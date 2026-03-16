@@ -4,6 +4,8 @@ import { config } from './config.js';
 import { PrismaClient } from '@prisma/client';
 import Controller from "./interfaces/controller.interface.js"
 import { Redis } from 'ioredis';
+import { loggingMiddleware } from './middlewares/loggingMiddleware.middleware.js';
+import { authMiddleware } from './middlewares/auth.middleware.js';
 
 export const prisma = new PrismaClient();
 export const redis = new Redis(config.redisUrl);
@@ -22,6 +24,8 @@ class App {
     private initializeMiddlewares(): void {
         this.app.use(express.json());
         this.app.use(cors());
+        this.app.use(loggingMiddleware);
+        this.app.use(authMiddleware);
     }
 
     private initializeControllers(controllers: Controller[]): void {
@@ -31,16 +35,11 @@ class App {
     }
 
     private async connectToDatabase(): Promise<void> {
+        redis.on('connect', () => {console.log('Redis: Connected');});
+        redis.on('error', (err) => {console.error('Redis connection error:', err);});
         try {
             await prisma.$connect();
             console.log('Connection with PostgreSQL established');
-            redis.on('connect', () => {
-                console.log('Redis: Connected');
-            });
-
-            redis.on('error', (err) => {
-                console.error('Redis: Error', err);
-            });
         } catch (error) {
             console.error('Error connecting to database:', error);
             process.exit(1);
