@@ -3,16 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
+  "type": "module",
   "scripts": {
     "start": "node dist/index.js",
-    "dev": "nodemon",
+    "dev": "nodemon --exec tsx lib/index.ts",
     "build": "tsc",
     "postinstall": "prisma generate"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "module",
   "dependencies": {
     "@prisma/client": "^6.19.2",
     "cors": "^2.8.6",
