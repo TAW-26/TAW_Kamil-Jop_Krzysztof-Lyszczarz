@@ -8,10 +8,11 @@ import { loggingMiddleware } from './middlewares/loggingMiddleware.middleware.js
 import { authMiddleware } from './middlewares/auth.middleware.js';
 import DailyRandomizerService from './services/dailyRandomizer.service.js';
 import cron from 'node-cron';
+import AutoCompleteService from './services/autocomplete.service.js';
 
 export const prisma = new PrismaClient();
 export const redis = new Redis(config.redisUrl);
-
+export const autoCompleteService = new AutoCompleteService();
 class App {
     public app: express.Application;
 
@@ -32,7 +33,8 @@ class App {
 
     public async init(): Promise<void> {
         await this.connectToDatabase();
-        this.initializeDailyRandomizer();
+        await this.initializeDailyRandomizer();
+        await autoCompleteService.initializeCacheIfNeeded();
     }
 
     private initializeControllers(controllers: Controller[]): void {
@@ -70,7 +72,7 @@ class App {
     }
 
     private async initializeDailyRandomizer(): Promise<void> {
-        try{
+        try {
             cron.schedule('0 2 * * *', async () => { 
                 console.log('Running daily randomizer task at 2:00 AM');
                 const dailyRandomizerService = new DailyRandomizerService();

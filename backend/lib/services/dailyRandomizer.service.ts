@@ -1,12 +1,8 @@
 import { prisma } from '../app.js';
+import { CATEGORIES } from '../constants/categories.map.js';
 type Category = { name: string; id: string; slug: string; };
 class DailyRandomizerService {
     private allCategories: Category[] = [];
-    private categoriesToViewMap: Record<string, string> = {
-        'top-500-revenue': 'view_top_500_revenue',
-        'horrors': 'view_horrors',
-        'cartoons': 'view_cartoons'
-    };
     public async run(): Promise<void> {
         try {
             await this.fetchCategories();
@@ -65,10 +61,10 @@ class DailyRandomizerService {
 
     private async randomizeDailyChallenge(category: Category, targetDate: Date): Promise<void> {
         const formattedDate = targetDate.toISOString().split('T')[0];
-        console.log(`Randomizing challenge for category ${category.id} on date ${formattedDate}...`);
-        const viewName = this.categoriesToViewMap[category.slug];
+        console.log(`Randomizing challenge for category ${category.slug} on date ${formattedDate}...`);
+        const viewName = CATEGORIES[category.slug]?.viewName;
         if (!viewName) {
-            console.warn(`No view mapping found for category ${category.id}, skipping.`);
+            console.warn(`No view mapping found for category ${category.slug}, skipping.`);
             return;
         }
         try {
