@@ -1,34 +1,30 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { config } from '../config.js';
-
-export interface TokenPayload {
-    id: string;
-    email?: string;
-    iat: number;
-    exp: number;
-}
+import { JwtPayload } from '../interfaces/auth.interface.js';
 
 export interface AuthRequest extends Request {
-    user?: TokenPayload;
+    user?: JwtPayload;
 }
 
-export const authMiddleware = (req: AuthRequest, res: Response, next: NextFunction) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
+export const authMiddleware = (
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+): Response | void => {
+    const authHeader = req.headers.authorization;
 
-    if (!token) {
-        return res.status(401).json({ message: 'No token provided' });
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ message: 'Brak tokena autoryzacyjnego' });
     }
+
+    const token = authHeader.split(' ')[1];
 
     try {
-        const secretKey = config.jwtSecret;
-        const decoded = jwt.verify(token, secretKey) as TokenPayload;
-        
-        req.user = decoded;
+        req.user = jwt.verify(token, config.jwtSecret) as JwtPayload;
         next();
     } catch (error) {
-        console.error('JWT Error:', (error as Error).message);
-        return res.status(403).json({ message: 'Invalid or expired token' });
+        console.error('JWT error:', (error as Error).message);
+        return res.status(403).json({ message: 'Nieprawidłowy lub wygasły token' });
     }
-}
+};

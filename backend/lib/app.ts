@@ -5,7 +5,6 @@ import { PrismaClient } from '@prisma/client';
 import Controller from "./interfaces/controller.interface.js"
 import { Redis } from 'ioredis';
 import { loggingMiddleware } from './middlewares/loggingMiddleware.middleware.js';
-import { authMiddleware } from './middlewares/auth.middleware.js';
 import DailyRandomizerService from './services/dailyRandomizer.service.js';
 import cron from 'node-cron';
 
@@ -27,7 +26,6 @@ class App {
         this.app.use(express.json());
         this.app.use(cors());
         this.app.use(loggingMiddleware);
-        this.app.use(authMiddleware);
     }
 
     public async init(): Promise<void> {
