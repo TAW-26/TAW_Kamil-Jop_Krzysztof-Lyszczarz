@@ -28,7 +28,7 @@ class App {
         this.app.use(express.json());
         this.app.use(cors());
         this.app.use(loggingMiddleware);
-        this.app.use(authMiddleware);
+        // this.app.use(authMiddleware);
     }
 
     public async init(): Promise<void> {
