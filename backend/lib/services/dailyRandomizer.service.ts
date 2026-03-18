@@ -108,7 +108,11 @@ class DailyRandomizerService {
                     director: movie.director,
                     studios: movie.production_companies,
                     actors: movie.actors,
-                    imdbRating: parseFloat(movie.imdb_rating || '0')
+                    imdbRating: parseFloat(movie.imdb_rating || '0'),
+                    overview: movie.overview,
+                    posterPath: movie.poster_path,
+                    backdropPath: movie.backdrop_path,
+                    isOscarWinner: movie.is_oscar_winner
                 };
                 await redis.set(redisKey, JSON.stringify(movieData), 'EX', 172800); 
                 console.log(`Redis cache updated for ${redisKey}`);

@@ -16,9 +16,13 @@ export interface MovieData {
     title: string | null;
     releaseDate: Date | null;
     genres: number[];
-    revenue: bigint | null;
+    revenue: number | null;
     director: string | null ;
     studios: string[];
     actors: string[];
-    imdbRating: number;
+    imdbRating: number | null;
+    overview?: string;
+    posterPath?: string;
+    backdropPath?: string;
+    isOscarWinner?: boolean;
 }
