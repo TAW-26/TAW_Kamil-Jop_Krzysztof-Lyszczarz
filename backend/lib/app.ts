@@ -71,9 +71,10 @@ class App {
 
     private async initializeDailyRandomizer(): Promise<void> {
         try {
+            const dailyRandomizerService = new DailyRandomizerService();
+            await dailyRandomizerService.run(); 
             cron.schedule('0 2 * * *', async () => { 
                 console.log('Running daily randomizer task at 2:00 AM');
-                const dailyRandomizerService = new DailyRandomizerService();
                 await dailyRandomizerService.run();},
                 { timezone: 'Europe/Warsaw' }
             );
