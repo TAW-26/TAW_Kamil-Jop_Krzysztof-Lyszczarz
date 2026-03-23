@@ -4,6 +4,7 @@ import AuthController from './controllers/auth.controller.js';
 import AdminController from './controllers/admin.controller.js';
 import UserController from './controllers/user.controller.js';
 import GameController from './controllers/game.controller.js';
+import LeaderboardController from './controllers/leaderboard.controller.js';
 
 const app = new App([
     new MovieController(),
@@ -11,6 +12,7 @@ const app = new App([
     new AdminController(),
     new UserController(),
     new GameController(),
+    new LeaderboardController(),
 
 ]);
 

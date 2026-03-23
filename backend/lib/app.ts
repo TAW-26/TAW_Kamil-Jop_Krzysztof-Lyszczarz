@@ -8,6 +8,8 @@ import { loggingMiddleware } from './middlewares/loggingMiddleware.middleware.js
 import DailyRandomizerService from './services/dailyRandomizer.service.js';
 import cron from 'node-cron';
 import AutoCompleteService from './services/autocomplete.service.js';
+import LeaderboardService from './services/leaderboard.service.js';
+import { CATEGORIES } from './constants/categories.map.js';
 
 export const prisma = new PrismaClient();
 export const redis = new Redis(config.redisUrl);
@@ -82,7 +84,6 @@ class App {
             console.error('Error scheduling daily randomizer task:', error);
         }
     }
-
 
     public listen(): void {
         this.app.listen(config.port, () => {

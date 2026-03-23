@@ -28,20 +28,73 @@ class GameService {
             }
             if (userId) {
                 let currentGame = await this.getCurrentGameObject(categorySlug, userId , dateStr);
-                if (!currentGame) {
-                    currentGame = await this.createGameObject(categorySlug, userId, dateStr, isCorrect);
+                if (currentGame && currentGame.is_won) {
+                    throw new Error('Już wygrałeś to wyzwanie! Spróbuj jutro nowe wyzwanie.');
                 }
-                else {
+                if (currentGame?.guesses?.includes(guessMovieId)) {
+                    throw new Error('Już próbowałeś tego filmu. Spróbuj innego.');
+                }
+                const currentAttemptCount = currentGame?.attempts || 0;
+                let pointsEarned = 100 - 10 * currentAttemptCount;
+                if (pointsEarned < 10) pointsEarned = 10;
+
+                if (!currentGame) {
+                    currentGame = await this.createGameObject(categorySlug, userId, dateStr, isCorrect, guessMovieId);
+                }else {
                     currentGame = await prisma.games.update({
                         where: { id: currentGame.id },
                         data: {
                             attempts: currentGame.attempts ? currentGame.attempts + 1 : 1,
                             is_won: isCorrect || currentGame.is_won,
-                            points_earned: isCorrect ? 10 : currentGame.points_earned 
+                            points_earned: isCorrect ? pointsEarned : currentGame.points_earned,
+                            guesses: [...(currentGame.guesses || []), guessMovieId]
                         }
                     });
                 }
                 attempts = currentGame.attempts? currentGame.attempts : 0;
+                if (isCorrect) {
+                    const user = await prisma.users.findUnique({ where: { id: userId } });
+                    
+                    let newStreak = user?.current_streak || 0;
+                    let lifetimeStreak = user?.lifetime_streak || 0;
+                    const lastWon = user?.last_won_date;
+                    const todayStr = dateStr; 
+
+                    if (lastWon) {
+                        const lastWonStr = lastWon.toISOString().split('T')[0];
+                        const yesterday = new Date(dateStr);
+                        yesterday.setDate(yesterday.getDate() - 1);
+                        const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+                        if (lastWonStr === todayStr) {
+                            newStreak = user!.current_streak ?? 0;
+                        } else if (lastWonStr === yesterdayStr) {
+                            newStreak += 1;
+                        } else {
+                            newStreak = 1;
+                        }
+                    } else {
+                        newStreak = 1;
+                    }
+                    if (newStreak > lifetimeStreak) {
+                        lifetimeStreak = newStreak;
+                    }
+
+                    await prisma.users.update({
+                        where: { id: userId },
+                        data: {
+                            points_balance: { increment: pointsEarned },
+                            lifetime_points: { increment: pointsEarned },
+                            current_streak: newStreak,
+                            last_won_date: new Date(),
+                            games : {connect: { id: currentGame.id }},
+                            lifetime_streak: lifetimeStreak
+                        }
+                    });
+                    await redis.del('leaderboard:points');
+                    await redis.del('leaderboard:streaks');
+                    await redis.del(`leaderboard:tries:${categorySlug}:${dateStr}`);
+                }
             }
             return {guessResult, attempts };
         }
@@ -245,7 +298,7 @@ class GameService {
     
     }
 
-    private async createGameObject(categorySlug : string, userId : string, dateStr : string, isCorrect : boolean) : Promise<games> {
+    private async createGameObject(categorySlug : string, userId : string, dateStr : string, isCorrect : boolean, movieId : number) : Promise<games> {
         const category = await prisma.categories.findUnique({ where: { slug: categorySlug } });
         const challenge = await prisma.daily_challenges.findFirst({
         where: {
@@ -263,8 +316,9 @@ class GameService {
                 challenge_id: challenge.id,
                 attempts: 1,
                 is_won: isCorrect,
-                points_earned: isCorrect ? 10 : 0,
-                played_at: new Date()
+                points_earned: isCorrect ? 100 : 0,
+                played_at: new Date(),
+                guesses: [movieId]
             }
         });
     }
