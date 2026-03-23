@@ -1,34 +1,89 @@
-import { GENRE_MAP } from "../constants/genres.map.js";
 import { ComparisonStatus } from "../interfaces/game.interface.js";
 import { MovieData } from "../interfaces/game.interface.js";
 import { prisma, redis } from '../app.js';
+import { games } from "@prisma/client";
 class GameService {
 
-    public async checkGuess(guessMovieId : number, categorySlug : string, dateStr : string) {
+    public async checkGuess(guessMovieId : number, categorySlug : string, dateStr : string, userId : string | null) {
         try {
+            if (!userId && categorySlug !== 'top-500-revenue'){
+                throw new Error('Goście mogą grać tylko w kategorii Top 500 Revenue');
+            }
             const correctMovieData = await this.getMovieDataFromRedis(categorySlug, dateStr);
             const guessMovieData = await this.getMovieDataFromId(guessMovieId);
-
-            return {
-            isCorrect: guessMovieData.id === correctMovieData.id,
-            movieTitle: guessMovieData.title, 
-            results: {
-            releaseDate: this.compareReleaseDate(guessMovieData.releaseDate ? new Date(guessMovieData.releaseDate) : new Date(), correctMovieData.releaseDate ? new Date(correctMovieData.releaseDate) : new Date()),
-            imdbRating: this.compareIMDBRating(guessMovieData.imdbRating || 0, correctMovieData.imdbRating || 0),
-            genres: this.compareGenres(guessMovieData.genres, correctMovieData.genres),
-            revenue: this.compareRevenue(guessMovieData.revenue || 0, correctMovieData.revenue || 0),
-            director: this.compareDirector(guessMovieData.director || '', correctMovieData.director || ''),
-            studios: this.compareStudios(guessMovieData.studios, correctMovieData.studios),
-            actors: this.compareActors(guessMovieData.actors, correctMovieData.actors),
-        }
-    };
+            let attempts = 0;
+            const isCorrect = guessMovieData.id === correctMovieData.id;
+            const guessResult = {
+                isCorrect: isCorrect,
+                movieTitle: guessMovieData.title, 
+                results: {
+                releaseDate: this.compareReleaseDate(guessMovieData.releaseDate ? new Date(guessMovieData.releaseDate) : new Date(), correctMovieData.releaseDate ? new Date(correctMovieData.releaseDate) : new Date()),
+                imdbRating: this.compareIMDBRating(guessMovieData.imdbRating || 0, correctMovieData.imdbRating || 0),
+                genres: this.compareGenres(guessMovieData.genres, correctMovieData.genres),
+                revenue: this.compareRevenue(guessMovieData.revenue || 0, correctMovieData.revenue || 0),
+                director: this.compareDirector(guessMovieData.director || '', correctMovieData.director || ''),
+                studios: this.compareStudios(guessMovieData.studios, correctMovieData.studios),
+                actors: this.compareActors(guessMovieData.actors, correctMovieData.actors),
+            }
+            }
+            if (userId) {
+                let currentGame = await this.getCurrentGameObject(categorySlug, userId , dateStr);
+                if (!currentGame) {
+                    currentGame = await this.createGameObject(categorySlug, userId, dateStr, isCorrect);
+                }
+                else {
+                    currentGame = await prisma.games.update({
+                        where: { id: currentGame.id },
+                        data: {
+                            attempts: currentGame.attempts ? currentGame.attempts + 1 : 1,
+                            is_won: isCorrect || currentGame.is_won,
+                            points_earned: isCorrect ? 10 : currentGame.points_earned 
+                        }
+                    });
+                }
+                attempts = currentGame.attempts? currentGame.attempts : 0;
+            }
+            return {guessResult, attempts };
         }
         catch (error) {
             console.error('Błąd podczas sprawdzania zgadywania:', error);
-            throw new Error('Nie można sprawdzić zgadywania');
+            throw new Error((error as Error).message || 'Nie można sprawdzić zgadywania');
         }
     }
 
+    public async getHint(categorySlug: string, dateStr: string, hintIndex: number, userId: string | null, guestAttempts: number = 0) {
+            try {
+                let currentAttempts = guestAttempts;
+
+                if (userId) {
+                    const game = await this.getCurrentGameObject(categorySlug, userId, dateStr);
+                    currentAttempts = game?.attempts || 0;
+                }
+
+                const requiredAttempts = hintIndex === 0 ? 4 : 8; 
+
+                if (currentAttempts < requiredAttempts) {
+                    throw new Error(` Potrzebujesz co najmniej ${requiredAttempts} prób, aby zobaczyć tę podpowiedź.`);
+                }
+
+                const movieData = await this.getMovieDataFromRedis(categorySlug, dateStr);
+
+                switch (hintIndex) {
+                    case 0:
+                        return { hintType: 'posterPath', hintValue: movieData.posterPath };
+                    case 1:
+                        return { hintType: 'overview', hintValue: movieData.overview };
+                    default:
+                        throw new Error('Nieznany indeks podpowiedzi');
+                }
+            }
+            catch (error) {            
+                console.error('Błąd podczas pobierania podpowiedzi:', error);
+                throw new Error((error as Error).message || 'Nie można pobrać podpowiedzi');
+            }
+        }
+
+    
     private async getMovieDataFromId(movieId: number) : Promise<MovieData> {
         try {
             const movie = await prisma.movies.findUnique({
@@ -73,7 +128,9 @@ class GameService {
                     director: parsedData.director,
                     studios: parsedData.studios,
                     actors: parsedData.actors,
-                    imdbRating: parsedData.imdbRating
+                    imdbRating: parsedData.imdbRating,
+                    overview: parsedData.overview,
+                    posterPath: parsedData.posterPath
                 };
                 return newMovieData;
 
@@ -151,7 +208,66 @@ class GameService {
         return 'wrong';
     }
 
+    private async getCurrentGameObject(categorySlug : string, userId : string, dateStr : string) : Promise<games | null>{
+        try{
+            const category = await prisma.categories.findUnique({
+                where: { slug: categorySlug }
+            });
+            if (!category) {
+                throw new Error('Nie można znaleźć kategorii o podanym slug');
+            }
+            
+            const dailyChallenge = await prisma.daily_challenges.findFirst({
+                where: {
+                    category_id: category?.id,
+                    challenge_date: new Date(dateStr)
+                }
+            });
 
+            if (!dailyChallenge) {
+                throw new Error('Nie można znaleźć dziennego wyzwania dla tej kategorii');
+            }
+
+            const game = await prisma.games.findFirst({
+                where: {
+                    user_id: userId,
+                    challenge_id: dailyChallenge.id
+                }
+            });
+            
+            return game;
+
+        }
+        catch (error) {
+            console.error('Błąd podczas pobierania danych z bazy:', error);
+            throw new Error('Błąd serwera');
+        }
+    
+    }
+
+    private async createGameObject(categorySlug : string, userId : string, dateStr : string, isCorrect : boolean) : Promise<games> {
+        const category = await prisma.categories.findUnique({ where: { slug: categorySlug } });
+        const challenge = await prisma.daily_challenges.findFirst({
+        where: {
+            category_id: category?.id,
+            challenge_date: new Date(dateStr)
+        }
+    });
+
+    if (!challenge) {
+        throw new Error("Wyzwanie nie istnieje dla podanej daty");
+    }
+        return await prisma.games.create({
+            data: {
+                user_id: userId,
+                challenge_id: challenge.id,
+                attempts: 1,
+                is_won: isCorrect,
+                points_earned: isCorrect ? 10 : 0,
+                played_at: new Date()
+            }
+        });
+    }
 }
 
 

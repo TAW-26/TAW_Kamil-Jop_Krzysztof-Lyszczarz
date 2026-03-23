@@ -28,3 +28,25 @@ export const authMiddleware = (
         return res.status(403).json({ message: 'Nieprawidłowy lub wygasły token' });
     }
 };
+
+
+export const optionalAuthMiddleware = (
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+): void => {
+const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return next();
+    }
+
+    const token = authHeader.split(' ')[1];
+
+    try {
+        req.user = jwt.verify(token, config.jwtSecret) as JwtPayload;
+    } catch (error) {
+        console.warn('Nieprawidłowy lub wygasły token, user traktowany jako niezalogowany');
+    }
+    next();
+};
+;
