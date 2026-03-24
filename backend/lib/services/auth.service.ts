@@ -240,13 +240,12 @@ class AuthService {
             });
             if (!user) {
                 const randomSuffix = Math.floor(1000 + Math.random() * 9000);
-                const randomString = crypto.randomUUID();
-                const dummyHash = await bcrypt.hash(randomString, 10);
+                const randomAuthId = crypto.randomBytes(32).toString('hex');
                 user = await prisma.users.create({
                     data: {
                         email: email,
                         username: `${name}${randomSuffix}`,
-                        password_hash: `OAUTH_GOOGLE_${dummyHash}`,
+                        password_hash: `OAUTH_GOOGLE_${randomAuthId}`,
                         role: 'user'
                     }
                 });
