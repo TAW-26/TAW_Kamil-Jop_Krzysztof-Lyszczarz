@@ -1,0 +1,938 @@
+{
+  "info": {
+    "_postman_id": "76ed3b51-1700-4dbf-adc4-f7d6f68f34a1",
+    "name": "Tests",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "43585823",
+    "_collection_link": "https://go.postman.co/collection/43585823-76ed3b51-1700-4dbf-adc4-f7d6f68f34a1?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "AuthController",
+      "item": [
+        {
+          "name": "Register User (Success)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"KONTOTESTOWE\",\r\n    \"email\": \"KONTOTESTOWE@test.com\",\r\n    \"password\": \"KONTOTESTOWeeeE\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Tworzy nowe konto. Przed wysłaniem zmień `email` i `username` na unikalne."
+          },
+          "response": []
+        },
+        {
+          "name": "Register User (Conflict)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"KONTOTESTOWE\",\r\n    \"email\": \"KONTOTESTOWE@test.com\",\r\n    \"password\": \"KONTOTESTOWE\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Testuje walidację unikalności. Powinien zwrócić `409 Conflict`."
+          },
+          "response": []
+        },
+        {
+          "name": "Register User (Invalid Email)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"KONTOTESTOWE\",\r\n    \"email\": \"KONTOTESTOWE.com\",\r\n    \"password\": \"KONTOTESTOWE\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Testuje Regex maila. Powinien zwrócić `400 Bad Request.`"
+          },
+          "response": []
+        },
+        {
+          "name": "Login (Success)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.globals.set(\"jwt_token\", jsonData.token);\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"KONTOTESTOWE\",\r\n    \"password\": \"KONTOTESTOWE\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Loguje użytkownika i zwraca token JWT."
+          },
+          "response": []
+        },
+        {
+          "name": "Login (Unauthorized)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"KONTOTESTOWE\",\r\n    \"password\": \"KONTOTESTOWE132131\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Testuje błędne hasło/login. Powinien zwrócić `401`."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Current Profile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
+            },
+            "description": "Pobiera dane zalogowanego użytkownika na podstawie Bearer Tokena."
+          },
+          "response": []
+        },
+        {
+          "name": "Change Password (Success)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"currentPassword\": \"KONTOTESTOWE\",\r\n    \"newPassword\": \"KONTOTESTOWEZMIANA\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/change-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "change-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Google OAUTH",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"token\": \"wklej token google\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/google",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "google"
+              ]
+            },
+            "description": "## Należy pozyskać token z Google OAuth2 Playground\n\n1. Wejdź na: [Google OAuth2 Playground](https://developers.google.com/oauthplayground/?authuser=1).\n    \n2. W kolumnie po lewej (Step 1) znajdź lub wpisz: `openid` oraz `email` i `profile`.\n    \n3. Kliknij **Authorize APIs** i zaloguj się na swoje konto Google.\n    \n4. W Step 2 kliknij **Exchange authorization code for tokens**.\n    \n5. Zmień zakładkę na górze na **ID Token**.\n    \n6. Skopiuj go i wklej do Postmana."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "GameController",
+      "item": [
+        {
+          "name": "Guess (Guest)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"categorySlug\": \"top-500-revenue\",\r\n    \"guessMovieId\": 420818\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/game/guess",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "game",
+                "guess"
+              ]
+            },
+            "description": "Testuje zgadywanie jako gość. Powinno zwrócić rezultat bez zapisu."
+          },
+          "response": []
+        },
+        {
+          "name": "Guess (Guest Error)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"categorySlug\": \"cartoons\",\r\n    \"guessMovieId\": 420818\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/game/guess",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "game",
+                "guess"
+              ]
+            },
+            "description": "Testuje scenariusz, w którym gość nie ma uprawnień do danej akcji."
+          },
+          "response": []
+        },
+        {
+          "name": "Hint (Guest)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/game/hint?categorySlug=cartoons&hintIndex=0&guestAttempts=5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "game",
+                "hint"
+              ],
+              "query": [
+                {
+                  "key": "categorySlug",
+                  "value": "cartoons"
+                },
+                {
+                  "key": "hintIndex",
+                  "value": "0"
+                },
+                {
+                  "key": "guestAttempts",
+                  "value": "5"
+                }
+              ]
+            },
+            "description": "Pobranie podpowiedzi przez niezalogowanego użytkownika."
+          },
+          "response": []
+        },
+        {
+          "name": "Hint (Missing Prerequisites)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/game/hint?categorySlug=cartoons&hintIndex=0",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "game",
+                "hint"
+              ],
+              "query": [
+                {
+                  "key": "categorySlug",
+                  "value": "cartoons"
+                },
+                {
+                  "key": "hintIndex",
+                  "value": "0"
+                }
+              ]
+            },
+            "description": "StartFragmentZwraca błąd, jeśli użytkownik prosi o podpowiedź, nie spełniając warunkówEndFragment"
+          },
+          "response": []
+        },
+        {
+          "name": "Guess (Increment Attempts)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"categorySlug\": \"cartoons\",\r\n    \"guessMovieId\": 420818\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/game/guess",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "game",
+                "guess"
+              ]
+            },
+            "description": "Każdy strzał zalogowanego użytkownika zwiększa licznik prób.\n\n(Jeśli już był ten film z tego konta należy zmienić id)"
+          },
+          "response": []
+        },
+        {
+          "name": "Guess (Increment Attempts)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"categorySlug\": \"cartoons\",\r\n    \"guessMovieId\": 808\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/game/guess",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "game",
+                "guess"
+              ]
+            },
+            "description": "Każdy strzał zalogowanego użytkownika zwiększa licznik prób.\n\n(Jeśli już był ten film z tego konta należy zmienić id)"
+          },
+          "response": []
+        },
+        {
+          "name": "Guess (Increment Attempts)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"categorySlug\": \"cartoons\",\r\n    \"guessMovieId\": 862\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/game/guess",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "game",
+                "guess"
+              ]
+            },
+            "description": "Każdy strzał zalogowanego użytkownika zwiększa licznik prób.\n\n(Jeśli już był ten film z tego konta należy zmienić id)"
+          },
+          "response": []
+        },
+        {
+          "name": "Guess (Increment Attempts)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"categorySlug\": \"cartoons\",\r\n    \"guessMovieId\": 12\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/game/guess",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "game",
+                "guess"
+              ]
+            },
+            "description": "Każdy strzał zalogowanego użytkownika zwiększa licznik prób.\n\n(Jeśli już był ten film z tego konta należy zmienić id)"
+          },
+          "response": []
+        },
+        {
+          "name": "Game State (Logged In)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/game/current?categorySlug=cartoons",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "game",
+                "current"
+              ],
+              "query": [
+                {
+                  "key": "categorySlug",
+                  "value": "cartoons"
+                }
+              ]
+            },
+            "description": "Pobiera aktualny stan sesji gry dla zalogowanego gracza."
+          },
+          "response": []
+        },
+        {
+          "name": "Game State (Unauthorized)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/game/current?categorySlug=cartoons",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "game",
+                "current"
+              ],
+              "query": [
+                {
+                  "key": "categorySlug",
+                  "value": "cartoons"
+                }
+              ]
+            },
+            "description": "Próba pobrania stanu gry bez tokena JWT. Powinna zwrócić `401.`"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "LeaderboardController",
+      "item": [
+        {
+          "name": "Top Points",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/leaderboard/points",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "leaderboard",
+                "points"
+              ]
+            },
+            "description": "Pobiera ranking graczy według sumy punktów."
+          },
+          "response": []
+        },
+        {
+          "name": "Top Streaks",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/leaderboard/streaks",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "leaderboard",
+                "streaks"
+              ]
+            },
+            "description": "Pobiera ranking według najdłuższych serii (streak)."
+          },
+          "response": []
+        },
+        {
+          "name": "Daily Attempts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/leaderboard/tries?categorySlug=cartoons",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "leaderboard",
+                "tries"
+              ],
+              "query": [
+                {
+                  "key": "categorySlug",
+                  "value": "cartoons"
+                }
+              ]
+            },
+            "description": "StartFragmentStatystyki podejść dla konkretnej kategorii (np. Cartoons).EndFragment"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "MovieController",
+      "item": [
+        {
+          "name": "Search Autocomplete",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies/search?q=Sui&category=top-500-revenue",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "movies",
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "Sui"
+                },
+                {
+                  "key": "category",
+                  "value": "top-500-revenue"
+                }
+              ]
+            },
+            "description": "StartFragTestuje podpowiedzi wyszukiwania (powinno zwrócić m.in. Suicide Squad)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "AvatarShopController",
+      "item": [
+        {
+          "name": "List Avatars",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/avatar-shop/avatars",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "avatar-shop",
+                "avatars"
+              ]
+            },
+            "description": "StartFragmentPobiera listę dostępnych awatarów (pierwsza strona).EndFragment"
+          },
+          "response": []
+        },
+        {
+          "name": "List Avatars (Limit 5 Search = batman)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/avatar-shop/avatars?search=batman&limit=5&page=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "avatar-shop",
+                "avatars"
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "batman"
+                },
+                {
+                  "key": "limit",
+                  "value": "5"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Testuje search query i limit"
+          },
+          "response": []
+        },
+        {
+          "name": "List Avatars (Sorted)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/avatar-shop/avatars?ownership=unowned&genre=28&sortYear=desc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "avatar-shop",
+                "avatars"
+              ],
+              "query": [
+                {
+                  "key": "ownership",
+                  "value": "unowned"
+                },
+                {
+                  "key": "genre",
+                  "value": "28"
+                },
+                {
+                  "key": "sortYear",
+                  "value": "desc"
+                }
+              ]
+            },
+            "description": "Testuje sortowanie"
+          },
+          "response": []
+        },
+        {
+          "name": "Buy Avatar (Low Balance)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"movieId\": 155\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/avatar-shop/purchase",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "avatar-shop",
+                "purchase"
+              ]
+            },
+            "description": "Próba zakupu przy niewystarczającej liczbie punktów."
+          },
+          "response": []
+        },
+        {
+          "name": "Buy Avatar (Owned)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"movieId\": 200\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/avatar-shop/purchase",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "avatar-shop",
+                "purchase"
+              ]
+            },
+            "description": "Próba ponownego zakupu posiadanego już awatara."
+          },
+          "response": []
+        },
+        {
+          "name": "My Inventory",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/avatar-shop/owned-avatars",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "avatar-shop",
+                "owned-avatars"
+              ]
+            },
+            "description": "Pobiera listę awatarów kupionych przez użytkownika."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
