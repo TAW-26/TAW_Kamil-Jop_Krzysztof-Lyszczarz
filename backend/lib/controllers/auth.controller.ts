@@ -19,6 +19,7 @@ class AuthController implements Controller {
         this.router.post(`${this.path}/login`, this.login);
         this.router.get(`${this.path}/me`, authMiddleware, this.me);
         this.router.patch(`${this.path}/change-password`, authMiddleware, this.changePassword);
+        this.router.post(`${this.path}/google`, this.googleLogin);
     }
 
     private register = async (req: Request, res: Response): Promise<Response> => {
@@ -93,6 +94,23 @@ class AuthController implements Controller {
             }
 
             return res.status(400).json({ message });
+        }
+    };
+
+    private googleLogin = async (req: Request, res: Response): Promise<void> => {
+        const { token } = req.body;
+        if (!token) {
+            res.status(400).json({ error: 'Brak tokena Google w zapytaniu (wymagane pole "token")' });
+            return;
+        }
+        try {
+            const result = await this.authService.loginWithGoogle(token);
+
+            res.status(200).json(result);
+        } catch (error) {
+            res.status(401).json({
+                message: (error as Error).message,
+            });
         }
     };
 }

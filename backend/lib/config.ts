@@ -35,4 +35,5 @@ export const config = {
     redisUrl: getEnv('REDIS_URL'),
     jwtSecret: getEnv('JWT_SECRET'),
     jwtExpiresIn: process.env.JWT_EXPIRES_IN || '12h',
+    googleClientId: getEnv('GOOGLE_CLIENT_ID'),
 };

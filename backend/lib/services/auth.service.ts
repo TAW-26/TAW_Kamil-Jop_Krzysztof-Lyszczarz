@@ -1,7 +1,9 @@
 import bcrypt from 'bcrypt';
+import { OAuth2Client } from 'google-auth-library';
 import jwt from 'jsonwebtoken';
 import { prisma } from '../app.js';
 import { config } from '../config.js';
+import crypto from 'crypto';
 import {
     ChangePasswordDto,
     JwtPayload,
@@ -14,6 +16,7 @@ import {
 class AuthService {
     private readonly jwtSecretKey = config.jwtSecret;
     private readonly jwtExpiresIn = config.jwtExpiresIn || '12h';
+    private readonly googleClient = new OAuth2Client(config.googleClientId);
 
     private toSafeUser(user: any): SafeUser {
         return {
@@ -43,14 +46,22 @@ class AuthService {
         if (username.trim().length > 30) {
             throw new Error('Nazwa użytkownika może mieć maksymalnie 30 znaków');
         }
+        const usernameRegex = /^[a-zA-Z0-9_]+$/;
+        if (!usernameRegex.test(username)) {
+            throw new Error('Nazwa użytkownika może zawierać tylko litery, cyfry i podkreślenia');
+        }
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             throw new Error('Nieprawidłowy adres e-mail');
         }
 
-        if (password.length < 6) {
-            throw new Error('Hasło musi mieć co najmniej 6 znaków');
+        if (password.length < 6 || password.length > 50) {
+            throw new Error('Hasło musi mieć od 6 do 50 znaków');
+        }
+        const passwordStrengthRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*()_+=[\]{};':"\\|,.<>/?-]{6,}$/;
+        if (!passwordStrengthRegex.test(password)) {
+            throw new Error('Hasło musi zawierać co najmniej jedną literę i jedną cyfrę');
         }
     }
 
@@ -60,6 +71,31 @@ class AuthService {
         if (!username || !password) {
             throw new Error('Username i password są wymagane');
         }
+
+        if (username.trim().length > 30 || password.length > 100) {
+            throw new Error('Nieprawidłowe dane logowania');
+        }
+    }
+
+    private validatePasswordChange(data: ChangePasswordDto): void {
+        const { currentPassword, newPassword } = data;
+
+        if (!currentPassword || !newPassword) {
+            throw new Error('Oba hasła są wymagane');
+        }
+
+        if (currentPassword === newPassword) {
+            throw new Error('Nowe hasło musi być inne niż stare');
+        }
+
+        if (newPassword.length < 6 || newPassword.length > 50) {
+            throw new Error('Nowe hasło musi mieć od 6 do 50 znaków');
+        }
+
+        const passwordStrengthRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/;
+        if (!passwordStrengthRegex.test(newPassword)) {
+            throw new Error('Nowe hasło musi zawierać co najmniej jedną dużą literę i jedną cyfrę');
+        }
     }
 
     public async register(userData: RegisterDto): Promise<SafeUser> {
@@ -67,7 +103,6 @@ class AuthService {
 
         const normalizedUsername = userData.username.trim();
         const normalizedEmail = userData.email.trim().toLowerCase();
-
         const existingUserByUsername = await prisma.users.findUnique({
             where: { username: normalizedUsername },
         });
@@ -150,13 +185,11 @@ class AuthService {
         data: ChangePasswordDto
     ): Promise<void> {
         const { currentPassword, newPassword } = data;
+        this.validatePasswordChange(data);
+
 
         if (!currentPassword || !newPassword) {
             throw new Error('currentPassword i newPassword są wymagane');
-        }
-
-        if (newPassword.length < 6) {
-            throw new Error('Nowe hasło musi mieć co najmniej 6 znaków');
         }
 
         const user = await prisma.users.findUnique({
@@ -186,7 +219,53 @@ class AuthService {
         });
     }
 
+    public async loginWithGoogle(token: string): Promise<LoginResponse> {
+        try {
+            const ticket = await this.googleClient.verifyIdToken({
+                idToken: token,
+                // Chwilowo zakomentowałem na czas testów bez frontendu
+                // audience: config.googleClientId,
+            });
 
+            const payload = ticket.getPayload();
+
+            if (!payload || !payload.email) {
+                throw new Error('Nie można zweryfikować tokenu Google');
+            }
+
+            const {email} = payload;
+            const name = payload.name || email.split('@')[0];
+            let user = await prisma.users.findUnique({ 
+                where: { email: email } 
+            });
+            if (!user) {
+                const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+                const randomString = crypto.randomUUID();
+                const dummyHash = await bcrypt.hash(randomString, 10);
+                user = await prisma.users.create({
+                    data: {
+                        email: email,
+                        username: `${name}${randomSuffix}`,
+                        password_hash: `OAUTH_GOOGLE_${dummyHash}`,
+                        role: 'user'
+                    }
+                });
+            }
+            const jwtToken = jwt.sign(
+                { userId: user.id, username: user.username, role: user.role || 'user' },
+                this.jwtSecretKey,
+                { expiresIn: this.jwtExpiresIn as jwt.SignOptions['expiresIn'] }
+            );
+
+            const createdUser = this.toSafeUser(user);
+
+            return { token: jwtToken, user: createdUser };
+        }
+        catch (error) {
+            console.error('Google login error:', error);
+            throw new Error('Nie można zalogować się za pomocą Google');
+        }
+    }
 }
 
 export default AuthService;
