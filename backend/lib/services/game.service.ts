@@ -5,6 +5,15 @@ import { games } from "@prisma/client";
 class GameService {
 
     public async checkGuess(guessMovieId : number, categorySlug : string, dateStr : string, userId : string | null) {
+        if (typeof guessMovieId !== 'number' || isNaN(guessMovieId)) {
+            throw new Error('guessMovieId musi być liczbą');
+        }
+        if (typeof categorySlug !== 'string' || !categorySlug.trim()) {
+            throw new Error('categorySlug musi być niepustym stringiem');
+        }
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+            throw new Error('Nieprawidłowy format daty');
+        }
         try {
             if (!userId && categorySlug !== 'top-500-revenue'){
                 throw new Error('Goście mogą grać tylko w kategorii Top 500 Revenue');
@@ -24,8 +33,8 @@ class GameService {
                 director: this.compareDirector(guessMovieData.director || '', correctMovieData.director || ''),
                 studios: this.compareStudios(guessMovieData.studios, correctMovieData.studios),
                 actors: this.compareActors(guessMovieData.actors, correctMovieData.actors),
-            }
-            }
+                    }
+                };
             if (userId) {
                 let currentGame = await this.getCurrentGameObject(categorySlug, userId , dateStr);
                 if (currentGame && currentGame.is_won) {
@@ -105,6 +114,15 @@ class GameService {
     }
 
     public async getHint(categorySlug: string, dateStr: string, hintIndex: number, userId: string | null, guestAttempts: number = 0) {
+        if (typeof categorySlug !== 'string' || !categorySlug.trim()) {
+            throw new Error('categorySlug musi być niepustym stringiem');
+        }
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+            throw new Error('Nieprawidłowy format daty');
+        }
+        if (typeof hintIndex !== 'number' || isNaN(hintIndex)) {
+            throw new Error('hintIndex musi być liczbą');
+        }
             try {
                 let currentAttempts = guestAttempts;
 
@@ -138,53 +156,61 @@ class GameService {
 
 
     public async getGameState(categorySlug: string, dateStr: string, userId: string) {
-    try {
-        const game = await this.getCurrentGameObject(categorySlug, userId, dateStr);
-        
-        if (!game || !game.guesses || game.guesses.length === 0) {
-            return { guesses: [], attempts: 0, isWon: false };
+        if (typeof categorySlug !== 'string' || !categorySlug.trim()) {
+            throw new Error('categorySlug musi być niepustym stringiem');
         }
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+            throw new Error('Nieprawidłowy format daty');
+        }
+        try {
+            const game = await this.getCurrentGameObject(categorySlug, userId, dateStr);
+            
+            if (!game || !game.guesses || game.guesses.length === 0) {
+                return { guesses: [], attempts: 0, isWon: false };
+            }
 
-        const correctMovieData = await this.getMovieDataFromRedis(categorySlug, dateStr);
-        const guessList = game.guesses;
+            const correctMovieData = await this.getMovieDataFromRedis(categorySlug, dateStr);
+            const guessList = game.guesses;
 
-        const response = await Promise.all(guessList.map(async (guessId) => {
-            const guessMovieData = await this.getMovieDataFromId(guessId);
+            const response = await Promise.all(guessList.map(async (guessId) => {
+                const guessMovieData = await this.getMovieDataFromId(guessId);
+                return {
+                    id: guessMovieData.id,
+                    title: guessMovieData.title,
+                    comparison: {
+                        releaseDate: this.compareReleaseDate(guessMovieData.releaseDate ? new Date(guessMovieData.releaseDate) : new Date(), correctMovieData.releaseDate ? new Date(correctMovieData.releaseDate) : new Date()),
+                        imdbRating: this.compareIMDBRating(guessMovieData.imdbRating || 0, correctMovieData.imdbRating || 0),
+                        genres: this.compareGenres(guessMovieData.genres, correctMovieData.genres),
+                        revenue: this.compareRevenue(guessMovieData.revenue || 0, correctMovieData.revenue || 0),
+                        director: this.compareDirector(guessMovieData.director || '', correctMovieData.director || ''),
+                        studios: this.compareStudios(guessMovieData.studios, correctMovieData.studios),
+                        actors: this.compareActors(guessMovieData.actors, correctMovieData.actors),
+                    }
+                };
+            }));
+
             return {
-                id: guessMovieData.id,
-                title: guessMovieData.title,
-                comparison: {
-                    releaseDate: this.compareReleaseDate(guessMovieData.releaseDate ? new Date(guessMovieData.releaseDate) : new Date(), correctMovieData.releaseDate ? new Date(correctMovieData.releaseDate) : new Date()),
-                    imdbRating: this.compareIMDBRating(guessMovieData.imdbRating || 0, correctMovieData.imdbRating || 0),
-                    genres: this.compareGenres(guessMovieData.genres, correctMovieData.genres),
-                    revenue: this.compareRevenue(guessMovieData.revenue || 0, correctMovieData.revenue || 0),
-                    director: this.compareDirector(guessMovieData.director || '', correctMovieData.director || ''),
-                    studios: this.compareStudios(guessMovieData.studios, correctMovieData.studios),
-                    actors: this.compareActors(guessMovieData.actors, correctMovieData.actors),
-                }
+                guesses: response,
+                attempts: game.attempts,
+                isWon: game.is_won
             };
-        }));
 
-        return {
-            guesses: response,
-            attempts: game.attempts,
-            isWon: game.is_won
-        };
-
-    } catch (error) {
-        console.error('Błąd podczas pobierania stanu gry:', error);
-        throw new Error((error as Error).message || 'Nie można pobrać stanu gry');
-    }
-    }
+        } catch (error) {
+            console.error('Błąd podczas pobierania stanu gry:', error);
+            throw new Error((error as Error).message || 'Nie można pobrać stanu gry');
+        }
+        }
     
     private async getMovieDataFromId(movieId: number) : Promise<MovieData> {
+        if (typeof movieId !== 'number' || isNaN(movieId)) {
+            throw new Error('movieId musi być liczbą');
+        }
         try {
             const movie = await prisma.movies.findUnique({
                 where: { tmdb_id: movieId }});
             if (!movie) {
                 throw new Error('Nie można znaleźć filmu o podanym ID');
             }    
-            console.log(movie);
             const newMovieData : MovieData = {
                 id: movie.tmdb_id,
                 title: movie.title,
@@ -207,6 +233,12 @@ class GameService {
     }
 
     private async getMovieDataFromRedis(categorySlug: string, dateStr: string) : Promise<MovieData> {
+        if (typeof categorySlug !== 'string' || !categorySlug.trim()) {
+            throw new Error('categorySlug musi być niepustym stringiem');
+        }
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+            throw new Error('Nieprawidłowy format daty');
+        }
         const redisKey = `daily:${categorySlug}:${dateStr}`;
         try {
             const cachedData = await redis.get(redisKey);

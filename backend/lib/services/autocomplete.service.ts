@@ -10,6 +10,15 @@ type MovieCache = {
 class AutoCompleteService {
 
     public async searchMovie(query : string, categorySlug : string, limit : number = 10): Promise<MovieCache[]> {
+        if (typeof query !== 'string' || !query.trim()) {
+            throw new Error('Query musi być niepustym stringiem');
+        }
+        if (typeof categorySlug !== 'string' || !categorySlug.trim()) {
+            throw new Error('categorySlug musi być niepustym stringiem');
+        }
+        if (typeof limit !== 'number' || limit < 1 || limit > 100) {
+            throw new Error('Limit musi być liczbą między 1 a 100');
+        }
         const redisKey = CATEGORIES[categorySlug]?.redisKey;
         if (!redisKey) {
             console.warn(`No Redis key mapping found for category ${categorySlug}. Cannot perform search.`);

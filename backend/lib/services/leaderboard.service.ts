@@ -22,6 +22,12 @@ class LeaderboardService {
     }
 
     public async getTriesLeaderboard(categorySlug: string, dateStr: string): Promise<TriesHistogramEntry[]> {
+        if (typeof categorySlug !== 'string' || !categorySlug.trim()) {
+            throw new Error('categorySlug musi być niepustym stringiem');
+        }
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+            throw new Error('Nieprawidłowy format daty (wymagany YYYY-MM-DD)');
+        }
         const redisKey = `leaderboard:tries:${categorySlug}:${dateStr}`;
         try{
             const cachedDataRaw = await redis.get(redisKey);

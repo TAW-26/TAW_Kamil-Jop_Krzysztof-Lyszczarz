@@ -14,6 +14,8 @@ class AvatarShopService {
             search?: string
         }
     ): Promise<any> {
+        if (typeof page !== 'number' || page < 1) page = 1;
+        if (typeof limit !== 'number' || limit < 1 || limit > 100) limit = 20;
         const offset = (page - 1) * limit;
 
         const ownedAvatars = await prisma.user_avatars.findMany({

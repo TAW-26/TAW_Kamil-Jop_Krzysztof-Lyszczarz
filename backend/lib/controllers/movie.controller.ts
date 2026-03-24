@@ -3,7 +3,7 @@ import Controller from '../interfaces/controller.interface.js';
 import { autoCompleteService } from '../app.js';
 
 class MovieController implements Controller { 
-  public path = '/api/movies';
+  public path = 'movies';
   public router = Router();
 
   constructor() {

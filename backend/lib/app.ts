@@ -28,6 +28,7 @@ class App {
         this.app.use(express.json());
         this.app.use(cors());
         this.app.use(loggingMiddleware);
+        this.app.set('trust proxy', 1);
         const limiter = rateLimit({
             windowMs: 15 * 60 * 1000, 
             max: 500,
