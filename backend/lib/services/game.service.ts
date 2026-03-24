@@ -136,6 +136,46 @@ class GameService {
             }
         }
 
+
+    public async getGameState(categorySlug: string, dateStr: string, userId: string) {
+    try {
+        const game = await this.getCurrentGameObject(categorySlug, userId, dateStr);
+        
+        if (!game || !game.guesses || game.guesses.length === 0) {
+            return { guesses: [], attempts: 0, isWon: false };
+        }
+
+        const correctMovieData = await this.getMovieDataFromRedis(categorySlug, dateStr);
+        const guessList = game.guesses;
+
+        const response = await Promise.all(guessList.map(async (guessId) => {
+            const guessMovieData = await this.getMovieDataFromId(guessId);
+            return {
+                id: guessMovieData.id,
+                title: guessMovieData.title,
+                comparison: {
+                    releaseDate: this.compareReleaseDate(guessMovieData.releaseDate ? new Date(guessMovieData.releaseDate) : new Date(), correctMovieData.releaseDate ? new Date(correctMovieData.releaseDate) : new Date()),
+                    imdbRating: this.compareIMDBRating(guessMovieData.imdbRating || 0, correctMovieData.imdbRating || 0),
+                    genres: this.compareGenres(guessMovieData.genres, correctMovieData.genres),
+                    revenue: this.compareRevenue(guessMovieData.revenue || 0, correctMovieData.revenue || 0),
+                    director: this.compareDirector(guessMovieData.director || '', correctMovieData.director || ''),
+                    studios: this.compareStudios(guessMovieData.studios, correctMovieData.studios),
+                    actors: this.compareActors(guessMovieData.actors, correctMovieData.actors),
+                }
+            };
+        }));
+
+        return {
+            guesses: response,
+            attempts: game.attempts,
+            isWon: game.is_won
+        };
+
+    } catch (error) {
+        console.error('Błąd podczas pobierania stanu gry:', error);
+        throw new Error((error as Error).message || 'Nie można pobrać stanu gry');
+    }
+    }
     
     private async getMovieDataFromId(movieId: number) : Promise<MovieData> {
         try {

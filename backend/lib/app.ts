@@ -8,8 +8,7 @@ import { loggingMiddleware } from './middlewares/loggingMiddleware.middleware.js
 import DailyRandomizerService from './services/dailyRandomizer.service.js';
 import cron from 'node-cron';
 import AutoCompleteService from './services/autocomplete.service.js';
-import LeaderboardService from './services/leaderboard.service.js';
-import { CATEGORIES } from './constants/categories.map.js';
+import rateLimit from 'express-rate-limit';
 
 export const prisma = new PrismaClient();
 export const redis = new Redis(config.redisUrl);
@@ -29,6 +28,16 @@ class App {
         this.app.use(express.json());
         this.app.use(cors());
         this.app.use(loggingMiddleware);
+        const limiter = rateLimit({
+            windowMs: 15 * 60 * 1000, 
+            max: 500,
+            message: { 
+                error: 'Zbyt wiele zapytań z tego adresu IP. Odpocznij chwilę i spróbuj ponownie za 15 minut.' 
+            },
+            standardHeaders: true, 
+            legacyHeaders: false, 
+        });
+        this.app.use('/', limiter);
     }
 
     public async init(): Promise<void> {
