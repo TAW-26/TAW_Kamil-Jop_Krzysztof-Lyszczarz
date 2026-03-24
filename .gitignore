@@ -1,37 +1,50 @@
 node_modules/
+**/node_modules/
+.angular/
+**/ .angular/cache/
+.vite/
+**/.vite/
+.npm
+/dist/
+/build/
+**/dist/
 
 
-.env
+backend/.env
 .env.*
 !.env.example
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
+frontend/package-lock.json
+backend/package-lock.json
+**/yarn.lock
+**/pnpm-lock.yaml
 
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-
-dist/
-build/
-out/
-.next/
-.nuxt/
-coverage/
-
-
-.DS_Store
-Thumbs.db
-ehthumbs.db
 
 .vscode/
+!.vscode/extensions.json
+!.vscode/launch.json
 .idea/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+.DS_Store
+Thumbs.db
 
+
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+coverage/
+.nyc_output
+
+*.tsbuildinfo
 /prisma/generated-client
 /lib/generated

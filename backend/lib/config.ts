@@ -2,15 +2,38 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-export const config = {
-    port: Number(process.env.PORT) || 3100,
-    databaseUrl: process.env.DATABASE_URL || '',
-    redisUrl: process.env.REDIS_URL || '',
-    jwtSecret: process.env.JWT_SECRET || 'super-secret-key'
-};
+function getEnv(name: string): string {
+    const value = process.env[name];
 
+    if (!value || value.trim() === '') {
+        throw new Error(`Missing required environment variable: ${name}`);
+    }
 
-if (!config.databaseUrl) {
-    console.error("FATAL ERROR: DATABASE_URL is not defined.");
-    process.exit(1);
+    return value;
 }
+
+function getEnvNumber(name: string, defaultValue?: number): number {
+    const value = process.env[name];
+
+    if (!value || value.trim() === '') {
+        if (defaultValue !== undefined) return defaultValue;
+        throw new Error(`Missing required environment variable: ${name}`);
+    }
+
+    const parsed = Number(value);
+
+    if (Number.isNaN(parsed)) {
+        throw new Error(`Environment variable ${name} must be a number`);
+    }
+
+    return parsed;
+}
+
+export const config = {
+    port: getEnvNumber('PORT', 3000),
+    databaseUrl: getEnv('DATABASE_URL'),
+    redisUrl: getEnv('REDIS_URL'),
+    jwtSecret: getEnv('JWT_SECRET'),
+    jwtExpiresIn: process.env.JWT_EXPIRES_IN || '12h',
+    googleClientId: getEnv('GOOGLE_CLIENT_ID'),
+};

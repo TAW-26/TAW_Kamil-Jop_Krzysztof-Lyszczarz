@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["views"]
 }
 
 datasource db {
@@ -39,6 +40,7 @@ model games {
   played_at        DateTime?         @default(now()) @db.Timestamp(6)
   daily_challenges daily_challenges? @relation(fields: [challenge_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   users            users?            @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  guesses          Int[]             @default([])
 
   @@unique([user_id, challenge_id])
   @@index([challenge_id], map: "idx_games_challenge_id")
@@ -89,8 +91,74 @@ model users {
   lifetime_points    Int?           @default(0)
   points_balance     Int?           @default(0)
   current_streak     Int?           @default(0)
+  lifetime_streak    Int?           @default(0)
   equipped_avatar_id Int?
+  equipped_avatar_url String?
   created_at         DateTime?      @default(now()) @db.Timestamp(6)
   games              games[]
   user_avatars       user_avatars[]
+  last_won_date      DateTime?      
+}
+
+view view_cartoons {
+  tmdb_id               Int?
+  imdb_id               String?   @db.VarChar(50)
+  title                 String?   @db.VarChar(255)
+  original_title        String?   @db.VarChar(255)
+  original_language     String?   @db.VarChar(50)
+  release_date          DateTime? @db.Date
+  budget                BigInt?
+  revenue               BigInt?
+  poster_path           String?   @db.VarChar(255)
+  backdrop_path         String?   @db.VarChar(255)
+  overview              String?
+  genres                Int[]
+  production_companies  String[]
+  director              String?   @db.VarChar(255)
+  actors                String[]
+  imdb_rating           String?   @db.VarChar(10)
+  rotten_tomatoes_score Int?
+  is_oscar_winner       Boolean?
+}
+
+view view_horrors {
+  tmdb_id               Int?
+  imdb_id               String?   @db.VarChar(50)
+  title                 String?   @db.VarChar(255)
+  original_title        String?   @db.VarChar(255)
+  original_language     String?   @db.VarChar(50)
+  release_date          DateTime? @db.Date
+  budget                BigInt?
+  revenue               BigInt?
+  poster_path           String?   @db.VarChar(255)
+  backdrop_path         String?   @db.VarChar(255)
+  overview              String?
+  genres                Int[]
+  production_companies  String[]
+  director              String?   @db.VarChar(255)
+  actors                String[]
+  imdb_rating           String?   @db.VarChar(10)
+  rotten_tomatoes_score Int?
+  is_oscar_winner       Boolean?
+}
+
+view view_top_500_revenue {
+  tmdb_id               Int?
+  imdb_id               String?   @db.VarChar(50)
+  title                 String?   @db.VarChar(255)
+  original_title        String?   @db.VarChar(255)
+  original_language     String?   @db.VarChar(50)
+  release_date          DateTime? @db.Date
+  budget                BigInt?
+  revenue               BigInt?
+  poster_path           String?   @db.VarChar(255)
+  backdrop_path         String?   @db.VarChar(255)
+  overview              String?
+  genres                Int[]
+  production_companies  String[]
+  director              String?   @db.VarChar(255)
+  actors                String[]
+  imdb_rating           String?   @db.VarChar(10)
+  rotten_tomatoes_score Int?
+  is_oscar_winner       Boolean?
 }
