@@ -4,7 +4,7 @@ import  GameService  from '../services/game.service.js';
 import { optionalAuthMiddleware, AuthRequest, authMiddleware } from '../middlewares/auth.middleware.js';
 
 class GameController implements Controller { 
-  public path = '/api/game';
+  public path = 'game';
   public router = Router();
   public gameService = new GameService();
 
@@ -81,7 +81,8 @@ class GameController implements Controller {
         res.status(401).json({ error: 'Unauthorized' });
         return;
     }
-    try {        const gameState = await this.gameService.getGameState(String(categorySlug), dateStr, userId);
+    try {        
+        const gameState = await this.gameService.getGameState(String(categorySlug), dateStr, userId);
         res.status(200).json(gameState);
     }
     catch (error) {

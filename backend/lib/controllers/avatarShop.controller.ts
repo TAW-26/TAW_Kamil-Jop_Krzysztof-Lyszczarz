@@ -3,7 +3,7 @@ import Controller from '../interfaces/controller.interface.js';
 import { AuthRequest, authMiddleware } from '../middlewares/auth.middleware.js';
 import AvatarShopService from '../services/avatarShop.service.js';
 class AvatarShopController implements Controller { 
-  public path = '/api/avatar-shop';
+  public path = 'avatar-shop';
   public router = Router();
   public avatarShopService = new AvatarShopService();
 
