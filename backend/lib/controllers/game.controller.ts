@@ -4,7 +4,7 @@ import  GameService  from '../services/game.service.js';
 import { optionalAuthMiddleware, AuthRequest, authMiddleware } from '../middlewares/auth.middleware.js';
 
 class GameController implements Controller { 
-  public path = 'game';
+  public path = '/game';
   public router = Router();
   public gameService = new GameService();
 

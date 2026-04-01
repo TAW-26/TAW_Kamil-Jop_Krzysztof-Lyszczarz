@@ -1,11 +1,37 @@
 import { prisma } from '../app.js';
 import { Prisma } from '@prisma/client';
+
+interface ShopItem {
+    id: number;
+    title: string | null;
+    posterPath: string | null;
+    releaseDate: Date | null;
+    price: number;
+    isOwned: boolean;
+}
+
+interface ShopItemsResponse {
+    items: ShopItem[];
+    meta: {
+        totalItems: number;
+        currentPage: number;
+        totalPages: number;
+        itemsPerPage: number;
+    };
+}
+
+interface OwnedAvatar {
+    id: number;
+    title: string | null;
+    posterPath: string | null;
+}
+
 class AvatarShopService {
     private AVATAR_PRICE = 500;
 
     public async getShopItems(
-        userId: string, 
-        page: number = 1,  
+        userId: string,
+        page: number = 1,
         limit: number = 20,
         filters: {
             ownership?: 'all' | 'owned' | 'unowned',
@@ -13,7 +39,7 @@ class AvatarShopService {
             genre?: number,
             search?: string
         }
-    ): Promise<any> {
+    ): Promise<ShopItemsResponse> {
         if (typeof page !== 'number' || page < 1) page = 1;
         if (typeof limit !== 'number' || limit < 1 || limit > 100) limit = 20;
         const offset = (page - 1) * limit;
@@ -92,14 +118,14 @@ class AvatarShopService {
             if (existing) {
                 throw new Error('Avatar already owned');
             }
-            const pointsBalance = user.points_balance ? user.points_balance : 0;
+            const pointsBalance = user.points_balance ?? 0;
             if (pointsBalance < this.AVATAR_PRICE) {
                 throw new Error('Not enough points');
             }
 
             await tx.users.update({
                 where: { id: userId },
-                data: { points_balance: pointsBalance - this.AVATAR_PRICE }
+                data: { points_balance: { decrement: this.AVATAR_PRICE } }
             });
             await tx.user_avatars.create({
                 data: {
@@ -112,7 +138,7 @@ class AvatarShopService {
         return response;
     }
 
-    public async getOwnedAvatars(userId: string): Promise<any[]> {
+    public async getOwnedAvatars(userId: string): Promise<OwnedAvatar[]> {
         const ownedAvatars = await prisma.user_avatars.findMany({
             where: { user_id: userId },
             select: { movie_id: true }

@@ -2,7 +2,7 @@ export type ComparisonStatus = 'correct' | 'partial' | 'wrong' | 'higher' | 'low
 
 export interface AttributeResult {
     attribute: string;
-    value : any;
+    value: string | number | boolean | string[] | number[] | null;
     status: ComparisonStatus;
 }
 

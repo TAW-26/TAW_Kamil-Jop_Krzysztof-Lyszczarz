@@ -5,20 +5,13 @@ class LeaderboardService {
 
     public async getStreakLeaderboard(): Promise<StreakLeaderboardEntry[]> {
         const redisKey = 'leaderboard:streaks';
-        try{
-            const cachedDataRaw = await redis.get(redisKey);
-            if (cachedDataRaw) {
-                return JSON.parse(cachedDataRaw);
-            } else {
-                const leaderboardData = await this.fetchStreakLeaderboardFromDb();
-                await redis.set(redisKey, JSON.stringify(leaderboardData), 'EX', this.LEADERBOARD_CACHE_TTL);
-                return leaderboardData;
-            }
+        const cachedDataRaw = await redis.get(redisKey);
+        if (cachedDataRaw) {
+            return JSON.parse(cachedDataRaw) as StreakLeaderboardEntry[];
         }
-        catch (error) {
-            console.error('Error fetching streak leaderboard:', error);
-            return [];
-        }
+        const leaderboardData = await this.fetchStreakLeaderboardFromDb();
+        await redis.set(redisKey, JSON.stringify(leaderboardData), 'EX', this.LEADERBOARD_CACHE_TTL);
+        return leaderboardData;
     }
 
     public async getTriesLeaderboard(categorySlug: string, dateStr: string): Promise<TriesHistogramEntry[]> {
@@ -29,39 +22,24 @@ class LeaderboardService {
             throw new Error('Nieprawidłowy format daty (wymagany YYYY-MM-DD)');
         }
         const redisKey = `leaderboard:tries:${categorySlug}:${dateStr}`;
-        try{
-            const cachedDataRaw = await redis.get(redisKey);
-            if (cachedDataRaw) {
-                return JSON.parse(cachedDataRaw);
-            }
-            else {
-                const leaderboardData = await this.fetchTriesLeaderboardFromDb(categorySlug, dateStr);
-                await redis.set(redisKey, JSON.stringify(leaderboardData), 'EX', this.LEADERBOARD_CACHE_TTL);
-                return leaderboardData;
-            }
+        const cachedDataRaw = await redis.get(redisKey);
+        if (cachedDataRaw) {
+            return JSON.parse(cachedDataRaw) as TriesHistogramEntry[];
         }
-        catch (error) {
-            console.error('Error fetching tries leaderboard:', error);
-            return [];
-        }
+        const leaderboardData = await this.fetchTriesLeaderboardFromDb(categorySlug, dateStr);
+        await redis.set(redisKey, JSON.stringify(leaderboardData), 'EX', this.LEADERBOARD_CACHE_TTL);
+        return leaderboardData;
     }
 
     public async getTotalPointsLeaderboard(): Promise<PointsLeaderboardEntry[]> {
         const redisKey = 'leaderboard:points';
-        try{
-            const cachedDataRaw = await redis.get(redisKey);
-            if (cachedDataRaw) {
-                return JSON.parse(cachedDataRaw);
-            } else {
-                const leaderboardData = await this.fetchPointsLeaderboardFromDb();
-                await redis.set(redisKey, JSON.stringify(leaderboardData), 'EX', this.LEADERBOARD_CACHE_TTL);
-                return leaderboardData;
-            }
+        const cachedDataRaw = await redis.get(redisKey);
+        if (cachedDataRaw) {
+            return JSON.parse(cachedDataRaw) as PointsLeaderboardEntry[];
         }
-        catch (error) {
-            console.error('Error fetching points leaderboard:', error);
-            return [];
-        }
+        const leaderboardData = await this.fetchPointsLeaderboardFromDb();
+        await redis.set(redisKey, JSON.stringify(leaderboardData), 'EX', this.LEADERBOARD_CACHE_TTL);
+        return leaderboardData;
     }
 
     private async fetchStreakLeaderboardFromDb(): Promise<StreakLeaderboardEntry[]> {
