@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import { Prisma, users } from '@prisma/client';
 import { prisma } from '../app.js';
 import {
     AdminChangePasswordDto,
@@ -9,7 +10,7 @@ import {
 } from '../interfaces/auth.interface.js';
 
 class AdminService {
-    private toSafeUser(user: any): SafeUser {
+    private toSafeUser(user: users): SafeUser {
         return {
             id: user.id,
             username: user.username,
@@ -110,11 +111,12 @@ class AdminService {
             });
 
             return this.toSafeUser(user);
-        } catch (error: any) {
-            if (error.code === 'P2002') {
+        } catch (error: unknown) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
                 throw new Error('Username lub e-mail są już zajęte');
             }
 
+            console.error('Błąd podczas tworzenia użytkownika:', error);
             throw new Error('Nie udało się utworzyć użytkownika');
         }
     }
@@ -153,7 +155,7 @@ class AdminService {
             throw new Error('Użytkownik nie istnieje');
         }
 
-        const updateData: any = {};
+        const updateData: Prisma.usersUpdateInput = {};
 
         if (data.username !== undefined) {
             this.validateUsername(data.username);

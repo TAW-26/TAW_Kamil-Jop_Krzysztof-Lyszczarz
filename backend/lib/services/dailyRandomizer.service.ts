@@ -26,12 +26,7 @@ class DailyRandomizerService {
     }
 
     private async fetchCategories(): Promise<void> {
-        try{
-            this.allCategories = await prisma.categories.findMany();
-        } catch (error) {
-            console.error('Error fetching categories:', error);
-        }
-
+        this.allCategories = await prisma.categories.findMany();
     }
 
     private async processCategoryForDate(category: Category, targetDate: Date): Promise<void> {
@@ -50,7 +45,7 @@ class DailyRandomizerService {
             await this.ensureMovieInRedis(category.slug, formattedDate, existingChallenge.movie_id? existingChallenge.movie_id : -1);
         }
 
-        console.log(`Category ${category.slug} for date ${formattedDate} already randomized: ${!!existingChallenge}`);
+        console.log(`Category ${category.slug} for date ${formattedDate}: ${existingChallenge ? 'already exists, ensured Redis cache' : 'newly randomized'}`);
     }
 
 

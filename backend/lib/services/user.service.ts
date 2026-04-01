@@ -1,8 +1,9 @@
+import { users } from '@prisma/client';
 import { prisma } from '../app.js';
 import { SafeUser, UpdateMeDto } from '../interfaces/auth.interface.js';
 
 class UserService {
-    private toSafeUser(user: any): SafeUser {
+    private toSafeUser(user: users): SafeUser {
         return {
             id: user.id,
             username: user.username,

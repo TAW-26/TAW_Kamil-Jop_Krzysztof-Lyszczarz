@@ -28,6 +28,8 @@ backend/package-lock.json
 !.vscode/extensions.json
 !.vscode/launch.json
 .idea/
+.cursor/
+**/.cursor/
 *.suo
 *.ntvs*
 *.njsproj

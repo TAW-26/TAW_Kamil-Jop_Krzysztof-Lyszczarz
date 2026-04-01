@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { prisma } from '../app.js';
 import { config } from '../config.js';
 import crypto from 'crypto';
+import { Prisma, users } from '@prisma/client';
 import {
     ChangePasswordDto,
     JwtPayload,
@@ -18,7 +19,7 @@ class AuthService {
     private readonly jwtExpiresIn = config.jwtExpiresIn || '12h';
     private readonly googleClient = new OAuth2Client(config.googleClientId);
 
-    private toSafeUser(user: any): SafeUser {
+    private toSafeUser(user: users): SafeUser {
         return {
             id: user.id,
             username: user.username,
@@ -132,12 +133,12 @@ class AuthService {
             });
 
             return this.toSafeUser(newUser);
-        } catch (error: any) {
-            if (error.code === 'P2002') {
+        } catch (error: unknown) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
                 throw new Error('Username lub e-mail są już zajęte');
             }
 
-            console.error('Registration error:', error.message);
+            console.error('Błąd podczas rejestracji użytkownika:', error);
             throw new Error('Nie udało się zarejestrować użytkownika');
         }
     }
@@ -223,8 +224,7 @@ class AuthService {
         try {
             const ticket = await this.googleClient.verifyIdToken({
                 idToken: token,
-                // Chwilowo zakomentowałem na czas testów bez frontendu
-                // audience: config.googleClientId,
+                audience: config.googleClientId,
             });
 
             const payload = ticket.getPayload();

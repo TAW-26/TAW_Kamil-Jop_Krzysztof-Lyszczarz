@@ -1,4 +1,4 @@
-import App from './app.js';
+import App, { autoCompleteService } from './app.js';
 import MovieController from './controllers/movie.controller.js';
 import AuthController from './controllers/auth.controller.js';
 import AdminController from './controllers/admin.controller.js';
@@ -8,7 +8,7 @@ import LeaderboardController from './controllers/leaderboard.controller.js';
 import AvatarShopController from './controllers/avatarShop.controller.js';
 
 const app = new App([
-    new MovieController(),
+    new MovieController(autoCompleteService),
     new AuthController(),
     new AdminController(),
     new UserController(),

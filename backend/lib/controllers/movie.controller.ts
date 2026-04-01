@@ -1,12 +1,12 @@
 import { Router, Request, Response } from 'express';
-import Controller from '../interfaces/controller.interface.js'; 
-import { autoCompleteService } from '../app.js';
+import Controller from '../interfaces/controller.interface.js';
+import AutoCompleteService from '../services/autocomplete.service.js';
 
-class MovieController implements Controller { 
-  public path = 'movies';
+class MovieController implements Controller {
+  public path = '/movies';
   public router = Router();
 
-  constructor() {
+  constructor(private readonly autoCompleteService: AutoCompleteService) {
     this.initializeRoutes();
   }
 
@@ -26,7 +26,7 @@ class MovieController implements Controller {
       return;
     }
     try {
-      const results = await autoCompleteService.searchMovie(query, categorySlug);
+      const results = await this.autoCompleteService.searchMovie(query, categorySlug);
       res.status(200).json(results); 
     }
     catch (error) {
