@@ -50,3 +50,4 @@ coverage/
 *.tsbuildinfo
 /prisma/generated-client
 /lib/generated
+backend/.cursorrules
