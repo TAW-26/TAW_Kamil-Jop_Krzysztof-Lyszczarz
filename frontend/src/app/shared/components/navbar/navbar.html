@@ -2,8 +2,14 @@
   <div class="navbar__logo text-28-black-uc text-main-color">MOVIEGUESS</div>
 
   <ul *ngIf="showLinks" class="navbar__links" aria-label="Primary links">
-    <li *ngFor="let link of links" class="navbar__link text-16-semi-bold text-muted-color">
-      {{ link }}
+    <li *ngFor="let link of links" class="navbar__link">
+      <button
+        type="button"
+        class="navbar__link-button text-16-semi-bold text-muted-color"
+        (click)="onLinkClick(link.targetId)"
+      >
+        {{ link.label }}
+      </button>
     </li>
   </ul>
 

@@ -12,4 +12,18 @@ import { TicketCarousel } from '../../shared/components/ticket-carousel/ticket-c
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
-export class Home {}
+export class Home {
+  protected scrollToSection(sectionId: string): void {
+    const element = document.getElementById(sectionId);
+    if (!element) {
+      return;
+    }
+
+    const blockPosition = sectionId === 'home-genre' ? 'center' : 'start';
+    element.scrollIntoView({
+      behavior: 'smooth',
+      block: blockPosition,
+      inline: 'nearest',
+    });
+  }
+}

@@ -1,9 +1,13 @@
 <main class="home">
   <section class="home__navbar-wrap">
-    <app-navbar class="home__navbar" variant="default-not-logged"></app-navbar>
+    <app-navbar
+      class="home__navbar"
+      variant="default-not-logged"
+      (navLinkSelect)="scrollToSection($event)"
+    ></app-navbar>
   </section>
 
-  <section class="home__hero">
+  <section id="home-hero" class="home__hero">
     <div class="home__hero-text">
       <h1 class="home__title text-64-black text-main-color">Zgadnij film, zdobądź bilet.</h1>
       <p class="home__description text-18-regular text-muted-color">
@@ -18,18 +22,18 @@
     </div>
   </section>
 
-  <section class="home__genre">
+  <section id="home-genre" class="home__genre">
     <h2 class="home__section-title text-40-bold text-main-color">Wybierz swój gatunek</h2>
     <app-ticket-carousel
       [categories]="['Horror', 'Akcja', 'Sci-Fi', 'Komedia', 'Animacja']"
     ></app-ticket-carousel>
   </section>
 
-  <section class="home__how-to-play">
+  <section id="home-how-to-play" class="home__how-to-play">
     <app-how-to-play-section></app-how-to-play-section>
   </section>
 
-  <section class="home__footer-wrap">
+  <section id="home-footer" class="home__footer-wrap">
     <app-footer></app-footer>
   </section>
 </main>

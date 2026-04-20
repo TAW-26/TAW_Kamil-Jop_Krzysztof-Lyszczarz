@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Button } from '../button/button';
 
 export type NavbarVariant =
@@ -17,8 +17,14 @@ export type NavbarVariant =
 export class Navbar {
   @Input() variant: NavbarVariant = 'default-logged';
   @Input() walletAmount = '1,250';
+  @Output() navLinkSelect = new EventEmitter<string>();
 
-  protected readonly links = ['Kategorie', 'Ranking', 'Zasady', 'Sklep'];
+  protected readonly links = [
+    { label: 'Kategorie', targetId: 'home-genre' },
+    { label: 'Ranking', targetId: 'home-hero' },
+    { label: 'Zasady', targetId: 'home-how-to-play' },
+    { label: 'Sklep', targetId: 'home-footer' },
+  ];
 
   protected get showLinks(): boolean {
     return this.variant !== 'log-sign';
@@ -34,5 +40,9 @@ export class Navbar {
 
   protected get showSignButton(): boolean {
     return this.variant === 'default-not-logged';
+  }
+
+  protected onLinkClick(targetId: string): void {
+    this.navLinkSelect.emit(targetId);
   }
 }
