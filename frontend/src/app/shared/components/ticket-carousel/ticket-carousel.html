@@ -1,0 +1,48 @@
+<section class="ticket-carousel bg-card" aria-label="Category ticket carousel">
+  <div class="ticket-carousel__ticket-wrap">
+    <button
+      type="button"
+      class="ticket-carousel__ticket-button"
+      [disabled]="isAnimating"
+      (click)="selectCurrentCategory()"
+      [attr.aria-label]="'Przejdz do kategorii ' + activeCategory"
+    >
+      <div class="ticket-carousel__ticket-viewport">
+        <div #currentLayer class="ticket-carousel__ticket-layer ticket-carousel__ticket-layer--current">
+          <div class="ticket-carousel__ticket-scale">
+            <app-ticket />
+          </div>
+        </div>
+
+        <div *ngIf="incomingIndex !== null" #incomingLayer class="ticket-carousel__ticket-layer ticket-carousel__ticket-layer--incoming">
+          <div class="ticket-carousel__ticket-scale">
+            <app-ticket />
+          </div>
+        </div>
+      </div>
+    </button>
+  </div>
+
+  <p class="ticket-carousel__category text-16-black-uc text-main-color">
+    {{ activeCategory }}
+  </p>
+
+  <div class="ticket-carousel__controls">
+    <button
+      type="button"
+      class="ticket-carousel__control-btn"
+      aria-label="Poprzednia kategoria"
+      (click)="previous()"
+    >
+      <span class="ticket-carousel__control-icon" aria-hidden="true">‹</span>
+    </button>
+    <button
+      type="button"
+      class="ticket-carousel__control-btn"
+      aria-label="Nastepna kategoria"
+      (click)="next()"
+    >
+      <span class="ticket-carousel__control-icon" aria-hidden="true">›</span>
+    </button>
+  </div>
+</section>

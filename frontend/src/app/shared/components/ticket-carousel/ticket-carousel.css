@@ -1,0 +1,102 @@
+:host {
+  display: block;
+}
+
+.ticket-carousel {
+  width: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.ticket-carousel__ticket-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.ticket-carousel__ticket-button {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  width: 220px;
+  height: 225px;
+  cursor: pointer;
+}
+
+.ticket-carousel__ticket-button:disabled {
+  cursor: default;
+}
+
+.ticket-carousel__ticket-viewport {
+  width: 220px;
+  height: 225px;
+  position: relative;
+  overflow: hidden;
+}
+
+.ticket-carousel__ticket-layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  will-change: transform, opacity;
+}
+
+.ticket-carousel__ticket-layer--current {
+  z-index: 1;
+}
+
+.ticket-carousel__ticket-layer--incoming {
+  z-index: 2;
+}
+
+.ticket-carousel__ticket-scale {
+  width: 240px;
+  height: 450px;
+  transform: scale(0.5);
+  transform-origin: top center;
+}
+
+.ticket-carousel__category {
+  margin: 0;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.ticket-carousel__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.ticket-carousel__control-btn {
+  width: 60px;
+  height: 60px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--border-light);
+  background: var(--background-main);
+  color: var(--text-main);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.ticket-carousel__control-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-family: 'Poppins', sans-serif;
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 1;
+  transform: translateY(-2px);
+}

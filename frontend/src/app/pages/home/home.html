@@ -10,6 +10,12 @@
     <app-ticket />
   </section>
 
+  <section class="mt-16 flex justify-center">
+    <app-ticket-carousel
+      [categories]="['Horror', 'Akcja', 'Sci-Fi', 'Komedia', 'Animacja']"
+    ></app-ticket-carousel>
+  </section>
+
   <section class="mx-auto mt-16 flex w-full max-w-[900px] flex-wrap items-center justify-center gap-6">
     <app-button variant="default"></app-button>
     <app-button variant="sign-up-log-in"></app-button>
@@ -20,5 +26,9 @@
     <app-button variant="owned"></app-button>
     <app-button variant="profile-settings"></app-button>
     <app-button variant="sign-up-with-google"></app-button>
+  </section>
+
+  <section class="mx-auto mt-16 w-full max-w-[1440px]">
+    <app-footer></app-footer>
   </section>
 </main>
