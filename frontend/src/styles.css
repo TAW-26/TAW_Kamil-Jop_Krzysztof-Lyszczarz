@@ -5,10 +5,110 @@
 
 :root {
   font-family: 'Poppins', sans-serif;
+  --background-main: #111111;
+  --background-card: #1a1a1a;
+  --background-gold: rgb(212 175 55 / 10%);
+  --gold-gradient: linear-gradient(180deg, #d8b840 0%, #baa028 100%);
+  --background-white: #ffffff;
+
+  --text-main: #ffffff;
+  --text-black: #000000;
+  --text-muted: rgb(255 255 255 / 70%);
+  --text-gold: rgb(67 58 22 / 80%);
+
+  --border-light: #ffffff;
+  --brighte: rgb(255 255 255 / 5%);
+  --label-new: #e53a36;
+
+  --medal-gold: #d4af37;
+  --medal-silver: #c0c0c0;
+  --medal-bronze: #cd7f32;
+
+  --status-correct: #2e7d32;
+  --status-partial: #f57f17;
+  --status-wrong: #333333;
+  --status-empty: #222222;
 }
 
 body {
   font-family: 'Poppins', sans-serif;
+}
+
+/* color utilities */
+.bg-main {
+  background-color: var(--background-main);
+}
+
+.bg-card {
+  background-color: var(--background-card);
+}
+
+.bg-gold {
+  background-color: var(--background-gold);
+}
+
+.bg-gold-gradient {
+  background: var(--gold-gradient);
+}
+
+.bg-white {
+  background-color: var(--background-white);
+}
+
+.text-main-color {
+  color: var(--text-main);
+}
+
+.text-black-color {
+  color: var(--text-black);
+}
+
+.text-muted-color {
+  color: var(--text-muted);
+}
+
+.text-gold-color {
+  color: var(--text-gold);
+}
+
+.border-light {
+  border-color: var(--border-light);
+}
+
+.bg-brighte {
+  background-color: var(--brighte);
+}
+
+.bg-label-new {
+  background-color: var(--label-new);
+}
+
+.text-medal-gold {
+  color: var(--medal-gold);
+}
+
+.text-medal-silver {
+  color: var(--medal-silver);
+}
+
+.text-medal-bronze {
+  color: var(--medal-bronze);
+}
+
+.bg-status-correct {
+  background-color: var(--status-correct);
+}
+
+.bg-status-partial {
+  background-color: var(--status-partial);
+}
+
+.bg-status-wrong {
+  background-color: var(--status-wrong);
+}
+
+.bg-status-empty {
+  background-color: var(--status-empty);
 }
 
 /* heders */
