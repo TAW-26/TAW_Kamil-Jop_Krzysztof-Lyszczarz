@@ -24,8 +24,10 @@
       />
     </div>
 
-    <p *ngIf="mode === 'login'" class="auth-form__forgot text-12-regular text-muted-color">
-      Zapomniałeś hasła?
+    <p *ngIf="mode === 'login'" class="auth-form__forgot">
+      <a routerLink="/forgot-password" class="auth-form__forgot-link text-12-regular text-muted-color">
+        Zapomniałeś hasła?
+      </a>
     </p>
 
     <div class="auth-form__actions">

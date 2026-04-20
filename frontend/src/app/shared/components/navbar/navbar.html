@@ -20,7 +20,15 @@
     </li>
   </ul>
 
-  <div *ngIf="showAvatarOnly" class="navbar__avatar" aria-label="User avatar">🧙‍♂️</div>
+  <button
+    *ngIf="showAvatarOnly"
+    type="button"
+    class="navbar__avatar-button navbar__avatar"
+    aria-label="Przejdz do profilu"
+    (click)="goToProfile()"
+  >
+    🧙‍♂️
+  </button>
 
   <app-button
     *ngIf="showSignButton"
@@ -32,6 +40,13 @@
     <div class="navbar__wallet text-16-bold">
       <span>🎟️ {{ walletAmount }}</span>
     </div>
-    <div class="navbar__avatar" aria-label="User avatar">🧙‍♂️</div>
+    <button
+      type="button"
+      class="navbar__avatar-button navbar__avatar"
+      aria-label="Przejdz do profilu"
+      (click)="goToProfile()"
+    >
+      🧙‍♂️
+    </button>
   </div>
 </nav>

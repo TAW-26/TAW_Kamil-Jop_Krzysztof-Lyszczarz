@@ -36,4 +36,40 @@
 .app-footer__link {
   text-decoration: none;
   white-space: nowrap;
+  color: var(--text-muted);
+  position: relative;
+  transition:
+    color 160ms ease,
+    transform 120ms ease;
+}
+
+.app-footer__link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 2px;
+  background: var(--medal-gold);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 180ms ease;
+}
+
+.app-footer__link:hover {
+  color: var(--text-main);
+}
+
+.app-footer__link:hover::after,
+.app-footer__link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.app-footer__link:active {
+  transform: translateY(1px);
+}
+
+.app-footer__link:focus-visible {
+  outline: none;
+  color: var(--text-main);
 }

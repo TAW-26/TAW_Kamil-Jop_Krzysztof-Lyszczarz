@@ -97,6 +97,27 @@
   font-size: 20px;
 }
 
+.navbar__avatar-button {
+  padding: 0;
+  cursor: pointer;
+  transition:
+    transform 120ms ease,
+    border-color 160ms ease;
+}
+
+.navbar__avatar-button:hover,
+.navbar__avatar-button:focus-visible {
+  border-color: var(--medal-gold);
+}
+
+.navbar__avatar-button:active {
+  transform: translateY(1px);
+}
+
+.navbar__avatar-button:focus-visible {
+  outline: none;
+}
+
 .navbar__wallet-group {
   width: 160px;
   display: flex;

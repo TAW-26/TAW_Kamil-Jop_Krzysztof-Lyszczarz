@@ -71,4 +71,8 @@ export class Navbar {
   protected goToHome(): void {
     void this.router.navigate(['/']);
   }
+
+  protected goToProfile(): void {
+    void this.router.navigate(['/profile']);
+  }
 }
