@@ -1,34 +1,35 @@
-<main class="min-h-screen bg-main p-6">
-  <section class="mx-auto flex w-full max-w-[1440px] flex-col gap-14">
-    <app-navbar variant="default-logged"></app-navbar>
-    <app-navbar variant="with-wallet" walletAmount="1,250"></app-navbar>
-    <app-navbar variant="default-not-logged"></app-navbar>
-    <app-navbar variant="log-sign"></app-navbar>
+<main class="home">
+  <section class="home__navbar-wrap">
+    <app-navbar class="home__navbar" variant="default-not-logged"></app-navbar>
   </section>
 
-  <section class="mt-16 flex justify-center">
-    <app-ticket />
+  <section class="home__hero">
+    <div class="home__hero-text">
+      <h1 class="home__title text-64-black text-main-color">Zgadnij film, zdobądź bilet.</h1>
+      <p class="home__description text-18-regular text-muted-color">
+        Codzienne filmowe wyzwania. Wybierz swój ulubiony gatunek, analizuj kadry i sprawdź
+        swoją wiedzę kinową. Czy uda Ci się zebrać wszystkie bilety?
+      </p>
+      <app-button variant="default"></app-button>
+    </div>
+
+    <div class="home__hero-ticket">
+      <app-ticket></app-ticket>
+    </div>
   </section>
 
-  <section class="mt-16 flex justify-center">
+  <section class="home__genre">
+    <h2 class="home__section-title text-40-bold text-main-color">Wybierz swój gatunek</h2>
     <app-ticket-carousel
       [categories]="['Horror', 'Akcja', 'Sci-Fi', 'Komedia', 'Animacja']"
     ></app-ticket-carousel>
   </section>
 
-  <section class="mx-auto mt-16 flex w-full max-w-[900px] flex-wrap items-center justify-center gap-6">
-    <app-button variant="default"></app-button>
-    <app-button variant="sign-up-log-in"></app-button>
-    <app-button variant="log-in"></app-button>
-    <app-button variant="sign-up"></app-button>
-    <app-button variant="buy"></app-button>
-    <app-button variant="locked"></app-button>
-    <app-button variant="owned"></app-button>
-    <app-button variant="profile-settings"></app-button>
-    <app-button variant="sign-up-with-google"></app-button>
+  <section class="home__how-to-play">
+    <app-how-to-play-section></app-how-to-play-section>
   </section>
 
-  <section class="mx-auto mt-16 w-full max-w-[1440px]">
+  <section class="home__footer-wrap">
     <app-footer></app-footer>
   </section>
 </main>

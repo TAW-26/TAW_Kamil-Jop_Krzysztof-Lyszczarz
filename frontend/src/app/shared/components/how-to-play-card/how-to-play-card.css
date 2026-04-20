@@ -1,0 +1,43 @@
+:host {
+  display: block;
+}
+
+.how-card {
+  box-sizing: border-box;
+  width: 319px;
+  min-height: 374px;
+  padding: 50px 30px;
+  border: 1px solid var(--border-light);
+  border-radius: 20px;
+  background: var(--background-card);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 23px;
+}
+
+.how-card__icon-wrap {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--brighte);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.how-card__icon {
+  font-size: 34px;
+  line-height: 1;
+}
+
+.how-card__title {
+  margin: 0;
+  text-align: center;
+}
+
+.how-card__description {
+  margin: 0;
+  width: 213px;
+  text-align: center;
+}
