@@ -75,6 +75,10 @@
   width: 260px;
 }
 
+.app-button--full {
+  width: 100%;
+}
+
 .app-button__google {
   display: inline-flex;
   align-items: center;

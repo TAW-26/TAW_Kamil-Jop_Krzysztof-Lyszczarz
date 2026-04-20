@@ -20,6 +20,13 @@
   letter-spacing: 0.56px;
 }
 
+.navbar__logo-button {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
 .navbar__links {
   margin: 0;
   padding: 0 200px 0 50px;

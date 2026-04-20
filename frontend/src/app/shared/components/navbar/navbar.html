@@ -1,5 +1,12 @@
 <nav class="navbar" aria-label="Main navigation">
-  <div class="navbar__logo text-28-black-uc text-main-color">MOVIEGUESS</div>
+  <button
+    type="button"
+    class="navbar__logo-button"
+    aria-label="Przejdz do strony glownej"
+    (click)="goToHome()"
+  >
+    <span class="navbar__logo text-28-black-uc text-main-color">MOVIEGUESS</span>
+  </button>
 
   <ul *ngIf="showLinks" class="navbar__links" aria-label="Primary links">
     <li *ngFor="let link of links" class="navbar__link">
@@ -15,7 +22,11 @@
 
   <div *ngIf="showAvatarOnly" class="navbar__avatar" aria-label="User avatar">🧙‍♂️</div>
 
-  <app-button *ngIf="showSignButton" variant="sign-up-log-in"></app-button>
+  <app-button
+    *ngIf="showSignButton"
+    variant="sign-up-log-in"
+    (click)="goToLogin()"
+  ></app-button>
 
   <div *ngIf="showWalletWithAvatar" class="navbar__wallet-group">
     <div class="navbar__wallet text-16-bold">

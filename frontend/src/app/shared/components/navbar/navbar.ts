@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { Button } from '../button/button';
 
 export type NavbarVariant =
@@ -26,6 +27,8 @@ export class Navbar {
     { label: 'Sklep', targetId: 'home-footer' },
   ];
 
+  constructor(private readonly router: Router) {}
+
   protected get showLinks(): boolean {
     return this.variant !== 'log-sign';
   }
@@ -44,5 +47,13 @@ export class Navbar {
 
   protected onLinkClick(targetId: string): void {
     this.navLinkSelect.emit(targetId);
+  }
+
+  protected goToLogin(): void {
+    void this.router.navigate(['/login']);
+  }
+
+  protected goToHome(): void {
+    void this.router.navigate(['/']);
   }
 }

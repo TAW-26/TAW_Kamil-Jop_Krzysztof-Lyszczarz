@@ -1,0 +1,75 @@
+:host {
+  display: block;
+}
+
+.auth-form {
+  width: 420px;
+  box-sizing: border-box;
+  padding: 40px;
+  border-radius: 24px;
+  border: 1px solid var(--text-muted);
+  background: var(--background-card);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+
+.auth-form__brand {
+  margin: 0;
+  line-height: 1;
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.auth-form__content {
+  width: 100%;
+  min-width: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.auth-form__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.auth-form__forgot {
+  margin: 0;
+  text-align: right;
+}
+
+.auth-form__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.auth-form__action-primary app-button,
+.auth-form__action-google app-button {
+  width: 100%;
+}
+
+.auth-form__action-primary app-button {
+  display: flex;
+}
+
+.auth-form__action-google app-button {
+  display: flex;
+}
+
+.auth-form__divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.auth-form__divider-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border-light);
+}

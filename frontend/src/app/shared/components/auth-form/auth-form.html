@@ -1,0 +1,50 @@
+<section class="auth-form">
+  <h2 class="auth-form__brand text-28-black-uc">MOVIEGUESS</h2>
+
+  <div class="auth-form__content">
+    <app-auth-toggle [mode]="mode" (modeChange)="setMode($event)"></app-auth-toggle>
+
+    <div class="auth-form__fields">
+      <app-auth-input label="ADRES E-MAIL" placeholder="Wpisz swój email" />
+      <app-auth-input
+        [label]="mode === 'signup' ? 'HASŁO' : 'HASŁO'"
+        [placeholder]="mode === 'signup' ? 'Wpisz hasło' : 'Wpisz hasło'"
+        type="password"
+      />
+      <app-auth-input
+        *ngIf="mode === 'signup'"
+        label="POTWIERDŹ HASŁO"
+        placeholder="Powtórz hasło"
+        type="password"
+      />
+      <app-auth-input
+        *ngIf="mode === 'signup'"
+        label="NICK"
+        placeholder="Wpisz swój nick"
+      />
+    </div>
+
+    <p *ngIf="mode === 'login'" class="auth-form__forgot text-12-regular text-muted-color">
+      Zapomniałeś hasła?
+    </p>
+
+    <div class="auth-form__actions">
+      <div class="auth-form__action-primary">
+        <app-button
+          [variant]="mode === 'login' ? 'log-in' : 'sign-up'"
+          [fullWidth]="true"
+        ></app-button>
+      </div>
+
+      <div class="auth-form__divider">
+        <span class="auth-form__divider-line"></span>
+        <span class="auth-form__divider-text text-12-semi-bold-uc text-main-color">LUB</span>
+        <span class="auth-form__divider-line"></span>
+      </div>
+
+      <div class="auth-form__action-google">
+        <app-button variant="sign-up-with-google" [fullWidth]="true"></app-button>
+      </div>
+    </div>
+  </div>
+</section>
