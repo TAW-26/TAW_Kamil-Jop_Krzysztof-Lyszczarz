@@ -1,3 +1,24 @@
-<main class="flex min-h-screen items-center justify-center bg-[#111111] p-6">
-  <app-ticket />
+<main class="min-h-screen bg-main p-6">
+  <section class="mx-auto flex w-full max-w-[1440px] flex-col gap-14">
+    <app-navbar variant="default-logged"></app-navbar>
+    <app-navbar variant="with-wallet" walletAmount="1,250"></app-navbar>
+    <app-navbar variant="default-not-logged"></app-navbar>
+    <app-navbar variant="log-sign"></app-navbar>
+  </section>
+
+  <section class="mt-16 flex justify-center">
+    <app-ticket />
+  </section>
+
+  <section class="mx-auto mt-16 flex w-full max-w-[900px] flex-wrap items-center justify-center gap-6">
+    <app-button variant="default"></app-button>
+    <app-button variant="sign-up-log-in"></app-button>
+    <app-button variant="log-in"></app-button>
+    <app-button variant="sign-up"></app-button>
+    <app-button variant="buy"></app-button>
+    <app-button variant="locked"></app-button>
+    <app-button variant="owned"></app-button>
+    <app-button variant="profile-settings"></app-button>
+    <app-button variant="sign-up-with-google"></app-button>
+  </section>
 </main>
