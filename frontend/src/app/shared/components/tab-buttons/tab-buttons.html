@@ -1,0 +1,8 @@
+<div class="tab-buttons" role="tablist" aria-label="Shop categories">
+  <app-tab-button
+    *ngFor="let tab of tabs; let i = index"
+    [label]="tab"
+    [state]="i === activeIndex ? 'active' : 'default'"
+    (click)="setActiveTab(i)"
+  ></app-tab-button>
+</div>

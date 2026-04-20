@@ -1,0 +1,10 @@
+<button
+  type="button"
+  class="tab-button"
+  [class.tab-button--active]="isActive"
+  [attr.aria-pressed]="isActive"
+>
+  <span class="tab-button__label text-16-semi-bold" [class.tab-button__label--active]="isActive">
+    {{ label }}
+  </span>
+</button>

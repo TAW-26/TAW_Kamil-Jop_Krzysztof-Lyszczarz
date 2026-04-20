@@ -14,5 +14,51 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px 20px 120px;
+  padding: 148px 20px 140px;
+}
+
+.shop-page__layout {
+  width: min(100%, 1024px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 50px;
+}
+
+.shop-page__hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.shop-page__title {
+  margin: 0;
+  line-height: 1.1;
+}
+
+.shop-page__description {
+  margin: 0;
+  width: min(100%, 800px);
+  text-align: center;
+  line-height: 1.5;
+}
+
+.shop-page__catalog {
+  width: min(100%, 800px);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.shop-page__tabs {
+  width: 100%;
+}
+
+.shop-page__cards {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 220px);
+  justify-content: center;
+  gap: 30px;
 }

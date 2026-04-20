@@ -22,6 +22,7 @@ export class Button {
   @Input() variant: ButtonVariant = 'default';
   @Input() tickets = '300';
   @Input() fullWidth = false;
+  @Input() labelOverride?: string;
 
   protected get isGold(): boolean {
     return ['default', 'sign-up-log-in', 'log-in', 'sign-up', 'buy'].includes(
@@ -30,6 +31,10 @@ export class Button {
   }
 
   protected get text(): string {
+    if (this.labelOverride?.trim()) {
+      return this.labelOverride;
+    }
+
     switch (this.variant) {
       case 'default':
         return 'ZAGRAJ TERAZ';
