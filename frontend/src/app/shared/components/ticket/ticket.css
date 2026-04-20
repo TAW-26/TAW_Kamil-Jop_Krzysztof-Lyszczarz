@@ -1,0 +1,93 @@
+:host {
+  display: block;
+}
+
+.ticket {
+  position: relative;
+  width: 240px;
+  height: 450px;
+  overflow: hidden;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #d8b840 0%, #baa028 100%);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.38);
+}
+
+.ticket::before,
+.ticket::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: #000000;
+  transform: translateY(-50%);
+  z-index: 2;
+}
+
+.ticket::before {
+  left: -14px;
+}
+
+.ticket::after {
+  right: -14px;
+}
+
+.ticket__border {
+  position: absolute;
+  inset: 15px;
+  border: 2px dashed rgba(255, 255, 255, 0.7);
+  border-radius: 16px;
+}
+
+.ticket__title {
+  position: absolute;
+  top: 29px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  margin: 0;
+  color: #ffffff;
+  letter-spacing: 0.72px;
+}
+
+.ticket__divider {
+  position: absolute;
+  top: 224px;
+  left: 15px;
+  width: 210px;
+  border-top: 2px dashed #000000;
+  z-index: 1;
+}
+
+.ticket__logo {
+  position: absolute;
+  top: 138px;
+  left: 34px;
+  width: 172px;
+  height: 172px;
+  object-fit: contain;
+  z-index: 2;
+}
+
+.ticket__barcode {
+  position: absolute;
+  left: 50%;
+  top: 357px;
+  width: 120px;
+  height: 35px;
+  overflow: hidden;
+  transform: translateX(-50%);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.45);
+}
+
+.ticket__barcode-bars {
+  position: absolute;
+  top: 0;
+  left: -15px;
+  width: 150px;
+  height: 65px;
+  background-image: url('https://www.figma.com/api/mcp/asset/6c03dae2-af90-45e5-9e3a-52d35b4be308');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
