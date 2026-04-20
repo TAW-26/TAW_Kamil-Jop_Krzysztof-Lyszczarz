@@ -1,0 +1,29 @@
+<div class="search-input">
+  <div class="search-input__bar">
+    <input
+      type="text"
+      class="search-input__field text-14-semi-bold text-main-color"
+      placeholder="WPISZ TYTUŁ FILMU..."
+      [value]="query"
+      (input)="onInput($any($event.target).value)"
+      (blur)="closeSuggestions()"
+      autocomplete="off"
+    />
+
+    <button type="button" class="search-input__button text-18-bold-uc text-black-color">
+      ZGADNIJ
+    </button>
+  </div>
+
+  <ul *ngIf="showSuggestions" class="search-input__suggestions">
+    <li *ngFor="let item of filteredSuggestions">
+      <button
+        type="button"
+        class="search-input__suggestion-item text-14-semi-bold text-main-color"
+        (mousedown)="selectSuggestion(item)"
+      >
+        {{ item }}
+      </button>
+    </li>
+  </ul>
+</div>

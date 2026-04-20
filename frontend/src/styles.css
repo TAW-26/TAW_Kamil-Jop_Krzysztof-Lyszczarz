@@ -263,3 +263,11 @@ body {
   line-height: 1;
   text-transform: uppercase;
 }
+
+.text-240-black-uc {
+  font-family: 'Poppins', sans-serif;
+  font-size: 240px;
+  font-weight: 900;
+  line-height: 1.1;
+  text-transform: uppercase;
+}

@@ -9,6 +9,10 @@ export type NavbarVariant =
   | 'default-not-logged'
   | 'log-sign';
 
+type NavbarLink =
+  | { label: string; type: 'section'; targetId: string }
+  | { label: string; type: 'route'; commands: (string | number)[] };
+
 @Component({
   selector: 'app-navbar',
   imports: [CommonModule, Button],
@@ -20,11 +24,11 @@ export class Navbar {
   @Input() walletAmount = '1,250';
   @Output() navLinkSelect = new EventEmitter<string>();
 
-  protected readonly links = [
-    { label: 'Kategorie', targetId: 'home-genre' },
-    { label: 'Ranking', targetId: 'home-hero' },
-    { label: 'Zasady', targetId: 'home-how-to-play' },
-    { label: 'Sklep', targetId: 'home-footer' },
+  protected readonly links: NavbarLink[] = [
+    { label: 'Kategorie', type: 'section', targetId: 'home-genre' },
+    { label: 'Ranking', type: 'route', commands: ['/rank'] },
+    { label: 'Zasady', type: 'section', targetId: 'home-how-to-play' },
+    { label: 'Sklep', type: 'route', commands: ['/shop'] },
   ];
 
   constructor(private readonly router: Router) {}
@@ -45,8 +49,19 @@ export class Navbar {
     return this.variant === 'default-not-logged';
   }
 
-  protected onLinkClick(targetId: string): void {
-    this.navLinkSelect.emit(targetId);
+  protected onLinkClick(link: NavbarLink): void {
+    if (link.type === 'route') {
+      void this.router.navigate(link.commands);
+      return;
+    }
+
+    const isOnHome = this.router.url === '/' || this.router.url.startsWith('/#');
+    if (isOnHome) {
+      this.navLinkSelect.emit(link.targetId);
+      return;
+    }
+
+    void this.router.navigate(['/'], { fragment: link.targetId });
   }
 
   protected goToLogin(): void {

@@ -1,0 +1,43 @@
+:host {
+  display: block;
+}
+
+.attribute-tile {
+  height: 60px;
+  border-radius: 8px;
+  border: 1px solid var(--text-muted);
+  padding: 10px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.attribute-tile--empty {
+  background: var(--status-empty);
+}
+
+.attribute-tile--wrong {
+  background: var(--status-wrong);
+  opacity: 0.6;
+}
+
+.attribute-tile--partial {
+  background: var(--status-partial);
+  border-color: var(--status-partial);
+}
+
+.attribute-tile--correct {
+  background: var(--status-correct);
+  border-color: var(--status-correct);
+}
+
+.attribute-tile--partial-year {
+  background: var(--status-partial);
+  border-color: var(--status-partial);
+}
+
+.attribute-tile__text {
+  text-transform: uppercase;
+  line-height: 1;
+}

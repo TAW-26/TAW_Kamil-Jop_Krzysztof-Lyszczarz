@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { Button } from '../../shared/components/button/button';
 import { Footer } from '../../shared/components/footer/footer';
 import { HowToPlaySection } from '../../shared/components/how-to-play-section/how-to-play-section';
@@ -12,7 +14,26 @@ import { TicketCarousel } from '../../shared/components/ticket-carousel/ticket-c
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
-export class Home {
+export class Home implements OnInit, OnDestroy {
+  private fragmentSubscription?: Subscription;
+
+  constructor(private readonly route: ActivatedRoute) {}
+
+  ngOnInit(): void {
+    this.fragmentSubscription = this.route.fragment.subscribe((fragment) => {
+      if (!fragment) {
+        return;
+      }
+
+      // Allow the view to settle after navigation before scrolling.
+      setTimeout(() => this.scrollToSection(fragment), 0);
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.fragmentSubscription?.unsubscribe();
+  }
+
   protected scrollToSection(sectionId: string): void {
     const element = document.getElementById(sectionId);
     if (!element) {

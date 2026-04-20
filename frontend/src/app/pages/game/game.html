@@ -1,0 +1,31 @@
+<main class="game-page">
+  <app-navbar variant="default-logged"></app-navbar>
+
+  <section class="game-page__content">
+    <section class="game-page__top">
+      <h1 class="game-page__watermark text-240-black-uc text-gold-color">{{ categoryTitle }}</h1>
+      <app-ticket [title]="ticketTitle"></app-ticket>
+    </section>
+
+    <section class="game-page__search">
+      <app-search-input></app-search-input>
+
+      <div class="game-page__headers">
+        <span
+          *ngFor="let header of headers; let i = index"
+          class="game-page__header text-16-black-uc text-muted-color"
+          [class.game-page__header--year]="i === 1"
+          [class.game-page__header--flex]="i !== 1"
+        >
+          {{ header }}
+        </span>
+      </div>
+
+      <div class="game-page__rows">
+        <app-guess-row *ngFor="let row of rows" [tiles]="row"></app-guess-row>
+      </div>
+    </section>
+  </section>
+
+  <app-footer></app-footer>
+</main>

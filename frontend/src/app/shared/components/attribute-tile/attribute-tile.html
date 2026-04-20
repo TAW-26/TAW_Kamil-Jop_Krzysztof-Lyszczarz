@@ -1,0 +1,14 @@
+<div
+  class="attribute-tile"
+  [ngClass]="{
+    'attribute-tile--empty': state === 'empty',
+    'attribute-tile--wrong': state === 'wrong',
+    'attribute-tile--partial': state === 'partial',
+    'attribute-tile--correct': state === 'correct',
+    'attribute-tile--partial-year': state === 'partial-year'
+  }"
+>
+  <span *ngIf="!isEmpty" class="attribute-tile__text text-14-semi-bold text-main-color">
+    {{ text }}
+  </span>
+</div>

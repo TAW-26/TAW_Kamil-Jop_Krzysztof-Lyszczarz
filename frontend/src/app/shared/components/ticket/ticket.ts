@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-ticket',
@@ -7,5 +7,6 @@ import { Component } from '@angular/core';
   styleUrl: './ticket.css',
 })
 export class Ticket {
+  @Input() title = 'MOVIEGUESS';
   protected readonly logoUrl = '/assets/logo-movie-guess.png';
 }

@@ -63,14 +63,15 @@ export class TicketCarousel implements OnDestroy {
       return;
     }
 
-    const category = (this.categories[this.activeIndex] ?? '').toLowerCase();
+    const category = (this.categories[this.activeIndex] ?? '')
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, '-');
     if (!category) {
       return;
     }
 
-    void this.router.navigate([], {
-      queryParams: { category },
-    });
+    void this.router.navigate(['/game', category]);
   }
 
   ngOnDestroy(): void {
