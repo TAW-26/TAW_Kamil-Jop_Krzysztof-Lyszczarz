@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Button } from '../../shared/components/button/button';
 import { Footer } from '../../shared/components/footer/footer';
@@ -17,7 +17,10 @@ import { TicketCarousel } from '../../shared/components/ticket-carousel/ticket-c
 export class Home implements OnInit, OnDestroy {
   private fragmentSubscription?: Subscription;
 
-  constructor(private readonly route: ActivatedRoute) {}
+  constructor(
+    private readonly route: ActivatedRoute,
+    private readonly router: Router
+  ) {}
 
   ngOnInit(): void {
     this.fragmentSubscription = this.route.fragment.subscribe((fragment) => {
@@ -46,5 +49,9 @@ export class Home implements OnInit, OnDestroy {
       block: blockPosition,
       inline: 'nearest',
     });
+  }
+
+  protected goToDailyGame(): void {
+    void this.router.navigate(['/game', 'daily']);
   }
 }
