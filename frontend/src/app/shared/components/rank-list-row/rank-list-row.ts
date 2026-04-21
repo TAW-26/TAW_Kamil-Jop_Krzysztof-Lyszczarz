@@ -1,10 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 
 export type RankListRowVariant = 'default' | 'me' | 'history';
 
 @Component({
   selector: 'app-rank-list-row',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './rank-list-row.html',
   styleUrl: './rank-list-row.css',
 })

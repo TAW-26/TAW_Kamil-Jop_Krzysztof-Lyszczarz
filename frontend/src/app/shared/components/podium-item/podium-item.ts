@@ -1,10 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 
 export type PodiumItemVariant = '1' | '2' | '3';
 
 @Component({
   selector: 'app-podium-item',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './podium-item.html',
   styleUrl: './podium-item.css',
 })

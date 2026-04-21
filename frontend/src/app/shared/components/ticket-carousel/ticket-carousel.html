@@ -1,29 +1,27 @@
 <section class="ticket-carousel" aria-label="Category ticket carousel">
-  <div class="ticket-carousel__ticket-wrap">
-    <button
-      type="button"
-      class="ticket-carousel__ticket-button"
-      [disabled]="isAnimating"
-      (click)="selectCurrentCategory()"
-      [attr.aria-label]="'Przejdz do kategorii ' + activeCategory"
-    >
-      <div class="ticket-carousel__ticket-viewport">
-        <div #currentLayer class="ticket-carousel__ticket-layer ticket-carousel__ticket-layer--current">
-          <div class="ticket-carousel__ticket-scale">
-            <app-ticket />
-          </div>
-        </div>
-
-        <div *ngIf="incomingIndex !== null" #incomingLayer class="ticket-carousel__ticket-layer ticket-carousel__ticket-layer--incoming">
-          <div class="ticket-carousel__ticket-scale">
-            <app-ticket />
-          </div>
+  <div class="ticket-carousel__embla embla">
+    <div #viewport class="ticket-carousel__viewport embla__viewport">
+      <div class="ticket-carousel__container embla__container">
+        <div
+          *ngFor="let category of categories; let i = index"
+          class="ticket-carousel__slide embla__slide"
+        >
+          <button
+            type="button"
+            class="ticket-carousel__ticket-button"
+            (click)="selectCategory(i)"
+            [attr.aria-label]="'Przejdz do kategorii ' + category"
+          >
+            <div class="ticket-carousel__ticket-scale">
+              <app-ticket [title]="category.toUpperCase()" />
+            </div>
+          </button>
         </div>
       </div>
-    </button>
+    </div>
   </div>
 
-  <p class="ticket-carousel__category text-16-black-uc text-main-color">
+  <p class="ticket-carousel__category text-24-black-uc text-main-color">
     {{ activeCategory }}
   </p>
 
@@ -33,6 +31,7 @@
       class="ticket-carousel__control-btn"
       aria-label="Poprzednia kategoria"
       (click)="previous()"
+      [disabled]="!canScrollPrev && categories.length <= 1"
     >
       <span class="ticket-carousel__control-icon" aria-hidden="true">‹</span>
     </button>
@@ -41,6 +40,7 @@
       class="ticket-carousel__control-btn"
       aria-label="Nastepna kategoria"
       (click)="next()"
+      [disabled]="!canScrollNext && categories.length <= 1"
     >
       <span class="ticket-carousel__control-icon" aria-hidden="true">›</span>
     </button>

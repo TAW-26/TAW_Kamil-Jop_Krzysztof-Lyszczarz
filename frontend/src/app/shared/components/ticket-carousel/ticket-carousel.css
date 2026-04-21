@@ -3,55 +3,53 @@
 }
 
 .ticket-carousel {
-  width: 380px;
+  width: 100%;
+  max-width: 760px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 34px;
+  gap: 12px;
 }
 
-.ticket-carousel__ticket-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
+.ticket-carousel__embla {
   width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.ticket-carousel__viewport {
+  overflow: hidden;
+}
+
+.ticket-carousel__container {
+  display: flex;
+  touch-action: pan-y pinch-zoom;
+  margin-left: -16px;
+}
+
+.ticket-carousel__slide {
+  transform: translate3d(0, 0, 0);
+  flex: 0 0 70%;
+  min-width: 0;
+  padding-left: 16px;
+  display: flex;
+  justify-content: center;
 }
 
 .ticket-carousel__ticket-button {
   border: 0;
   background: transparent;
   padding: 0;
-  width: 380px;
-  height: 360px;
-  cursor: pointer;
-}
-
-.ticket-carousel__ticket-button:disabled {
-  cursor: default;
-}
-
-.ticket-carousel__ticket-viewport {
-  width: 380px;
-  height: 360px;
-  position: relative;
-  overflow: hidden;
-}
-
-.ticket-carousel__ticket-layer {
-  position: absolute;
-  inset: 0;
+  width: 100%;
   display: flex;
-  justify-content: center;
-  will-change: transform, opacity;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: filter 140ms ease;
 }
 
-.ticket-carousel__ticket-layer--current {
-  z-index: 1;
-}
-
-.ticket-carousel__ticket-layer--incoming {
-  z-index: 2;
+.ticket-carousel__ticket-button:hover {
+  filter: brightness(1.04);
 }
 
 .ticket-carousel__ticket-scale {
@@ -65,13 +63,15 @@
   margin: 0;
   line-height: 1;
   text-transform: uppercase;
+  margin-top: -10px;
 }
 
 .ticket-carousel__controls {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 28px;
+  gap: 24px;
+  margin-top: 2px;
 }
 
 .ticket-carousel__control-btn {
@@ -86,6 +86,14 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  transition:
+    border-color 140ms ease,
+    color 140ms ease;
+}
+
+.ticket-carousel__control-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
 }
 
 .ticket-carousel__control-icon {

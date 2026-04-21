@@ -1,12 +1,15 @@
 import { CommonModule } from '@angular/common';
 import {
-  ChangeDetectorRef,
+  AfterViewInit,
   Component,
   ElementRef,
   Input,
+  OnChanges,
   OnDestroy,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
+import EmblaCarousel, { EmblaCarouselType } from 'embla-carousel';
 import { Router } from '@angular/router';
 import { Ticket } from '../ticket/ticket';
 
@@ -16,57 +19,65 @@ import { Ticket } from '../ticket/ticket';
   templateUrl: './ticket-carousel.html',
   styleUrl: './ticket-carousel.css',
 })
-export class TicketCarousel implements OnDestroy {
+export class TicketCarousel implements AfterViewInit, OnDestroy, OnChanges {
   @Input() categories: string[] = ['Horror', 'Akcja', 'Sci-Fi', 'Komedia'];
 
-  @ViewChild('currentLayer', { static: false })
-  private currentLayerRef?: ElementRef<HTMLElement>;
-  @ViewChild('incomingLayer', { static: false })
-  private incomingLayerRef?: ElementRef<HTMLElement>;
+  @ViewChild('viewport', { static: true })
+  private viewportRef?: ElementRef<HTMLElement>;
 
   protected activeIndex = 0;
-  protected incomingIndex: number | null = null;
-  protected isAnimating = false;
+  protected canScrollPrev = false;
+  protected canScrollNext = false;
 
-  private readonly animationMs = 520;
-  private readonly slideDistancePx = 240;
+  private emblaApi?: EmblaCarouselType;
+  private readonly loopEnabled = true;
+  private readonly tweenFactorBase = 0.84;
+  private tweenFactor = 0;
   private isDestroyed = false;
 
-  constructor(
-    private readonly router: Router,
-    private readonly cdr: ChangeDetectorRef
-  ) {}
+  constructor(private readonly router: Router) {}
 
   protected get activeCategory(): string {
     return this.categories[this.activeIndex] ?? '';
   }
 
-  protected previous(): void {
-    if (!this.categories.length || this.isAnimating) {
+  ngAfterViewInit(): void {
+    const viewport = this.viewportRef?.nativeElement;
+    if (!viewport) {
       return;
     }
-    const nextIndex =
-      (this.activeIndex - 1 + this.categories.length) % this.categories.length;
-    void this.startTransition(nextIndex, 'right');
+
+    this.emblaApi = EmblaCarousel(viewport, { loop: this.loopEnabled, align: 'center' });
+    this.bindEmbla();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!changes['categories']) {
+      return;
+    }
+
+    if (!this.categories.length) {
+      this.activeIndex = 0;
+    }
+    this.emblaApi?.reInit();
+  }
+
+  protected previous(): void {
+    if (!this.emblaApi) {
+      return;
+    }
+    this.emblaApi.scrollPrev();
   }
 
   protected next(): void {
-    if (!this.categories.length || this.isAnimating) {
+    if (!this.emblaApi) {
       return;
     }
-    const nextIndex = (this.activeIndex + 1) % this.categories.length;
-    void this.startTransition(nextIndex, 'left');
+    this.emblaApi.scrollNext();
   }
 
-  protected selectCurrentCategory(): void {
-    if (this.isAnimating) {
-      return;
-    }
-
-    const category = (this.categories[this.activeIndex] ?? '')
-      .trim()
-      .toLowerCase()
-      .replace(/\s+/g, '-');
+  protected selectCategory(index: number): void {
+    const category = (this.categories[index] ?? '').trim().toLowerCase().replace(/\s+/g, '-');
     if (!category) {
       return;
     }
@@ -76,69 +87,80 @@ export class TicketCarousel implements OnDestroy {
 
   ngOnDestroy(): void {
     this.isDestroyed = true;
+    this.emblaApi?.destroy();
+    this.emblaApi = undefined;
   }
 
-  private async startTransition(
-    nextIndex: number,
-    direction: 'left' | 'right'
-  ): Promise<void> {
-    this.incomingIndex = nextIndex;
-    this.isAnimating = true;
-    this.cdr.detectChanges();
-
-    await this.waitForNextFrame();
-    if (this.isDestroyed) {
+  private bindEmbla(): void {
+    if (!this.emblaApi) {
       return;
     }
 
-    const current = this.currentLayerRef?.nativeElement;
-    const incoming = this.incomingLayerRef?.nativeElement;
-    if (!current || !incoming) {
-      this.isAnimating = false;
-      this.incomingIndex = null;
-      return;
-    }
+    this.setTweenFactor();
+    this.updateUiState();
+    this.tweenOpacity();
 
-    const outgoingEndX = direction === 'left' ? -this.slideDistancePx : this.slideDistancePx;
-    const incomingStartX = direction === 'left' ? this.slideDistancePx : -this.slideDistancePx;
-
-    const currentAnim = current.animate(
-      [
-        { transform: 'translateX(0px)', opacity: 1 },
-        { transform: `translateX(${outgoingEndX}px)`, opacity: 1 },
-      ],
-      { duration: this.animationMs, easing: 'cubic-bezier(0.22, 0.61, 0.36, 1)', fill: 'forwards' }
-    );
-
-    const incomingAnim = incoming.animate(
-      [
-        { transform: `translateX(${incomingStartX}px)`, opacity: 1 },
-        { transform: 'translateX(0px)', opacity: 1 },
-      ],
-      { duration: this.animationMs, easing: 'cubic-bezier(0.22, 0.61, 0.36, 1)', fill: 'forwards' }
-    );
-
-    await Promise.allSettled([currentAnim.finished, incomingAnim.finished]);
-    if (this.isDestroyed) {
-      return;
-    }
-
-    currentAnim.cancel();
-    incomingAnim.cancel();
-    current.style.transform = 'translateX(0px)';
-    current.style.opacity = '1';
-    incoming.style.transform = 'translateX(0px)';
-    incoming.style.opacity = '1';
-
-    this.activeIndex = nextIndex;
-    this.incomingIndex = null;
-    this.isAnimating = false;
-    this.cdr.detectChanges();
+    this.emblaApi
+      .on('reInit', () => {
+        this.setTweenFactor();
+        this.updateUiState();
+        this.tweenOpacity();
+      })
+      .on('select', () => this.updateUiState())
+      .on('scroll', () => this.tweenOpacity())
+      .on('slideFocus', () => this.tweenOpacity());
   }
 
-  private waitForNextFrame(): Promise<void> {
-    return new Promise((resolve) => {
-      requestAnimationFrame(() => resolve());
+  private updateUiState(): void {
+    if (!this.emblaApi) {
+      return;
+    }
+
+    this.activeIndex = this.emblaApi.selectedScrollSnap();
+    this.canScrollPrev = this.emblaApi.canScrollPrev();
+    this.canScrollNext = this.emblaApi.canScrollNext();
+  }
+
+  private setTweenFactor(): void {
+    if (!this.emblaApi) {
+      return;
+    }
+    this.tweenFactor = this.tweenFactorBase * this.emblaApi.scrollSnapList().length;
+  }
+
+  private tweenOpacity(): void {
+    if (!this.emblaApi || this.isDestroyed) {
+      return;
+    }
+
+    const scrollProgress = this.emblaApi.scrollProgress();
+    const slidesInView = this.emblaApi.slidesInView();
+    const slideNodes = this.emblaApi.slideNodes();
+
+    this.emblaApi.scrollSnapList().forEach((scrollSnap, snapIndex) => {
+      let diffToTarget = scrollSnap - scrollProgress;
+      const slideIndex = snapIndex;
+
+      if (slideIndex >= slideNodes.length) {
+        return;
+      }
+
+      if (!slidesInView.includes(slideIndex)) {
+        return;
+      }
+
+      if (this.loopEnabled) {
+        // Adjust for loop wrapping using scroll progress bounds.
+        if (diffToTarget > 0.5) {
+          diffToTarget -= 1;
+        } else if (diffToTarget < -0.5) {
+          diffToTarget += 1;
+        }
+      }
+
+      const tweenValue = 1 - Math.abs(diffToTarget * this.tweenFactor);
+      const opacity = Math.min(Math.max(tweenValue, 0), 1).toString();
+      slideNodes[slideIndex].style.opacity = opacity;
     });
   }
 }
