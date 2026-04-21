@@ -56,6 +56,21 @@
 
 .home__hero-ticket {
   flex-shrink: 0;
+  transform: perspective(1100px) rotateX(12deg) rotateY(-14deg);
+  transform-origin: center;
+  animation: home-ticket-float-3d 3.8s ease-in-out infinite;
+}
+
+@keyframes home-ticket-float-3d {
+  0% {
+    transform: perspective(1100px) rotateX(12deg) rotateY(-14deg) translateY(0);
+  }
+  50% {
+    transform: perspective(1100px) rotateX(12deg) rotateY(-14deg) translateY(-10px);
+  }
+  100% {
+    transform: perspective(1100px) rotateX(12deg) rotateY(-14deg) translateY(0);
+  }
 }
 
 .home__genre,
