@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
 
+export type TicketTheme = 'default' | 'horror' | 'cartoons' | 'daily-challenge';
+
 @Component({
   selector: 'app-ticket',
   imports: [],
@@ -8,5 +10,6 @@ import { Component, Input } from '@angular/core';
 })
 export class Ticket {
   @Input() title = 'MOVIEGUESS';
+  @Input() theme: TicketTheme = 'default';
   protected readonly logoUrl = '/assets/logo-movie-guess.png';
 }

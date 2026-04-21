@@ -1,4 +1,10 @@
-<article class="ticket" aria-label="MovieGuess ticket">
+<article
+  class="ticket"
+  [class.ticket--horror]="theme === 'horror'"
+  [class.ticket--cartoons]="theme === 'cartoons'"
+  [class.ticket--daily]="theme === 'daily-challenge'"
+  aria-label="MovieGuess ticket"
+>
   <div class="ticket__border"></div>
 
   <h1 class="ticket__title text-24-black-uc">{{ title }}</h1>

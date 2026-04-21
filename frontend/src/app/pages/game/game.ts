@@ -5,7 +5,7 @@ import { Footer } from '../../shared/components/footer/footer';
 import { GuessRow, GuessRowTile } from '../../shared/components/guess-row/guess-row';
 import { Navbar } from '../../shared/components/navbar/navbar';
 import { SearchInput } from '../../shared/components/search-input/search-input';
-import { Ticket } from '../../shared/components/ticket/ticket';
+import { Ticket, TicketTheme } from '../../shared/components/ticket/ticket';
 import { combineLatest, Subscription } from 'rxjs';
 
 @Component({
@@ -17,6 +17,7 @@ import { combineLatest, Subscription } from 'rxjs';
 export class Game implements OnInit, OnDestroy {
   protected categoryTitle = 'TOP 250';
   protected ticketTitle = 'TOP 250';
+  protected ticketTheme: TicketTheme = 'default';
   protected readonly headers = ['TYTUŁ', 'ROK', 'GATUNEK', 'REŻYSER', 'GŁÓWNY AKTOR'];
 
   protected readonly rows: GuessRowTile[][] = [
@@ -47,6 +48,19 @@ export class Game implements OnInit, OnDestroy {
 
   constructor(private readonly route: ActivatedRoute) {}
 
+  protected get watermarkClass(): string {
+    switch (this.ticketTheme) {
+      case 'horror':
+        return 'game-page__watermark--horror';
+      case 'cartoons':
+        return 'game-page__watermark--cartoons';
+      case 'daily-challenge':
+        return 'game-page__watermark--daily';
+      default:
+        return 'text-gold-color';
+    }
+  }
+
   ngOnInit(): void {
     this.routeSubscription = combineLatest([
       this.route.paramMap,
@@ -57,6 +71,7 @@ export class Game implements OnInit, OnDestroy {
       const raw = pathCategory || queryCategory || 'top-250';
       this.categoryTitle = this.toDisplayTitle(raw);
       this.ticketTitle = this.categoryTitle;
+      this.ticketTheme = this.toTicketTheme(raw);
     });
   }
 
@@ -69,5 +84,24 @@ export class Game implements OnInit, OnDestroy {
       .replace(/[-_]+/g, ' ')
       .trim()
       .toUpperCase();
+  }
+
+  private toTicketTheme(raw: string): TicketTheme {
+    const normalized = raw
+      .replace(/[-_]+/g, ' ')
+      .trim()
+      .toLowerCase();
+
+    if (normalized === 'horror') {
+      return 'horror';
+    }
+    if (normalized === 'cartoons') {
+      return 'cartoons';
+    }
+    if (normalized === 'daily') {
+      return 'daily-challenge';
+    }
+
+    return 'default';
   }
 }

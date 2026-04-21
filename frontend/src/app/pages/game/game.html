@@ -3,8 +3,10 @@
 
   <section class="game-page__content">
     <section class="game-page__top">
-      <h1 class="game-page__watermark text-240-black-uc text-gold-color">{{ categoryTitle }}</h1>
-      <app-ticket [title]="ticketTitle"></app-ticket>
+      <h1 class="game-page__watermark text-240-black-uc" [ngClass]="watermarkClass">
+        {{ categoryTitle }}
+      </h1>
+      <app-ticket [title]="ticketTitle" [theme]="ticketTheme"></app-ticket>
     </section>
 
     <section class="game-page__search">

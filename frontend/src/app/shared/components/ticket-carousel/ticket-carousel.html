@@ -13,7 +13,7 @@
             [attr.aria-label]="'Przejdz do kategorii ' + category"
           >
             <div class="ticket-carousel__ticket-scale">
-              <app-ticket [title]="category.toUpperCase()" />
+              <app-ticket [title]="category.toUpperCase()" [theme]="getThemeForCategory(category)" />
             </div>
           </button>
         </div>

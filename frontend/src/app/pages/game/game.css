@@ -31,8 +31,20 @@
   position: absolute;
   margin: 0;
   letter-spacing: 0;
-  opacity: 0.8;
+  opacity: 1;
   pointer-events: none;
+}
+
+.game-page__watermark--horror {
+  color: var(--ticket-horror-accent-80);
+}
+
+.game-page__watermark--cartoons {
+  color: var(--ticket-cartoons-accent-80);
+}
+
+.game-page__watermark--daily {
+  color: var(--ticket-daily-accent-80);
 }
 
 .game-page__search {

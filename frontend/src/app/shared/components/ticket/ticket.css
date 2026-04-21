@@ -3,12 +3,15 @@
 }
 
 .ticket {
+  --ticket-bg: var(--ticket-default-gradient);
+  --ticket-border: var(--ticket-default-border);
+  --ticket-divider: var(--ticket-default-divider);
   position: relative;
   width: 240px;
   height: 450px;
   overflow: hidden;
   border-radius: 16px;
-  background: var(--gold-gradient);
+  background: var(--ticket-bg);
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.38);
 }
 
@@ -36,7 +39,7 @@
 .ticket__border {
   position: absolute;
   inset: 15px;
-  border: 2px dashed var(--text-muted);
+  border: 2px dashed var(--ticket-border);
   border-radius: 16px;
 }
 
@@ -56,7 +59,7 @@
   top: 224px;
   left: 15px;
   width: 210px;
-  border-top: 2px dashed var(--text-black);
+  border-top: 2px dashed var(--ticket-divider);
   z-index: 1;
 }
 
@@ -90,4 +93,22 @@
   background-image: url('https://www.figma.com/api/mcp/asset/6c03dae2-af90-45e5-9e3a-52d35b4be308');
   background-size: 100% 100%;
   background-repeat: no-repeat;
+}
+
+.ticket--horror {
+  --ticket-bg: var(--ticket-horror-gradient);
+  --ticket-border: var(--ticket-horror-border);
+  --ticket-divider: var(--ticket-horror-divider);
+}
+
+.ticket--cartoons {
+  --ticket-bg: var(--ticket-cartoons-gradient);
+  --ticket-border: var(--ticket-cartoons-border);
+  --ticket-divider: var(--ticket-cartoons-divider);
+}
+
+.ticket--daily {
+  --ticket-bg: var(--ticket-daily-gradient);
+  --ticket-border: var(--ticket-daily-border);
+  --ticket-divider: var(--ticket-daily-divider);
 }

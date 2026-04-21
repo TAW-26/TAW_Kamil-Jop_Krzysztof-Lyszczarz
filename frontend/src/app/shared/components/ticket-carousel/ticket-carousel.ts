@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import EmblaCarousel, { EmblaCarouselType } from 'embla-carousel';
 import { Router } from '@angular/router';
-import { Ticket } from '../ticket/ticket';
+import { Ticket, TicketTheme } from '../ticket/ticket';
 
 @Component({
   selector: 'app-ticket-carousel',
@@ -20,7 +20,7 @@ import { Ticket } from '../ticket/ticket';
   styleUrl: './ticket-carousel.css',
 })
 export class TicketCarousel implements AfterViewInit, OnDestroy, OnChanges {
-  @Input() categories: string[] = ['Horror', 'Akcja', 'Sci-Fi', 'Komedia'];
+  @Input() categories: string[] = ['Horror', 'Cartoons', 'Daily'];
 
   @ViewChild('viewport', { static: true })
   private viewportRef?: ElementRef<HTMLElement>;
@@ -83,6 +83,20 @@ export class TicketCarousel implements AfterViewInit, OnDestroy, OnChanges {
     }
 
     void this.router.navigate(['/game', category]);
+  }
+
+  protected getThemeForCategory(category: string): TicketTheme {
+    const normalized = category.trim().toLowerCase();
+    if (normalized === 'horror') {
+      return 'horror';
+    }
+    if (normalized === 'cartoons') {
+      return 'cartoons';
+    }
+    if (normalized === 'daily') {
+      return 'daily-challenge';
+    }
+    return 'default';
   }
 
   ngOnDestroy(): void {
