@@ -1,0 +1,32 @@
+<article
+  class="rank-list-row"
+  [class.rank-list-row--me]="isMe"
+  [class.rank-list-row--history]="isHistory"
+  [style.width.px]="rowWidth"
+  [style.min-height.px]="rowMinHeight"
+>
+  <p class="rank-list-row__position" [class.text-16-black-uc]="!isHistory" [class.text-14-semi-bold-uc]="isHistory">
+    {{ position }}
+  </p>
+
+  <div class="rank-list-row__nickname-wrap">
+    <div *ngIf="!isHistory" class="rank-list-row__avatar">
+      <span class="rank-list-row__avatar-icon">🧙‍♂️</span>
+    </div>
+    <p
+      class="rank-list-row__nickname"
+      [class.text-16-black-uc]="!isHistory"
+      [class.text-16-semi-bold-uc]="isHistory"
+    >
+      {{ nickname }}
+    </p>
+  </div>
+
+  <p class="rank-list-row__tickets" [class.text-16-black-uc]="!isHistory" [class.text-14-semi-bold-uc]="isHistory">
+    {{ tickets }}
+  </p>
+
+  <p class="rank-list-row__streak" [class.text-16-black-uc]="!isHistory" [class.text-14-semi-bold-uc]="isHistory">
+    {{ streak }}
+  </p>
+</article>

@@ -12,7 +12,20 @@
 .profile-page__content {
   flex: 1;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 40px 20px 120px;
+  padding: 145px 20px 120px;
+}
+
+.profile-page__layout {
+  width: min(100%, 900px);
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+
+.profile-page__top {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }

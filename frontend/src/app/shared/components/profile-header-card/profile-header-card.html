@@ -1,0 +1,15 @@
+<section class="profile-header-card">
+  <div class="profile-header-card__left">
+    <div class="profile-header-card__avatar">
+      <span class="profile-header-card__avatar-icon">{{ icon }}</span>
+    </div>
+
+    <div class="profile-header-card__meta">
+      <h2 class="profile-header-card__nickname">{{ nickname }}</h2>
+      <p class="profile-header-card__created text-muted-color">{{ createdAt }}</p>
+      <p class="profile-header-card__badge">{{ badge }}</p>
+    </div>
+  </div>
+
+  <app-button variant="profile-settings" (click)="goToProfileSettings()"></app-button>
+</section>

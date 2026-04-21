@@ -2,7 +2,13 @@
   <app-navbar variant="with-wallet"></app-navbar>
 
   <section class="profile-page__content">
-    <h1 class="text-40-bold text-main-color">Profil</h1>
+    <div class="profile-page__layout">
+      <div class="profile-page__top">
+        <app-profile-header-card></app-profile-header-card>
+        <app-stats-cards></app-stats-cards>
+      </div>
+      <app-profile-tabs-section [activeTabIndex]="1"></app-profile-tabs-section>
+    </div>
   </section>
 
   <app-footer></app-footer>
