@@ -2,7 +2,29 @@
   <app-navbar variant="default-not-logged"></app-navbar>
 
   <section class="contact-page__content">
-    <h1 class="text-40-bold text-main-color">Kontakt</h1>
+    <article class="contact-card">
+      <h1 class="contact-card__title text-28-black-uc text-main-color">Kontakt</h1>
+      <p class="contact-card__description text-12-regular text-muted-color">
+        Masz pytanie lub sugestię? Napisz do nas, a odezwiemy się najszybciej jak to możliwe.
+      </p>
+
+      <div class="contact-card__form">
+        <app-auth-input label="IMIĘ" placeholder="Wpisz swoje imię"></app-auth-input>
+        <app-auth-input
+          label="ADRES E-MAIL"
+          placeholder="Wpisz swój email"
+          type="email"
+        ></app-auth-input>
+        <app-auth-input label="TEMAT" placeholder="Wpisz temat wiadomości"></app-auth-input>
+        <app-auth-input label="WIADOMOŚĆ" placeholder="Napisz swoją wiadomość"></app-auth-input>
+
+        <app-button
+          variant="log-in"
+          [labelOverride]="'WYŚLIJ WIADOMOŚĆ'"
+          [fullWidth]="true"
+        ></app-button>
+      </div>
+    </article>
   </section>
 
   <app-footer></app-footer>
