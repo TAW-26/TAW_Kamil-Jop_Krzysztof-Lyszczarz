@@ -1,0 +1,16 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.stats-cards {
+  width: 900px;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.stats-cards app-stat-card {
+  flex: 1 1 0;
+}

@@ -1,0 +1,23 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.guess-row {
+  width: 900px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.guess-row__tile app-attribute-tile {
+  width: 100%;
+}
+
+.guess-row__tile--flex {
+  flex: 1;
+}
+
+.guess-row__tile--year {
+  width: 120px;
+}

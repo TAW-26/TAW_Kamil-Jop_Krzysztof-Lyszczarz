@@ -1,0 +1,43 @@
+<section class="profile-tabs-section">
+  <app-tab-buttons
+    [tabs]="['HISTORIA GIER', 'EKWIPUNEK']"
+    [activeIndex]="activeTabIndex"
+    (activeIndexChange)="setActiveTab($event)"
+  ></app-tab-buttons>
+
+  <div *ngIf="activeTabIndex === 0" class="profile-tabs-section__history-rows">
+    <app-rank-list-row
+      variant="history"
+      [rowWidth]="900"
+      [rowMinHeight]="63"
+      position="DZIŚ, 18:30"
+      nickname="🔪HORROR"
+      tickets="ZGADNIĘTO ZA 3 RAZEM"
+      streak="WYGRANA"
+    ></app-rank-list-row>
+    <app-rank-list-row
+      variant="history"
+      [rowWidth]="900"
+      [rowMinHeight]="63"
+      position="DZIŚ, 18:30"
+      nickname="🔪HORROR"
+      tickets="ZGADNIĘTO ZA 3 RAZEM"
+      streak="WYGRANA"
+    ></app-rank-list-row>
+    <app-rank-list-row
+      variant="history"
+      [rowWidth]="900"
+      [rowMinHeight]="63"
+      position="DZIŚ, 18:30"
+      nickname="🔪HORROR"
+      tickets="ZGADNIĘTO ZA 3 RAZEM"
+      streak="WYGRANA"
+    ></app-rank-list-row>
+  </div>
+
+  <div *ngIf="activeTabIndex === 1" class="profile-tabs-section__equipment-cards">
+    <app-shop-card variant="card-eq-to-equip"></app-shop-card>
+    <app-shop-card variant="card-eq-equipped"></app-shop-card>
+    <app-shop-card variant="card-eq-to-equip"></app-shop-card>
+  </div>
+</section>

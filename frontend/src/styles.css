@@ -1,3 +1,296 @@
 /* You can add global styles to this file, and also import other style files */
 
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap');
 @import 'tailwindcss';
+
+:root {
+  font-family: 'Poppins', sans-serif;
+  --background-main: #111111;
+  --background-card: #1a1a1a;
+  --background-gold: rgb(212 175 55 / 10%);
+  --gold-gradient: linear-gradient(180deg, #d8b840 0%, #baa028 100%);
+  --background-white: #ffffff;
+
+  --text-main: #ffffff;
+  --text-black: #000000;
+  --text-muted: rgb(255 255 255 / 70%);
+  --text-gold: rgb(67 58 22 / 80%);
+
+  --border-light: #ffffff;
+  --brighte: rgb(255 255 255 / 5%);
+  --label-new: #e53a36;
+
+  --medal-gold: #d4af37;
+  --medal-silver: #c0c0c0;
+  --medal-bronze: #cd7f32;
+
+  --status-correct: #2e7d32;
+  --status-partial: #f57f17;
+  --status-wrong: #333333;
+  --status-empty: #222222;
+
+  /* ticket themes */
+  --ticket-default-gradient: var(--gold-gradient);
+  --ticket-default-border: var(--text-muted);
+  --ticket-default-divider: var(--text-black);
+
+  --ticket-horror-gradient: linear-gradient(180deg, #b4313e 0%, #62161f 100%);
+  --ticket-horror-border: rgba(255, 223, 223, 0.75);
+  --ticket-horror-divider: #2a070b;
+  --ticket-horror-accent: #b4313e;
+  --ticket-horror-accent-80: rgb(180 49 62 / 80%);
+
+  --ticket-cartoons-gradient: linear-gradient(180deg, #53c7ff 0%, #1f7fc7 100%);
+  --ticket-cartoons-border: rgba(235, 248, 255, 0.8);
+  --ticket-cartoons-divider: #0d2b4a;
+  --ticket-cartoons-accent: #53c7ff;
+  --ticket-cartoons-accent-80: rgb(83 199 255 / 80%);
+
+  --ticket-daily-gradient: linear-gradient(180deg, #8d6dff 0%, #4a2ca9 100%);
+  --ticket-daily-border: rgba(236, 226, 255, 0.8);
+  --ticket-daily-divider: #1a1040;
+  --ticket-daily-accent: #8d6dff;
+  --ticket-daily-accent-80: rgb(141 109 255 / 80%);
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+}
+
+/* color utilities */
+.bg-main {
+  background-color: var(--background-main);
+}
+
+.bg-card {
+  background-color: var(--background-card);
+}
+
+.bg-gold {
+  background-color: var(--background-gold);
+}
+
+.bg-gold-gradient {
+  background: var(--gold-gradient);
+}
+
+.bg-white {
+  background-color: var(--background-white);
+}
+
+.text-main-color {
+  color: var(--text-main);
+}
+
+.text-black-color {
+  color: var(--text-black);
+}
+
+.text-muted-color {
+  color: var(--text-muted);
+}
+
+.text-gold-color {
+  color: var(--text-gold);
+}
+
+.border-light {
+  border-color: var(--border-light);
+}
+
+.bg-brighte {
+  background-color: var(--brighte);
+}
+
+.bg-label-new {
+  background-color: var(--label-new);
+}
+
+.text-medal-gold {
+  color: var(--medal-gold);
+}
+
+.text-medal-silver {
+  color: var(--medal-silver);
+}
+
+.text-medal-bronze {
+  color: var(--medal-bronze);
+}
+
+.bg-status-correct {
+  background-color: var(--status-correct);
+}
+
+.bg-status-partial {
+  background-color: var(--status-partial);
+}
+
+.bg-status-wrong {
+  background-color: var(--status-wrong);
+}
+
+.bg-status-empty {
+  background-color: var(--status-empty);
+}
+
+/* heders */
+.text-64-black {
+  font-family: 'Poppins', sans-serif;
+  font-size: 64px;
+  font-weight: 900;
+  line-height: 110%;
+}
+
+.text-40-bold {
+  font-family: 'Poppins', sans-serif;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 120%;
+}
+
+.text-22-bold {
+  font-family: 'Poppins', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.text-20-bold-uc {
+  font-family: 'Poppins', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+/* text-main */
+.text-18-regular {
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 160%;
+}
+
+.text-15-regular {
+  font-family: 'Poppins', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 160%;
+}
+
+.text-12-regular {
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+/* ui */
+.text-28-black-uc {
+  font-family: 'Poppins', sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.text-24-black-uc {
+  font-family: 'Poppins', sans-serif;
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.text-18-bold-uc {
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.text-18-bold {
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.text-16-black-uc {
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.text-16-bold {
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.text-16-semi-bold-uc {
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.text-16-semi-bold {
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.text-14-bold {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.text-14-semi-bold-uc {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.text-14-semi-bold {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.text-12-semi-bold-uc {
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.text-8-bold-uc {
+  font-family: 'Poppins', sans-serif;
+  font-size: 8px;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.text-240-black-uc {
+  font-family: 'Poppins', sans-serif;
+  font-size: 240px;
+  font-weight: 900;
+  line-height: 1.1;
+  text-transform: uppercase;
+}

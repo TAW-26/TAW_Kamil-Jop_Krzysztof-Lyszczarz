@@ -1,0 +1,16 @@
+<article
+  class="ticket"
+  [class.ticket--horror]="theme === 'horror'"
+  [class.ticket--cartoons]="theme === 'cartoons'"
+  [class.ticket--daily]="theme === 'daily-challenge'"
+  aria-label="MovieGuess ticket"
+>
+  <div class="ticket__border"></div>
+
+  <h1 class="ticket__title text-24-black-uc">{{ title }}</h1>
+  <div class="ticket__divider" aria-hidden="true"></div>
+  <img class="ticket__logo" [src]="logoUrl" alt="MovieGuess logo" />
+  <div class="ticket__barcode" aria-hidden="true">
+    <div class="ticket__barcode-bars"></div>
+  </div>
+</article>

@@ -1,0 +1,86 @@
+:host {
+  display: inline-flex;
+}
+
+.app-button {
+  border: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+}
+
+.app-button:hover {
+  filter: brightness(1.05);
+}
+
+.app-button--gold {
+  background: var(--gold-gradient);
+}
+
+.app-button--white {
+  background: var(--background-white);
+}
+
+.app-button--owned {
+  background: var(--background-card);
+}
+
+.app-button--outline-muted {
+  border: 1px solid var(--text-muted);
+  background: transparent;
+  padding: 0 40px;
+}
+
+.app-button--outline-light {
+  border: 1px solid var(--border-light);
+  background: var(--background-card);
+  padding: 0 40px;
+}
+
+.app-button--pill {
+  border-radius: 30px;
+  padding: 0 40px;
+}
+
+.app-button--rounded {
+  border-radius: 12px;
+}
+
+.app-button--h40 {
+  height: 40px;
+  border-radius: 15px;
+}
+
+.app-button--h45 {
+  height: 45px;
+}
+
+.app-button--h52 {
+  height: 52px;
+}
+
+.app-button--h55 {
+  height: 55px;
+}
+
+.app-button--h59 {
+  height: 59px;
+}
+
+.app-button--w260 {
+  width: 260px;
+}
+
+.app-button--full {
+  width: 100%;
+}
+
+.app-button__google {
+  display: inline-flex;
+  align-items: center;
+  gap: 15px;
+}

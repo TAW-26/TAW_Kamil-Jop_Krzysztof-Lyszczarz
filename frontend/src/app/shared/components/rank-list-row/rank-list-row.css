@@ -1,0 +1,94 @@
+:host {
+  display: block;
+}
+
+.rank-list-row {
+  box-sizing: border-box;
+  width: 800px;
+  min-height: 56px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  background: var(--background-card);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.rank-list-row--me {
+  background: var(--background-main);
+  border: 1px solid var(--medal-gold);
+}
+
+.rank-list-row__position,
+.rank-list-row__nickname,
+.rank-list-row__tickets,
+.rank-list-row__streak {
+  margin: 0;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.rank-list-row__position {
+  width: 50px;
+  color: var(--text-muted);
+}
+
+.rank-list-row__nickname-wrap {
+  width: 385px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rank-list-row__avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rank-list-row__avatar-icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.rank-list-row__nickname,
+.rank-list-row__tickets {
+  color: var(--text-main);
+}
+
+.rank-list-row__tickets {
+  width: 140px;
+}
+
+.rank-list-row__streak {
+  width: 140px;
+  color: var(--text-muted);
+}
+
+.rank-list-row--history .rank-list-row__position {
+  width: 100px;
+}
+
+.rank-list-row--history .rank-list-row__nickname-wrap {
+  flex: 1;
+  width: auto;
+}
+
+.rank-list-row--history .rank-list-row__position,
+.rank-list-row--history .rank-list-row__tickets {
+  color: var(--text-muted);
+}
+
+.rank-list-row--history .rank-list-row__streak {
+  width: 100px;
+  color: var(--status-correct);
+  text-align: right;
+}
+
+.rank-list-row--history .rank-list-row__tickets {
+  width: 200px;
+}

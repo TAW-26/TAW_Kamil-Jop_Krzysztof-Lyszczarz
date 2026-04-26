@@ -1,0 +1,52 @@
+:host {
+  display: block;
+}
+
+.contact-page {
+  min-height: 100vh;
+  background: var(--background-main);
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-page__content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px 180px;
+}
+
+.contact-card {
+  width: 520px;
+  box-sizing: border-box;
+  padding: 40px;
+  border-radius: 24px;
+  border: 1px solid var(--text-muted);
+  background: var(--background-card);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.contact-card__title {
+  margin: 0;
+  line-height: 1;
+  text-align: center;
+}
+
+.contact-card__description {
+  margin: 0;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.contact-card__form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.contact-card__form app-button {
+  width: 100%;
+}

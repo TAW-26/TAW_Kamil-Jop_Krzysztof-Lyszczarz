@@ -1,0 +1,48 @@
+<section class="ticket-carousel" aria-label="Category ticket carousel">
+  <div class="ticket-carousel__embla embla">
+    <div #viewport class="ticket-carousel__viewport embla__viewport">
+      <div class="ticket-carousel__container embla__container">
+        <div
+          *ngFor="let category of categories; let i = index"
+          class="ticket-carousel__slide embla__slide"
+        >
+          <button
+            type="button"
+            class="ticket-carousel__ticket-button"
+            (click)="selectCategory(i)"
+            [attr.aria-label]="'Przejdz do kategorii ' + category"
+          >
+            <div class="ticket-carousel__ticket-scale">
+              <app-ticket [title]="category.toUpperCase()" [theme]="getThemeForCategory(category)" />
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="ticket-carousel__category text-24-black-uc text-main-color">
+    {{ activeCategory }}
+  </p>
+
+  <div class="ticket-carousel__controls">
+    <button
+      type="button"
+      class="ticket-carousel__control-btn"
+      aria-label="Poprzednia kategoria"
+      (click)="previous()"
+      [disabled]="!canScrollPrev && categories.length <= 1"
+    >
+      <span class="ticket-carousel__control-icon" aria-hidden="true">‹</span>
+    </button>
+    <button
+      type="button"
+      class="ticket-carousel__control-btn"
+      aria-label="Nastepna kategoria"
+      (click)="next()"
+      [disabled]="!canScrollNext && categories.length <= 1"
+    >
+      <span class="ticket-carousel__control-icon" aria-hidden="true">›</span>
+    </button>
+  </div>
+</section>

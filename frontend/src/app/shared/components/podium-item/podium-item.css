@@ -1,0 +1,141 @@
+:host {
+  display: block;
+}
+
+.podium-item {
+  width: 140px;
+  position: relative;
+}
+
+.podium-item--silver {
+  height: 200px;
+}
+
+.podium-item--bronze {
+  height: 173px;
+}
+
+.podium-item--gold {
+  height: 331px;
+}
+
+.podium-item__avatar-wrap {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 0;
+  z-index: 2;
+}
+
+.podium-item--gold .podium-item__avatar-wrap {
+  top: 36px;
+}
+
+.podium-item__avatar-ring {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--background-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  border: 3px solid var(--medal-silver);
+}
+
+.podium-item--bronze .podium-item__avatar-ring {
+  border-color: var(--medal-bronze);
+}
+
+.podium-item--gold .podium-item__avatar-ring {
+  width: 80px;
+  height: 80px;
+  border-color: var(--medal-gold);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.45);
+}
+
+.podium-item__crown {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 28px;
+}
+
+.podium-item__card {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-left: 1px solid;
+  border-right: 1px solid;
+  border-top: 1px solid;
+  border-radius: 16px 16px 0 0;
+  background: var(--background-card);
+  border-color: var(--medal-silver);
+}
+
+.podium-item--silver .podium-item__card {
+  top: 30px;
+}
+
+.podium-item--bronze .podium-item__card {
+  top: 33px;
+  border-color: var(--medal-bronze);
+}
+
+.podium-item--gold .podium-item__card {
+  top: 111px;
+  border-color: var(--medal-gold);
+  background: linear-gradient(
+    180deg,
+    rgba(212, 175, 55, 0.16) 0%,
+    rgba(255, 255, 255, 0) 75%,
+    rgba(26, 26, 26, 1) 100%
+  );
+}
+
+.podium-item__content {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 35px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.podium-item__nick,
+.podium-item__tickets-value,
+.podium-item__tickets-label {
+  margin: 0;
+  line-height: 1;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.podium-item__nick,
+.podium-item__tickets-value {
+  color: var(--text-main);
+}
+
+.podium-item__tickets {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.podium-item__tickets-label {
+  color: var(--text-muted);
+}
+
+.podium-item--gold .podium-item__nick,
+.podium-item--gold .podium-item__tickets-value,
+.podium-item--gold .podium-item__tickets-label {
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}

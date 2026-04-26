@@ -1,0 +1,25 @@
+<div class="auth-toggle">
+  <span
+    class="auth-toggle__thumb"
+    [class.auth-toggle__thumb--signup]="mode === 'signup'"
+    aria-hidden="true"
+  ></span>
+  <button
+    type="button"
+    class="auth-toggle__option text-14-semi-bold"
+    [class.text-black-color]="mode === 'login'"
+    [class.text-muted-color]="mode !== 'login'"
+    (click)="setMode('login')"
+  >
+    Zaloguj się
+  </button>
+  <button
+    type="button"
+    class="auth-toggle__option text-14-semi-bold"
+    [class.text-black-color]="mode === 'signup'"
+    [class.text-muted-color]="mode !== 'signup'"
+    (click)="setMode('signup')"
+  >
+    Utwórz konto
+  </button>
+</div>

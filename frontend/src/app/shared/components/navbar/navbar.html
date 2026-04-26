@@ -1,0 +1,52 @@
+<nav class="navbar" aria-label="Main navigation">
+  <button
+    type="button"
+    class="navbar__logo-button"
+    aria-label="Przejdz do strony glownej"
+    (click)="goToHome()"
+  >
+    <span class="navbar__logo text-28-black-uc text-main-color">MOVIEGUESS</span>
+  </button>
+
+  <ul *ngIf="showLinks" class="navbar__links" aria-label="Primary links">
+    <li *ngFor="let link of links" class="navbar__link">
+      <button
+        type="button"
+        class="navbar__link-button text-16-semi-bold text-muted-color"
+        (click)="onLinkClick(link)"
+      >
+        {{ link.label }}
+      </button>
+    </li>
+  </ul>
+
+  <button
+    *ngIf="showAvatarOnly"
+    type="button"
+    class="navbar__avatar-button navbar__avatar"
+    aria-label="Przejdz do profilu"
+    (click)="goToProfile()"
+  >
+    🧙‍♂️
+  </button>
+
+  <app-button
+    *ngIf="showSignButton"
+    variant="sign-up-log-in"
+    (click)="goToLogin()"
+  ></app-button>
+
+  <div *ngIf="showWalletWithAvatar" class="navbar__wallet-group">
+    <div class="navbar__wallet text-16-bold">
+      <span>🎟️ {{ walletAmount }}</span>
+    </div>
+    <button
+      type="button"
+      class="navbar__avatar-button navbar__avatar"
+      aria-label="Przejdz do profilu"
+      (click)="goToProfile()"
+    >
+      🧙‍♂️
+    </button>
+  </div>
+</nav>

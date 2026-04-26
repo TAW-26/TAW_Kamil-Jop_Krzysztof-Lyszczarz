@@ -1,0 +1,46 @@
+<main class="rank-page">
+  <app-navbar variant="default-logged"></app-navbar>
+
+  <section class="rank-page__content">
+    <div class="rank-page__layout">
+      <h1 class="rank-page__title text-64-black text-main-color">Najlepsi Kinomaniacy</h1>
+
+      <div class="rank-page__podium">
+        <app-podium-item variant="2"></app-podium-item>
+        <app-podium-item variant="1"></app-podium-item>
+        <app-podium-item variant="3"></app-podium-item>
+      </div>
+
+      <div class="rank-page__table">
+        <div class="rank-page__header-row text-16-black-uc text-muted-color">
+          <span class="rank-page__header-pos">POZ.</span>
+          <span class="rank-page__header-player">GRACZ</span>
+          <span class="rank-page__header-tickets">ZEBRANE BILETY</span>
+          <span class="rank-page__header-streak">SERIA</span>
+        </div>
+
+        <div class="rank-page__header-divider"></div>
+
+        <div class="rank-page__rows">
+          <app-rank-list-row variant="default"></app-rank-list-row>
+          <app-rank-list-row variant="default"></app-rank-list-row>
+          <app-rank-list-row variant="default"></app-rank-list-row>
+          <app-rank-list-row variant="default"></app-rank-list-row>
+          <app-rank-list-row variant="default"></app-rank-list-row>
+          <app-rank-list-row variant="default"></app-rank-list-row>
+          <app-rank-list-row variant="default"></app-rank-list-row>
+          <app-rank-list-row
+            variant="me"
+            position="125"
+            nickname="TY"
+            tickets="🎟️ 10"
+            streak="🔥 3 DNI"
+          ></app-rank-list-row>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <app-footer></app-footer>
+</main>

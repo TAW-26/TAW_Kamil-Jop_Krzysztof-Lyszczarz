@@ -1,0 +1,69 @@
+:host {
+  display: inline-flex;
+}
+
+.tab-button {
+  border: 0;
+  background: transparent;
+  padding: 12px 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition:
+    color 160ms ease,
+    transform 120ms ease;
+}
+
+.tab-button::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 3px;
+  background: var(--medal-gold);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 180ms ease;
+}
+
+.tab-button--active::after,
+.tab-button:hover::after,
+.tab-button:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.tab-button__label {
+  text-transform: uppercase;
+  color: var(--text-muted);
+  transition: color 160ms ease;
+}
+
+.tab-button__label--active {
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.tab-button:hover .tab-button__label {
+  color: var(--text-main);
+}
+
+.tab-button:active {
+  transform: translateY(1px);
+}
+
+.tab-button:focus-visible {
+  outline: none;
+}
+
+.tab-button:focus-visible .tab-button__label {
+  color: var(--text-main);
+}
+
+.tab-button:focus-visible.tab-button--active .tab-button__label {
+  color: transparent;
+}

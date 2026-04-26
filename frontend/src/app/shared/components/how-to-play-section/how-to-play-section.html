@@ -1,0 +1,12 @@
+<section class="how-section" aria-label="Jak grac">
+  <h2 class="how-section__title text-40-bold text-main-color">Jak grać?</h2>
+
+  <div class="how-section__cards">
+    <app-how-to-play-card
+      *ngFor="let item of steps"
+      [step]="item.step"
+      [title]="item.title"
+      [description]="item.description"
+    />
+  </div>
+</section>

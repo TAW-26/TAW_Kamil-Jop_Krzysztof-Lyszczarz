@@ -1,0 +1,36 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.profile-tabs-section {
+  width: 900px;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.profile-tabs-section app-tab-buttons {
+  width: 100%;
+}
+
+.profile-tabs-section__history-rows {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.profile-tabs-section__history-rows app-rank-list-row {
+  width: 100%;
+}
+
+.profile-tabs-section__equipment-cards {
+  width: 100%;
+  padding: 15px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 30px;
+}

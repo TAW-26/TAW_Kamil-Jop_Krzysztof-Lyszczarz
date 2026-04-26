@@ -1,0 +1,39 @@
+<main class="home">
+  <section class="home__navbar-wrap">
+    <app-navbar
+      class="home__navbar"
+      variant="default-not-logged"
+      (navLinkSelect)="scrollToSection($event)"
+    ></app-navbar>
+  </section>
+
+  <section id="home-hero" class="home__hero">
+    <div class="home__hero-text">
+      <h1 class="home__title text-64-black text-main-color">Zgadnij film, zdobądź bilet.</h1>
+      <p class="home__description text-18-regular text-muted-color">
+        Codzienne filmowe wyzwania. Wybierz swój ulubiony gatunek, analizuj kadry i sprawdź
+        swoją wiedzę kinową. Czy uda Ci się zebrać wszystkie bilety?
+      </p>
+      <app-button variant="default" (click)="goToDailyGame()"></app-button>
+    </div>
+
+    <div class="home__hero-ticket">
+      <app-ticket></app-ticket>
+    </div>
+  </section>
+
+  <section id="home-genre" class="home__genre">
+    <h2 class="home__section-title text-40-bold text-main-color">Wybierz swój gatunek</h2>
+    <app-ticket-carousel
+      [categories]="['Horror', 'Cartoons', 'Daily']"
+    ></app-ticket-carousel>
+  </section>
+
+  <section id="home-how-to-play" class="home__how-to-play">
+    <app-how-to-play-section></app-how-to-play-section>
+  </section>
+
+  <section id="home-footer" class="home__footer-wrap">
+    <app-footer></app-footer>
+  </section>
+</main>

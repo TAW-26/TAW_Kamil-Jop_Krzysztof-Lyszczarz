@@ -1,0 +1,137 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.navbar {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 80px;
+  padding: 0 50px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border-bottom: 1px solid var(--border-light);
+  background: var(--background-main);
+}
+
+.navbar__logo {
+  min-width: 192px;
+  letter-spacing: 0.56px;
+}
+
+.navbar__logo-button {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.navbar__links {
+  margin: 0;
+  padding: 0 200px 0 50px;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+}
+
+.navbar__link {
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.navbar__link-button {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  color: var(--text-muted);
+  position: relative;
+  transition:
+    color 160ms ease,
+    transform 120ms ease;
+}
+
+.navbar__link-button::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 2px;
+  background: var(--medal-gold);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 180ms ease;
+}
+
+.navbar__link-button:hover {
+  color: var(--text-main);
+}
+
+.navbar__link-button:hover::after,
+.navbar__link-button:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.navbar__link-button:active {
+  transform: translateY(1px);
+}
+
+.navbar__link-button:focus-visible {
+  outline: none;
+  color: var(--text-main);
+}
+
+.navbar__avatar {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--brighte);
+  font-size: 20px;
+}
+
+.navbar__avatar-button {
+  padding: 0;
+  cursor: pointer;
+  transition:
+    transform 120ms ease,
+    border-color 160ms ease;
+}
+
+.navbar__avatar-button:hover,
+.navbar__avatar-button:focus-visible {
+  border-color: var(--medal-gold);
+}
+
+.navbar__avatar-button:active {
+  transform: translateY(1px);
+}
+
+.navbar__avatar-button:focus-visible {
+  outline: none;
+}
+
+.navbar__wallet-group {
+  width: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+}
+
+.navbar__wallet {
+  padding: 8px 16px;
+  border: 1px solid var(--medal-gold);
+  border-radius: 20px;
+  color: var(--medal-gold);
+  background: var(--background-gold);
+  white-space: nowrap;
+}
+

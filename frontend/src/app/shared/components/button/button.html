@@ -1,0 +1,32 @@
+<button
+  type="button"
+  class="app-button"
+  [ngClass]="{
+    'app-button--gold': isGold,
+    'app-button--white': variant === 'sign-up-with-google',
+    'app-button--owned': variant === 'owned',
+    'app-button--outline-muted': variant === 'locked',
+    'app-button--outline-light': variant === 'profile-settings',
+    'app-button--pill': hasVariant('default', 'buy', 'locked', 'owned', 'profile-settings'),
+    'app-button--rounded': hasVariant('sign-up-log-in', 'log-in', 'sign-up', 'sign-up-with-google'),
+    'app-button--h40': variant === 'sign-up-log-in',
+    'app-button--h45': hasVariant('buy', 'locked', 'owned'),
+    'app-button--h52': variant === 'sign-up-with-google',
+    'app-button--h55': hasVariant('log-in', 'sign-up', 'profile-settings'),
+    'app-button--h59': variant === 'default',
+    'app-button--w260': variant === 'sign-up-with-google',
+    'app-button--full': fullWidth,
+    'text-18-bold-uc': hasVariant('default', 'sign-up-log-in', 'log-in', 'sign-up'),
+    'text-16-bold': variant === 'sign-up-with-google',
+    'text-14-bold': hasVariant('buy', 'locked', 'owned', 'profile-settings'),
+    'text-black-color': hasVariant('default', 'sign-up-log-in', 'log-in', 'sign-up', 'buy', 'sign-up-with-google'),
+    'text-main-color': hasVariant('owned', 'profile-settings'),
+    'text-muted-color': variant === 'locked'
+  }"
+>
+  <span *ngIf="variant !== 'sign-up-with-google'">{{ text }}</span>
+  <span *ngIf="variant === 'sign-up-with-google'" class="app-button__google">
+    <span>G</span>
+    <span>Continue with Google</span>
+  </span>
+</button>

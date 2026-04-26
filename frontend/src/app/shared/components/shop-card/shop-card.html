@@ -1,0 +1,49 @@
+<article
+  class="shop-card"
+  [class.shop-card--buy-new]="isBuyNew"
+  [class.shop-card--eq-to-equip]="isEqToEquip"
+  [class.shop-card--eq-equipped]="isEqEquipped"
+>
+  <div *ngIf="isBuyNew" class="shop-card__new-badge text-8-bold-uc">NOWOŚĆ</div>
+  <div *ngIf="isEqEquipped" class="shop-card__equipped-badge text-8-bold-uc">ZAŁOŻONO</div>
+
+  <div class="shop-card__icon-wrap">
+    <div class="shop-card__icon-bg"></div>
+    <span class="shop-card__icon">{{ icon }}</span>
+  </div>
+
+  <h3 class="shop-card__title text-18-bold text-main-color">{{ title }}</h3>
+
+  <p *ngIf="showDescription" class="shop-card__description text-12-regular text-muted-color">
+    {{ description }}
+  </p>
+
+  <div *ngIf="showAction" class="shop-card__action">
+    <app-button
+      *ngIf="variant === 'default-buy'"
+      variant="locked"
+      [labelOverride]="lockedLabel"
+      [fullWidth]="true"
+    ></app-button>
+
+    <app-button
+      *ngIf="variant === 'buy-new'"
+      variant="buy"
+      [tickets]="buyTickets"
+      [fullWidth]="true"
+    ></app-button>
+
+    <app-button
+      *ngIf="variant === 'owned'"
+      variant="owned"
+      [fullWidth]="true"
+    ></app-button>
+
+    <app-button
+      *ngIf="variant === 'card-eq-to-equip'"
+      variant="profile-settings"
+      [labelOverride]="'Użyj'"
+      [fullWidth]="true"
+    ></app-button>
+  </div>
+</article>

@@ -1,0 +1,38 @@
+<main class="shop-page">
+  <app-navbar variant="with-wallet"></app-navbar>
+
+  <section class="shop-page__content">
+    <div class="shop-page__layout">
+      <header class="shop-page__hero">
+        <h1 class="shop-page__title text-64-black text-main-color">Sklep Premium</h1>
+        <p class="shop-page__description text-18-regular text-muted-color">
+          Codzienne filmowe wyzwania. Wybierz swoją ulubioną kategorię, analizuj kadry i sprawdź
+          swoją wiedzę kinową. Czy uda Ci się zebrać wszystkie bilety?
+        </p>
+      </header>
+
+      <div class="shop-page__catalog">
+        <app-tab-buttons
+          class="shop-page__tabs"
+          [tabs]="['AWATARY', 'KOLOR RAMKI', 'KOLOR NICKU', 'INNE']"
+          [activeIndex]="0"
+        ></app-tab-buttons>
+
+        <div class="shop-page__cards">
+          <app-shop-card variant="buy-new"></app-shop-card>
+          <app-shop-card variant="owned"></app-shop-card>
+          <app-shop-card variant="default-buy" [lockedTickets]="'1000'"></app-shop-card>
+
+          <app-shop-card
+            variant="default-buy"
+            [lockedLabelOverride]="'🎟️ 300 Kup Brak biletów'"
+          ></app-shop-card>
+          <app-shop-card variant="default-buy" [lockedTickets]="'1000'"></app-shop-card>
+          <app-shop-card variant="default-buy" [lockedTickets]="'1000'"></app-shop-card>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <app-footer></app-footer>
+</main>

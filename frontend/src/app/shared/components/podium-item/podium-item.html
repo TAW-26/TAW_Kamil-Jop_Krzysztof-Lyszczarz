@@ -1,0 +1,24 @@
+<article
+  class="podium-item"
+  [class.podium-item--gold]="variant === '1'"
+  [class.podium-item--silver]="variant === '2'"
+  [class.podium-item--bronze]="variant === '3'"
+>
+  <div class="podium-item__avatar-wrap">
+    <span *ngIf="isGold" class="podium-item__crown">👑</span>
+    <div class="podium-item__avatar-ring">
+      <span class="podium-item__avatar-icon">{{ icon }}</span>
+    </div>
+  </div>
+
+  <div class="podium-item__card">
+    <div class="podium-item__content">
+      <h3 class="podium-item__nick text-16-semi-bold">{{ nick }}</h3>
+
+      <div class="podium-item__tickets">
+        <p class="podium-item__tickets-value text-18-bold">{{ tickets }}</p>
+        <p class="podium-item__tickets-label text-12-semi-bold-uc">BILETÓW</p>
+      </div>
+    </div>
+  </div>
+</article>

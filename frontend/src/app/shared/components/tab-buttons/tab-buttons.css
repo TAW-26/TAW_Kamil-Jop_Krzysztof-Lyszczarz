@@ -1,0 +1,11 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.tab-buttons {
+  width: 100%;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+}
