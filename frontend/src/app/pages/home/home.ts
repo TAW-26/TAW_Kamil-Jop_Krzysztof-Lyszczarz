@@ -52,6 +52,6 @@ export class Home implements OnInit, OnDestroy {
   }
 
   protected goToDailyGame(): void {
-    void this.router.navigate(['/game', 'daily']);
+    void this.router.navigate(['/game', 'daily'], { queryParams: { autoscroll: '1' } });
   }
 }

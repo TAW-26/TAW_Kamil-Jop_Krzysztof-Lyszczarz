@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Footer } from '../../shared/components/footer/footer';
 import { GuessRow, GuessRowTile } from '../../shared/components/guess-row/guess-row';
@@ -14,7 +21,7 @@ import { combineLatest, Subscription } from 'rxjs';
   templateUrl: './game.html',
   styleUrl: './game.css',
 })
-export class Game implements OnInit, OnDestroy {
+export class Game implements OnInit, AfterViewInit, OnDestroy {
   protected categoryTitle = 'TOP 250';
   protected ticketTitle = 'TOP 250';
   protected ticketTheme: TicketTheme = 'default';
@@ -45,6 +52,12 @@ export class Game implements OnInit, OnDestroy {
   ];
 
   private routeSubscription?: Subscription;
+  private shouldAutoScrollToPlay = false;
+  private hasAutoScrolledToPlay = false;
+  private autoScrollTimeoutId?: number;
+
+  @ViewChild('playSection', { static: false })
+  private playSectionRef?: ElementRef<HTMLElement>;
 
   constructor(private readonly route: ActivatedRoute) {}
 
@@ -72,11 +85,21 @@ export class Game implements OnInit, OnDestroy {
       this.categoryTitle = this.toDisplayTitle(raw);
       this.ticketTitle = this.categoryTitle;
       this.ticketTheme = this.toTicketTheme(raw);
+      this.shouldAutoScrollToPlay = query.get('autoscroll') === '1';
+      this.hasAutoScrolledToPlay = false;
+      this.scheduleAutoScrollToPlay();
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.scheduleAutoScrollToPlay();
   }
 
   ngOnDestroy(): void {
     this.routeSubscription?.unsubscribe();
+    if (this.autoScrollTimeoutId) {
+      window.clearTimeout(this.autoScrollTimeoutId);
+    }
   }
 
   private toDisplayTitle(raw: string): string {
@@ -103,5 +126,28 @@ export class Game implements OnInit, OnDestroy {
     }
 
     return 'default';
+  }
+
+  private scheduleAutoScrollToPlay(): void {
+    if (!this.shouldAutoScrollToPlay || this.hasAutoScrolledToPlay || !this.playSectionRef?.nativeElement) {
+      return;
+    }
+
+    if (this.autoScrollTimeoutId) {
+      window.clearTimeout(this.autoScrollTimeoutId);
+    }
+
+    // Ensure user sees the hero/top part first.
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+
+    this.autoScrollTimeoutId = window.setTimeout(() => {
+      const playSection = this.playSectionRef?.nativeElement;
+      if (!playSection || this.hasAutoScrolledToPlay) {
+        return;
+      }
+
+      playSection.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+      this.hasAutoScrolledToPlay = true;
+    }, 1100);
   }
 }

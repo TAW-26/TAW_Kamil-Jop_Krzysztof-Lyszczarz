@@ -82,7 +82,7 @@ export class TicketCarousel implements AfterViewInit, OnDestroy, OnChanges {
       return;
     }
 
-    void this.router.navigate(['/game', category]);
+    void this.router.navigate(['/game', category], { queryParams: { autoscroll: '1' } });
   }
 
   protected getThemeForCategory(category: string): TicketTheme {
