@@ -1,10 +1,19 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { AttributeTile, AttributeTileState } from '../attribute-tile/attribute-tile';
+import {
+  AttributeTile,
+  AttributeTileState,
+  AttributeTileVariant,
+} from '../attribute-tile/attribute-tile';
+import { GUESS_ROW_TILE_COUNT } from '../../../constants/guess-row.constants';
 
 export type GuessRowTile = {
   state: AttributeTileState;
   text?: string;
+  imageSrc?: string;
+  uppercaseText?: boolean;
+  tileVariant?: AttributeTileVariant;
+  stackCommaSeparated?: boolean;
 };
 
 @Component({
@@ -14,11 +23,8 @@ export type GuessRowTile = {
   styleUrl: './guess-row.css',
 })
 export class GuessRow {
-  @Input() tiles: GuessRowTile[] = [
-    { state: 'empty' },
-    { state: 'empty' },
-    { state: 'empty' },
-    { state: 'empty' },
-    { state: 'empty' },
-  ];
+  @Input() animateReveal = false;
+  @Input() tiles: GuessRowTile[] = Array.from({ length: GUESS_ROW_TILE_COUNT }, () => ({
+    state: 'empty' as const,
+  }));
 }

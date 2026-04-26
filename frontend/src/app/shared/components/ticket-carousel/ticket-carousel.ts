@@ -11,7 +11,11 @@ import {
 } from '@angular/core';
 import EmblaCarousel, { EmblaCarouselType } from 'embla-carousel';
 import { Router } from '@angular/router';
+import { HOME_TICKET_CAROUSEL_ITEMS, TicketCarouselItem } from '../../../constants/game-categories';
 import { Ticket, TicketTheme } from '../ticket/ticket';
+import { ticketThemeFromSlug } from '../../../utils/ticket-theme.util';
+
+export type { TicketCarouselItem };
 
 @Component({
   selector: 'app-ticket-carousel',
@@ -20,7 +24,7 @@ import { Ticket, TicketTheme } from '../ticket/ticket';
   styleUrl: './ticket-carousel.css',
 })
 export class TicketCarousel implements AfterViewInit, OnDestroy, OnChanges {
-  @Input() categories: string[] = ['Horror', 'Cartoons', 'Daily'];
+  @Input() items: TicketCarouselItem[] = HOME_TICKET_CAROUSEL_ITEMS;
 
   @ViewChild('viewport', { static: true })
   private viewportRef?: ElementRef<HTMLElement>;
@@ -38,7 +42,7 @@ export class TicketCarousel implements AfterViewInit, OnDestroy, OnChanges {
   constructor(private readonly router: Router) {}
 
   protected get activeCategory(): string {
-    return this.categories[this.activeIndex] ?? '';
+    return this.items[this.activeIndex]?.label ?? '';
   }
 
   ngAfterViewInit(): void {
@@ -52,11 +56,11 @@ export class TicketCarousel implements AfterViewInit, OnDestroy, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!changes['categories']) {
+    if (!changes['items']) {
       return;
     }
 
-    if (!this.categories.length) {
+    if (!this.items.length) {
       this.activeIndex = 0;
     }
     this.emblaApi?.reInit();
@@ -77,26 +81,16 @@ export class TicketCarousel implements AfterViewInit, OnDestroy, OnChanges {
   }
 
   protected selectCategory(index: number): void {
-    const category = (this.categories[index] ?? '').trim().toLowerCase().replace(/\s+/g, '-');
-    if (!category) {
+    const slug = (this.items[index]?.slug ?? '').trim();
+    if (!slug) {
       return;
     }
 
-    void this.router.navigate(['/game', category], { queryParams: { autoscroll: '1' } });
+    void this.router.navigate(['/game', slug], { queryParams: { autoscroll: '1' } });
   }
 
-  protected getThemeForCategory(category: string): TicketTheme {
-    const normalized = category.trim().toLowerCase();
-    if (normalized === 'horror') {
-      return 'horror';
-    }
-    if (normalized === 'cartoons') {
-      return 'cartoons';
-    }
-    if (normalized === 'daily') {
-      return 'daily-challenge';
-    }
-    return 'default';
+  protected getThemeForSlug(slug: string): TicketTheme {
+    return ticketThemeFromSlug(slug);
   }
 
   ngOnDestroy(): void {

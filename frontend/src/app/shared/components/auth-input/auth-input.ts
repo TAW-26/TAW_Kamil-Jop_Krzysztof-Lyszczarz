@@ -1,4 +1,4 @@
-import { Component, Input, model } from '@angular/core';
+import { Component, EventEmitter, Input, Output, model } from '@angular/core';
 
 @Component({
   selector: 'app-auth-input',
@@ -13,6 +13,7 @@ export class AuthInput {
   @Input() focused = false;
   @Input() disabled = false;
   @Input() autocomplete = '';
+  @Output() enterPressed = new EventEmitter<void>();
 
   readonly value = model('');
 }

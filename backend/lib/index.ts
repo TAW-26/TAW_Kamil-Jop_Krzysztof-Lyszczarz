@@ -14,8 +14,7 @@ const app = new App([
     new UserController(),
     new GameController(),
     new LeaderboardController(),
-    new AvatarShopController()
-
+    new AvatarShopController(),
 ]);
 
 await app.init();

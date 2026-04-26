@@ -1,5 +1,7 @@
 <div
   class="attribute-tile"
+  [class.attribute-tile--movie-poster]="!isEmpty && tileVariant === 'moviePoster'"
+  [class.attribute-tile--with-image]="hasImage && !isEmpty && tileVariant === 'default'"
   [ngClass]="{
     'attribute-tile--empty': state === 'empty',
     'attribute-tile--wrong': state === 'wrong',
@@ -8,7 +10,69 @@
     'attribute-tile--partial-year': state === 'partial-year'
   }"
 >
-  <span *ngIf="!isEmpty" class="attribute-tile__text text-14-semi-bold text-main-color">
-    {{ text }}
-  </span>
+  <ng-container *ngIf="!isEmpty && tileVariant === 'moviePoster'; else standardContent">
+    <div
+      class="attribute-tile__movie-inner"
+      tabindex="0"
+      role="group"
+      [attr.aria-label]="text"
+    >
+      <img
+        *ngIf="hasImage"
+        class="attribute-tile__poster attribute-tile__poster--solo"
+        [src]="imageSrc"
+        [attr.alt]="text"
+        [attr.title]="text"
+        width="44"
+        height="66"
+        loading="lazy"
+      />
+      <span
+        *ngIf="!hasImage"
+        class="attribute-tile__text attribute-tile__text--compact-uc text-14-semi-bold text-main-color"
+      >
+        {{ text }}
+      </span>
+      <span *ngIf="hasImage" class="attribute-tile__hover-title">
+        <span class="attribute-tile__hover-title-inner">{{ text }}</span>
+      </span>
+    </div>
+  </ng-container>
+  <ng-template #standardContent>
+    <img
+      *ngIf="hasImage && !isEmpty"
+      class="attribute-tile__poster"
+      [src]="imageSrc"
+      alt=""
+      width="52"
+      height="78"
+      loading="lazy"
+    />
+    <div
+      *ngIf="!isEmpty && stackCommaSeparated && stackedLines.length"
+      class="attribute-tile__stack"
+    >
+      <span
+        *ngFor="let line of stackedLines"
+        class="attribute-tile__stack-line text-main-color"
+      >
+        {{ line }}
+      </span>
+    </div>
+    <span
+      *ngIf="!isEmpty && (!stackCommaSeparated || !stackedLines.length)"
+      class="attribute-tile__text text-14-semi-bold text-main-color"
+      [class.attribute-tile__text--readable]="!uppercaseText"
+      [class.attribute-tile__text--compact-uc]="uppercaseText"
+      [class.attribute-tile__text--with-hint]="comparisonHintArrow !== ''"
+    >
+      <ng-container *ngIf="comparisonHintArrow; else tilePlainText">
+        <span class="attribute-tile__value-core">{{ valueWithoutHint }}</span>
+        <span class="attribute-tile__hint-arrow" aria-hidden="true">{{
+          comparisonHintArrow
+        }}</span>
+      </ng-container>
+      <ng-template #tilePlainText>{{ text }}</ng-template>
+    </span>
+  </ng-template>
 </div>

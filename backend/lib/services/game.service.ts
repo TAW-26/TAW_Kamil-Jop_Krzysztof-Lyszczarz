@@ -2,7 +2,79 @@ import { ComparisonStatus } from "../interfaces/game.interface.js";
 import { MovieData } from "../interfaces/game.interface.js";
 import { prisma, redis } from '../app.js';
 import { games } from "@prisma/client";
+import { GENRE_MAP } from '../constants/genres.map.js';
+
 class GameService {
+
+    private formatGenresLabel(genreIds: number[]): string {
+        if (!genreIds?.length) {
+            return '—';
+        }
+        return genreIds.map((id) => GENRE_MAP[id] ?? `(${id})`).join(', ');
+    }
+
+    private formatActorsLabel(actors: string[]): string {
+        if (!actors?.length) {
+            return '—';
+        }
+        const max = 6;
+        const shown = actors.slice(0, max);
+        const suffix = actors.length > max ? '…' : '';
+        return `${shown.join(', ')}${suffix}`;
+    }
+
+    private releaseYearLabel(releaseDate: Date | null): string {
+        if (!releaseDate || Number.isNaN(releaseDate.getTime())) {
+            return '—';
+        }
+        return String(releaseDate.getFullYear());
+    }
+
+    private formatImdbLabel(rating: number | null): string {
+        if (rating === null || rating === undefined || Number.isNaN(rating)) {
+            return '—';
+        }
+        return rating.toFixed(1);
+    }
+
+    private formatRevenueLabel(revenue: number | null): string {
+        if (revenue === null || revenue === undefined || Number.isNaN(Number(revenue))) {
+            return '—';
+        }
+        try {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                maximumFractionDigits: 0,
+            }).format(Number(revenue));
+        } catch {
+            return String(revenue);
+        }
+    }
+
+    private formatStudiosLabel(studios: string[]): string {
+        if (!studios?.length) {
+            return '—';
+        }
+        const max = 5;
+        const shown = studios.slice(0, max);
+        const suffix = studios.length > max ? '…' : '';
+        return `${shown.join(', ')}${suffix}`;
+    }
+
+    private buildGuessedDisplay(movie: MovieData) {
+        const release = movie.releaseDate ? new Date(movie.releaseDate) : null;
+        return {
+            posterPath: movie.posterPath ?? null,
+            genresLabel: this.formatGenresLabel(movie.genres),
+            directorLabel: movie.director?.trim() || '—',
+            actorsLabel: this.formatActorsLabel(movie.actors),
+            releaseYearLabel: this.releaseYearLabel(release),
+            imdbLabel: this.formatImdbLabel(movie.imdbRating ?? null),
+            revenueLabel: this.formatRevenueLabel(movie.revenue ?? null),
+            studiosLabel: this.formatStudiosLabel(movie.studios),
+        };
+    }
 
     public async checkGuess(guessMovieId : number, categorySlug : string, dateStr : string, userId : string | null) {
         if (typeof guessMovieId !== 'number' || isNaN(guessMovieId)) {
@@ -21,10 +93,13 @@ class GameService {
             const correctMovieData = await this.getMovieDataFromRedis(categorySlug, dateStr);
             const guessMovieData = await this.getMovieDataFromId(guessMovieId);
             let attempts = 0;
+            let ticketsAwarded: number | null = null;
             const isCorrect = guessMovieData.id === correctMovieData.id;
+            const guessedDisplay = this.buildGuessedDisplay(guessMovieData);
             const guessResult = {
                 isCorrect: isCorrect,
-                movieTitle: guessMovieData.title, 
+                movieTitle: guessMovieData.title,
+                guessedDisplay,
                 results: {
                 releaseDate: this.compareReleaseDate(guessMovieData.releaseDate ? new Date(guessMovieData.releaseDate) : new Date(), correctMovieData.releaseDate ? new Date(correctMovieData.releaseDate) : new Date()),
                 imdbRating: this.compareIMDBRating(guessMovieData.imdbRating || 0, correctMovieData.imdbRating || 0),
@@ -62,6 +137,7 @@ class GameService {
                 }
                 attempts = currentGame.attempts? currentGame.attempts : 0;
                 if (isCorrect) {
+                    ticketsAwarded = pointsEarned;
                     const user = await prisma.users.findUnique({ where: { id: userId } });
                     
                     let newStreak = user?.current_streak || 0;
@@ -105,7 +181,7 @@ class GameService {
                     await redis.del(`leaderboard:tries:${categorySlug}:${dateStr}`);
                 }
             }
-            return {guessResult, attempts };
+            return { guessResult, attempts, ticketsAwarded };
         }
         catch (error) {
             console.error('Błąd podczas sprawdzania zgadywania:', error);
@@ -174,9 +250,12 @@ class GameService {
 
             const response = await Promise.all(guessList.map(async (guessId) => {
                 const guessMovieData = await this.getMovieDataFromId(guessId);
+                const isGuessCorrect = guessMovieData.id === correctMovieData.id;
                 return {
                     id: guessMovieData.id,
                     title: guessMovieData.title,
+                    isCorrect: isGuessCorrect,
+                    guessedDisplay: this.buildGuessedDisplay(guessMovieData),
                     comparison: {
                         releaseDate: this.compareReleaseDate(guessMovieData.releaseDate ? new Date(guessMovieData.releaseDate) : new Date(), correctMovieData.releaseDate ? new Date(correctMovieData.releaseDate) : new Date()),
                         imdbRating: this.compareIMDBRating(guessMovieData.imdbRating || 0, correctMovieData.imdbRating || 0),
@@ -221,6 +300,7 @@ class GameService {
                 studios: movie.production_companies,
                 actors: movie.actors,
                 imdbRating: movie.imdb_rating ? parseFloat(movie.imdb_rating) : null,
+                posterPath: movie.poster_path ?? undefined,
             };
 
             return newMovieData;

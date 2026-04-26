@@ -9,5 +9,6 @@
     [attr.autocomplete]="autocomplete || null"
     [value]="value()"
     (input)="value.set(($any($event.target).value))"
+    (keydown.enter)="enterPressed.emit()"
   />
 </label>

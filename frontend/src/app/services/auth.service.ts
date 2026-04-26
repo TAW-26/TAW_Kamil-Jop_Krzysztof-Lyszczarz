@@ -43,6 +43,7 @@ export class AuthService {
   login(payload: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.baseUrl}/auth/login`, payload).pipe(
       tap(response => {
+        this.clearLocalStorage()
         this.setToken(response.token)
         this.currentUserSignal.set(response.user)
       }),
@@ -53,6 +54,7 @@ export class AuthService {
   loginWithGoogle(payload: GoogleLoginRequest): Observable<GoogleLoginResponse> {
     return this.http.post<GoogleLoginResponse>(`${this.baseUrl}/auth/google`, payload).pipe(
       tap(response => {
+        this.clearLocalStorage()
         this.setToken(response.token)
         this.currentUserSignal.set(response.user)
       }),
@@ -81,6 +83,7 @@ export class AuthService {
   }
 
   logout(): void {
+    this.clearLocalStorage()
     this.removeToken()
     this.currentUserSignal.set(null)
   }
@@ -130,6 +133,10 @@ export class AuthService {
 
   private getStoredToken(): string | null {
     return localStorage.getItem(TOKEN_KEY)
+  }
+
+  private clearLocalStorage(): void {
+    localStorage.clear()
   }
 
   private handleError(error: { error: ApiError; status: number }): Observable<never> {

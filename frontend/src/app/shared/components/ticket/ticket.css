@@ -2,6 +2,18 @@
   display: block;
 }
 
+:host.ticket-host--compact {
+  width: 168px;
+  height: 315px;
+  margin-inline: auto;
+  flex-shrink: 0;
+}
+
+:host.ticket-host--compact .ticket {
+  transform: scale(0.7);
+  transform-origin: top left;
+}
+
 .ticket {
   --ticket-bg: var(--ticket-default-gradient);
   --ticket-border: var(--ticket-default-border);

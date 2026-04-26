@@ -1,5 +1,8 @@
 <div class="search-input">
-  <div class="search-input__bar">
+  <div
+    class="search-input__bar"
+    [class.search-input__bar--busy]="isSearchPending()"
+  >
     <input
       type="text"
       class="search-input__field text-14-semi-bold text-main-color"
@@ -10,20 +13,77 @@
       autocomplete="off"
     />
 
-    <button type="button" class="search-input__button text-18-bold-uc text-black-color">
+    <button
+      type="button"
+      class="search-input__button text-18-bold-uc text-black-color"
+      (click)="onGuessClick()"
+    >
       GUESS
     </button>
   </div>
 
-  <ul *ngIf="showSuggestions" class="search-input__suggestions">
-    <li *ngFor="let item of filteredSuggestions">
-      <button
-        type="button"
-        class="search-input__suggestion-item text-14-semi-bold text-main-color"
-        (mousedown)="selectSuggestion(item)"
-      >
-        {{ item }}
-      </button>
-    </li>
-  </ul>
+  <div *ngIf="showDropdown()" class="search-input__dropdown">
+    <div
+      *ngIf="isSearchPending()"
+      class="search-input__pending"
+      aria-busy="true"
+      aria-live="polite"
+    >
+      <p class="search-input__pending-label text-12-regular text-muted-color">Searching…</p>
+      <div class="search-input__shimmer-rows">
+        <div
+          *ngFor="let row of shimmerRowIndexes; trackBy: trackByShimmerRow"
+          class="search-input__shimmer-row"
+        ></div>
+      </div>
+    </div>
+
+    <ul
+      *ngIf="!isSearchPending() && apiSuggestions().length > 0"
+      class="search-input__suggestions"
+      role="listbox"
+    >
+      <li *ngFor="let movie of apiSuggestions(); trackBy: trackByMovieId" role="option">
+        <button
+          type="button"
+          class="search-input__suggestion-item text-14-semi-bold text-main-color"
+          (mousedown)="selectSuggestion(movie)"
+        >
+          <span class="search-input__suggestion-row">
+            <span class="search-input__suggestion-poster">
+              <img
+                *ngIf="movie.poster_path && posterUrl(movie.poster_path) as src"
+                [src]="src"
+                [alt]="'Plakat: ' + movie.title"
+                width="46"
+                height="69"
+                loading="lazy"
+              />
+              <span
+                *ngIf="!movie.poster_path || !posterUrl(movie.poster_path)"
+                class="search-input__suggestion-poster-placeholder"
+                aria-hidden="true"
+              ></span>
+            </span>
+            <span class="search-input__suggestion-text">
+              <span class="search-input__suggestion-title">{{ movie.title }}</span>
+              <span
+                *ngIf="movie.original_title && movie.original_title !== movie.title"
+                class="search-input__suggestion-sub text-12-regular text-muted-color"
+              >
+                {{ movie.original_title }}
+              </span>
+            </span>
+          </span>
+        </button>
+      </li>
+    </ul>
+    <p
+      *ngIf="!isSearchPending() && showNoMatchesMessage()"
+      class="search-input__no-matches text-14-semi-bold text-muted-color"
+      role="status"
+    >
+      No movies in this category match that title. Try another spelling or title.
+    </p>
+  </div>
 </div>

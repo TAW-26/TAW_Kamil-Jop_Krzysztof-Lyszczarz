@@ -15,15 +15,28 @@ export interface GuessComparisonResults {
   actors: ComparisonStatus
 }
 
+export interface GuessedMovieDisplay {
+  posterPath: string | null
+  genresLabel: string
+  directorLabel: string
+  actorsLabel: string
+  releaseYearLabel: string
+  imdbLabel: string
+  revenueLabel: string
+  studiosLabel: string
+}
+
 export interface GuessResult {
   isCorrect: boolean
   movieTitle: string | null
+  guessedDisplay?: GuessedMovieDisplay
   results: GuessComparisonResults
 }
 
 export interface GuessResponse {
   guessResult: GuessResult
   attempts: number
+  ticketsAwarded?: number | null
 }
 
 export interface HintResponse {
@@ -34,6 +47,8 @@ export interface HintResponse {
 export interface GameStateGuess {
   id: number
   title: string | null
+  isCorrect: boolean
+  guessedDisplay?: GuessedMovieDisplay
   comparison: GuessComparisonResults
 }
 

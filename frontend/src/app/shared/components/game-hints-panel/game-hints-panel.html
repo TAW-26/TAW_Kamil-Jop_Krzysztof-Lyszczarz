@@ -1,0 +1,131 @@
+<section class="game-hints-panel" aria-labelledby="game-hints-heading">
+  <div class="game-hints-panel__bar">
+    <div class="game-hints-panel__lead">
+      <h3 id="game-hints-heading" class="game-hints-panel__title text-12-semi-bold-uc text-main-color">
+        Hints
+      </h3>
+      <p class="game-hints-panel__hint text-11-muted">
+        Optional. Poster after {{ posterMin }} guesses · Overview after {{ overviewMin }}.
+      </p>
+    </div>
+    <label class="game-hints-panel__switch">
+      <input
+        type="checkbox"
+        class="game-hints-panel__checkbox"
+        [checked]="hintsEnabled()"
+        (change)="toggleHintsEnabled($any($event.target).checked)"
+      />
+      <span class="game-hints-panel__switch-ui" aria-hidden="true"></span>
+      <span class="game-hints-panel__switch-label text-12-semi-bold-uc text-muted-color"
+        >Enable hints</span
+      >
+    </label>
+  </div>
+
+  @if (hintsEnabled()) {
+    <div class="game-hints-panel__cards" role="group" aria-label="Hint unlocks">
+      <article class="hint-card">
+        <div class="hint-card__head">
+          <span class="hint-card__label text-12-semi-bold-uc text-main-color">Poster</span>
+          <span class="hint-card__rule text-11-muted">After {{ posterMin }} guesses</span>
+        </div>
+        @if (attemptCount() < posterMin) {
+          <p class="hint-card__locked text-12-regular text-muted-color">
+            {{ lockedPosterMessage() }}
+          </p>
+        } @else if (!posterUrl()) {
+          <button
+            type="button"
+            class="hint-card__reveal text-12-semi-bold-uc"
+            [disabled]="posterLoading()"
+            (click)="revealPoster()"
+          >
+            {{ posterLoading() ? 'Loading…' : 'Reveal poster' }}
+          </button>
+        } @else {
+          <div class="hint-card__poster-done">
+            <p class="hint-card__poster-note text-12-regular text-muted-color">
+              Opens in a modal — heavily blurred so it stays a hint.
+            </p>
+            <button
+              type="button"
+              class="hint-card__reveal text-12-semi-bold-uc"
+              (click)="openPosterModal()"
+            >
+              View poster hint
+            </button>
+          </div>
+        }
+      </article>
+
+      <article class="hint-card">
+        <div class="hint-card__head">
+          <span class="hint-card__label text-12-semi-bold-uc text-main-color">Overview</span>
+          <span class="hint-card__rule text-11-muted">After {{ overviewMin }} guesses</span>
+        </div>
+        @if (attemptCount() < overviewMin) {
+          <p class="hint-card__locked text-12-regular text-muted-color">
+            {{ lockedOverviewMessage() }}
+          </p>
+        } @else if (!overviewText()) {
+          <button
+            type="button"
+            class="hint-card__reveal text-12-semi-bold-uc"
+            [disabled]="overviewLoading()"
+            (click)="revealOverview()"
+          >
+            {{ overviewLoading() ? 'Loading…' : 'Reveal overview' }}
+          </button>
+        } @else {
+          <p class="hint-card__overview text-12-regular text-main-color">
+            {{ overviewText() }}
+          </p>
+        }
+      </article>
+    </div>
+  }
+
+  @if (posterModalOpen() && posterUrl()) {
+    <div
+      class="hint-poster-modal__backdrop"
+      role="presentation"
+      (click)="onPosterBackdrop($event)"
+    >
+      <div
+        class="hint-poster-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="hint-poster-modal-title"
+        (click)="$event.stopPropagation()"
+      >
+        <h4
+          id="hint-poster-modal-title"
+          class="hint-poster-modal__title text-14-semi-bold-uc text-main-color"
+        >
+          Poster hint
+        </h4>
+        <p class="hint-poster-modal__sub text-11-muted">
+          Blurred on purpose — enough to nudge you, not enough to read the title.
+        </p>
+        <div class="hint-poster-modal__stage">
+          <img
+            [src]="posterUrl()!"
+            alt="Blurred movie poster hint"
+            width="342"
+            height="513"
+            class="hint-poster-modal__img"
+            loading="eager"
+            decoding="async"
+          />
+        </div>
+        <button
+          type="button"
+          class="hint-poster-modal__close text-12-semi-bold-uc"
+          (click)="closePosterModal()"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  }
+</section>

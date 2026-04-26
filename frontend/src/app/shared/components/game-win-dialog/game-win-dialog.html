@@ -1,0 +1,43 @@
+<div
+  class="game-win-dialog__backdrop"
+  role="presentation"
+  (click)="onBackdrop($event)"
+>
+  <div
+    class="game-win-dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="game-win-dialog-heading"
+    (click)="$event.stopPropagation()"
+  >
+    <h2 id="game-win-dialog-heading" class="game-win-dialog__title text-28-black-uc text-main-color">
+      Congratulations!
+    </h2>
+    <p class="game-win-dialog__movie text-18-bold text-medal-gold">
+      {{ movieTitle }}
+    </p>
+    <p class="game-win-dialog__line text-15-regular text-main-color">
+      You solved it <span class="game-win-dialog__emphasis">{{ attemptsPhrase }}</span>.
+    </p>
+    <p
+      *ngIf="ticketsAwarded !== null"
+      class="game-win-dialog__tickets text-16-semi-bold text-main-color"
+    >
+      🎟️ {{ ticketsPhrase }}
+    </p>
+    <p
+      *ngIf="ticketsAwarded === null && !isLoggedIn"
+      class="game-win-dialog__guest text-12-regular text-muted-color"
+    >
+      You're not signed in — log in to earn tickets in the avatar shop.
+    </p>
+    <div class="game-win-dialog__actions">
+      <app-button
+        variant="profile-settings"
+        [labelOverride]="'Close'"
+        [fullWidth]="true"
+        (click)="onClose()"
+      ></app-button>
+    </div>
+  </div>
+</div>

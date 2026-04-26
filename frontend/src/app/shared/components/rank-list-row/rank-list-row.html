@@ -11,7 +11,16 @@
 
   <div class="rank-list-row__nickname-wrap">
     <div *ngIf="!isHistory" class="rank-list-row__avatar">
-      <span class="rank-list-row__avatar-icon">🧙‍♂️</span>
+      <img
+        *ngIf="avatarUrl"
+        [src]="avatarUrl"
+        alt=""
+        class="rank-list-row__avatar-img"
+        width="32"
+        height="32"
+        loading="lazy"
+      />
+      <span *ngIf="!avatarUrl" class="rank-list-row__avatar-icon">🧙‍♂️</span>
     </div>
     <p
       class="rank-list-row__nickname"
@@ -22,11 +31,21 @@
     </p>
   </div>
 
-  <p class="rank-list-row__tickets" [class.text-16-black-uc]="!isHistory" [class.text-14-semi-bold-uc]="isHistory">
+  <p
+    *ngIf="!hideTicketsColumn"
+    class="rank-list-row__tickets"
+    [class.text-16-black-uc]="!isHistory"
+    [class.text-14-semi-bold-uc]="isHistory"
+  >
     {{ tickets }}
   </p>
 
-  <p class="rank-list-row__streak" [class.text-16-black-uc]="!isHistory" [class.text-14-semi-bold-uc]="isHistory">
+  <p
+    *ngIf="!hideStreakColumn"
+    class="rank-list-row__streak"
+    [class.text-16-black-uc]="!isHistory"
+    [class.text-14-semi-bold-uc]="isHistory"
+  >
     {{ streak }}
   </p>
 </article>

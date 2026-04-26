@@ -3,17 +3,17 @@
     <div #viewport class="ticket-carousel__viewport embla__viewport">
       <div class="ticket-carousel__container embla__container">
         <div
-          *ngFor="let category of categories; let i = index"
+          *ngFor="let item of items; let i = index"
           class="ticket-carousel__slide embla__slide"
         >
           <button
             type="button"
             class="ticket-carousel__ticket-button"
             (click)="selectCategory(i)"
-            [attr.aria-label]="'Go to category ' + category"
+            [attr.aria-label]="'Go to category ' + item.label"
           >
             <div class="ticket-carousel__ticket-scale">
-              <app-ticket [title]="category.toUpperCase()" [theme]="getThemeForCategory(category)" />
+              <app-ticket [title]="item.label.toUpperCase()" [theme]="getThemeForSlug(item.slug)" />
             </div>
           </button>
         </div>
@@ -31,7 +31,7 @@
       class="ticket-carousel__control-btn"
       aria-label="Previous category"
       (click)="previous()"
-      [disabled]="!canScrollPrev && categories.length <= 1"
+      [disabled]="!canScrollPrev && items.length <= 1"
     >
       <span class="ticket-carousel__control-icon" aria-hidden="true">‹</span>
     </button>
@@ -40,7 +40,7 @@
       class="ticket-carousel__control-btn"
       aria-label="Next category"
       (click)="next()"
-      [disabled]="!canScrollNext && categories.length <= 1"
+      [disabled]="!canScrollNext && items.length <= 1"
     >
       <span class="ticket-carousel__control-icon" aria-hidden="true">›</span>
     </button>

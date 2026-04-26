@@ -26,6 +26,7 @@ export interface SafeUser {
     lifetime_points: number | null;
     points_balance: number | null;
     current_streak: number | null;
+    lifetime_streak: number | null;
     equipped_avatar_id: number | null;
     equipped_avatar_url: string | null;
     created_at: Date | null;

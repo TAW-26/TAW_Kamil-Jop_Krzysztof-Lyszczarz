@@ -1,6 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { HOME_TICKET_CAROUSEL_ITEMS } from '../../constants/game-categories';
 import { Button } from '../../shared/components/button/button';
 import { Footer } from '../../shared/components/footer/footer';
 import { HowToPlaySection } from '../../shared/components/how-to-play-section/how-to-play-section';
@@ -17,9 +18,11 @@ import { TicketCarousel } from '../../shared/components/ticket-carousel/ticket-c
 export class Home implements OnInit, OnDestroy {
   private fragmentSubscription?: Subscription;
 
+  protected readonly carouselItems = signal(HOME_TICKET_CAROUSEL_ITEMS);
+
   constructor(
     private readonly route: ActivatedRoute,
-    private readonly router: Router
+    private readonly router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -28,7 +31,6 @@ export class Home implements OnInit, OnDestroy {
         return;
       }
 
-      // Allow the view to settle after navigation before scrolling.
       setTimeout(() => this.scrollToSection(fragment), 0);
     });
   }
@@ -52,6 +54,8 @@ export class Home implements OnInit, OnDestroy {
   }
 
   protected goToDailyGame(): void {
-    void this.router.navigate(['/game', 'daily'], { queryParams: { autoscroll: '1' } });
+    void this.router.navigate(['/game', 'top-500-revenue'], {
+      queryParams: { autoscroll: '1' },
+    });
   }
 }

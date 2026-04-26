@@ -20,9 +20,7 @@
 
   <section id="home-genre" class="home__genre">
     <h2 class="home__section-title text-40-bold text-main-color">Choose your genre</h2>
-    <app-ticket-carousel
-      [categories]="['Horror', 'Cartoons', 'Daily']"
-    ></app-ticket-carousel>
+    <app-ticket-carousel [items]="carouselItems()"></app-ticket-carousel>
   </section>
 
   <section id="home-how-to-play" class="home__how-to-play">
