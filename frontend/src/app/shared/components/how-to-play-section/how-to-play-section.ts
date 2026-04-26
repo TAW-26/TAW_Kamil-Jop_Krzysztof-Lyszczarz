@@ -18,21 +18,21 @@ export class HowToPlaySection {
   protected readonly steps: HowToPlayStep[] = [
     {
       step: 1,
-      title: 'Wybierz bilet',
+      title: 'Pick a category',
       description:
-        'Zdecyduj sie na jedna z 5 kategorii. Masz ochote na kino grozy, czy moze wolisz klasyki z listy TOP 250?',
+        'Choose from genres like horror, cartoons, or the IMDb Top 250. There is also a daily challenge open to everyone.',
     },
     {
       step: 2,
-      title: 'Wybierz bilet',
+      title: 'Guess the title',
       description:
-        'Zdecyduj sie na jedna z 5 kategorii. Masz ochote na kino grozy, czy moze wolisz klasyki z listy TOP 250?',
+        'After each hint, search for a movie title. Tiles show how close you are on year, genre, director, cast, and more.',
     },
     {
       step: 3,
-      title: 'Wybierz bilet',
+      title: 'Earn tickets',
       description:
-        'Zdecyduj sie na jedna z 5 kategorii. Masz ochote na kino grozy, czy moze wolisz klasyki z listy TOP 250?',
+        'Correct guesses award tickets. Spend them on profile avatars and other items in the shop.',
     },
   ];
 }

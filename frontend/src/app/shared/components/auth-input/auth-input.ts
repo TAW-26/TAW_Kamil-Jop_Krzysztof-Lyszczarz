@@ -8,7 +8,7 @@ import { Component, Input, model } from '@angular/core';
 })
 export class AuthInput {
   @Input() label = 'ADRES E-MAIL';
-  @Input() placeholder = 'Wpisz swój email';
+  @Input() placeholder = 'Enter your email';
   @Input() type: 'text' | 'email' | 'password' = 'text';
   @Input() focused = false;
   @Input() disabled = false;

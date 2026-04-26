@@ -1,12 +1,27 @@
 <section class="profile-header-card">
   <div class="profile-header-card__left">
-    <div class="profile-header-card__avatar">
-      <span class="profile-header-card__avatar-icon">{{ icon }}</span>
+    <div
+      class="profile-header-card__avatar"
+      [class.profile-header-card__avatar--photo]="avatarPosterUrl()"
+    >
+      <img
+        *ngIf="avatarPosterUrl() as src"
+        [src]="src"
+        [attr.alt]="'Awatar profilu: ' + nickname()"
+        class="profile-header-card__avatar-img"
+        loading="lazy"
+        width="100"
+        height="100"
+      />
+      <ng-container *ngIf="!avatarPosterUrl()">
+        <span class="profile-header-card__avatar-icon">{{ icon }}</span>
+        <span class="profile-header-card__avatar-mock text-muted-color">(mock)</span>
+      </ng-container>
     </div>
 
     <div class="profile-header-card__meta">
-      <h2 class="profile-header-card__nickname">{{ nickname }}</h2>
-      <p class="profile-header-card__created text-muted-color">{{ createdAt }}</p>
+      <h2 class="profile-header-card__nickname">{{ nickname() }}</h2>
+      <p class="profile-header-card__created text-muted-color">{{ createdAt() }}</p>
       <p class="profile-header-card__badge">{{ badge }}</p>
     </div>
   </div>
@@ -16,10 +31,10 @@
     <button
       type="button"
       class="profile-header-card__logout text-14-bold"
-      aria-label="Wyloguj się z konta"
+      aria-label="Sign out of your account"
       (click)="logout()"
     >
-      Wyloguj
+      Sign out
     </button>
   </div>
 </section>

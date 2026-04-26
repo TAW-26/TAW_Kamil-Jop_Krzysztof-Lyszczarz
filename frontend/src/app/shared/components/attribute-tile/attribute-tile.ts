@@ -16,7 +16,7 @@ export type AttributeTileState =
 })
 export class AttributeTile {
   @Input() state: AttributeTileState = 'empty';
-  @Input() text = 'TEKST';
+  @Input() text = 'TEXT';
 
   protected get isEmpty(): boolean {
     return this.state === 'empty';

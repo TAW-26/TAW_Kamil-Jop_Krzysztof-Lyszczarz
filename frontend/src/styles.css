@@ -294,3 +294,22 @@ body {
   line-height: 1.1;
   text-transform: uppercase;
 }
+
+.shop-card--eq-to-equip .shop-card__action app-button button.app-button--outline-light {
+  transition:
+    border-color 0.18s ease,
+    filter 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.shop-card--eq-to-equip .shop-card__action app-button button.app-button--outline-light:hover {
+  border-color: var(--medal-gold);
+  filter: brightness(1.12);
+  box-shadow: 0 0 0 1px rgb(212 175 55 / 35%);
+}
+
+.shop-card--eq-to-equip .shop-card__action app-button button.app-button--outline-light:focus-visible {
+  border-color: var(--medal-gold);
+  outline: none;
+  box-shadow: 0 0 0 2px rgb(212 175 55 / 45%);
+}

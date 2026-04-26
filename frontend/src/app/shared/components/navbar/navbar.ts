@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
+import { AvatarShopApiService } from '../../../services/avatar-shop-api.service';
+import { equippedAvatarImageUrl } from '../../../utils/equipped-avatar-url.util';
 import { Button } from '../button/button';
 
 export type NavbarLayout = 'auto' | 'log-sign';
@@ -16,23 +18,31 @@ type NavbarLink =
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
-export class Navbar {
+export class Navbar implements OnInit {
   private readonly auth = inject(AuthService);
+  private readonly avatarShop = inject(AvatarShopApiService);
 
-  /** `log-sign` — strony logowania (tylko logo). `auto` — linki + gość albo zalogowany użytkownik. */
   @Input() layout: NavbarLayout = 'auto';
-  /** Przy zalogowanym: pokaż bilet / saldo obok awatara (np. sklep, profil). */
   @Input() showWallet = false;
-  /** Nadpisanie tekstu portfela; puste = `points_balance` z `/auth/me`. */
   @Input() walletAmount?: string;
 
   @Output() navLinkSelect = new EventEmitter<string>();
 
+  ngOnInit(): void {
+    if (this.auth.isAuthenticated()) {
+      this.avatarShop.fetchOwnedAvatars().subscribe({ error: console.error });
+    }
+  }
+
+  protected readonly navbarAvatarUrl = computed(() =>
+    equippedAvatarImageUrl(this.auth.currentUser(), this.avatarShop.ownedAvatars()),
+  );
+
   protected readonly links: NavbarLink[] = [
-    { label: 'Kategorie', type: 'section', targetId: 'home-genre' },
+    { label: 'Categories', type: 'section', targetId: 'home-genre' },
     { label: 'Ranking', type: 'route', commands: ['/rank'] },
-    { label: 'Zasady', type: 'section', targetId: 'home-how-to-play' },
-    { label: 'Sklep', type: 'route', commands: ['/shop'] },
+    { label: 'How to play', type: 'section', targetId: 'home-how-to-play' },
+    { label: 'Shop', type: 'route', commands: ['/shop'] },
   ];
 
   constructor(private readonly router: Router) {}
@@ -62,7 +72,7 @@ export class Navbar {
     if (b == null || Number.isNaN(b)) {
       return '0';
     }
-    return b.toLocaleString('pl-PL');
+    return b.toLocaleString('en-US');
   }
 
   protected displayName(): string | null {

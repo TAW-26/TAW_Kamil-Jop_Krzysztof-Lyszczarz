@@ -1,6 +1,6 @@
 <section class="profile-tabs-section">
   <app-tab-buttons
-    [tabs]="['HISTORIA GIER', 'EKWIPUNEK']"
+    [tabs]="['GAME HISTORY', 'INVENTORY']"
     [activeIndex]="activeTabIndex"
     (activeIndexChange)="setActiveTab($event)"
   ></app-tab-buttons>
@@ -10,34 +10,45 @@
       variant="history"
       [rowWidth]="900"
       [rowMinHeight]="63"
-      position="DZIŚ, 18:30"
+      position="TODAY, 6:30 PM"
       nickname="🔪HORROR"
-      tickets="ZGADNIĘTO ZA 3 RAZEM"
-      streak="WYGRANA"
+      tickets="GUESSED ON 3RD TRY"
+      streak="WIN"
     ></app-rank-list-row>
     <app-rank-list-row
       variant="history"
       [rowWidth]="900"
       [rowMinHeight]="63"
-      position="DZIŚ, 18:30"
+      position="TODAY, 6:30 PM"
       nickname="🔪HORROR"
-      tickets="ZGADNIĘTO ZA 3 RAZEM"
-      streak="WYGRANA"
+      tickets="GUESSED ON 3RD TRY"
+      streak="WIN"
     ></app-rank-list-row>
     <app-rank-list-row
       variant="history"
       [rowWidth]="900"
       [rowMinHeight]="63"
-      position="DZIŚ, 18:30"
+      position="TODAY, 6:30 PM"
       nickname="🔪HORROR"
-      tickets="ZGADNIĘTO ZA 3 RAZEM"
-      streak="WYGRANA"
+      tickets="GUESSED ON 3RD TRY"
+      streak="WIN"
     ></app-rank-list-row>
   </div>
 
   <div *ngIf="activeTabIndex === 1" class="profile-tabs-section__equipment-cards">
-    <app-shop-card variant="card-eq-to-equip"></app-shop-card>
-    <app-shop-card variant="card-eq-equipped"></app-shop-card>
-    <app-shop-card variant="card-eq-to-equip"></app-shop-card>
+    <p *ngIf="ownedAvatars().length === 0" class="profile-tabs-section__equipment-empty text-muted-color">
+      You do not have any avatars yet. Buy some in the shop.
+    </p>
+    <app-shop-card
+      *ngFor="let avatar of ownedAvatars(); trackBy: trackByAvatarId"
+      [variant]="equipmentVariant(avatar.id)"
+      [title]="avatar.title || 'Movie'"
+      [posterPath]="avatar.posterPath"
+      [description]="''"
+      [icon]="'🍿'"
+      [movieId]="avatar.id"
+      [equipDisabled]="equippingId() !== null"
+      (equipClick)="onEquipAvatar($event)"
+    ></app-shop-card>
   </div>
 </section>

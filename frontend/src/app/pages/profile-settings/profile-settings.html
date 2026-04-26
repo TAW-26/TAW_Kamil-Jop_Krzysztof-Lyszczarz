@@ -6,23 +6,23 @@
       <app-profile-header-card></app-profile-header-card>
 
       <article class="profile-settings-page__card">
-        <h1 class="profile-settings-page__title text-28-black-uc text-main-color">Ustawienia konta</h1>
+        <h1 class="profile-settings-page__title text-28-black-uc text-main-color">Account settings</h1>
 
         <div class="profile-settings-page__form">
-          <app-auth-input label="NICK" placeholder="Wpisz nowy nick"></app-auth-input>
+          <app-auth-input label="USERNAME" placeholder="Enter a new username"></app-auth-input>
           <app-auth-input
-            label="ADRES E-MAIL"
-            placeholder="Wpisz nowy adres e-mail"
+            label="EMAIL"
+            placeholder="Enter a new email address"
             type="email"
           ></app-auth-input>
           <app-auth-input
-            label="OBECNE HASŁO"
-            placeholder="Wpisz obecne hasło"
+            label="CURRENT PASSWORD"
+            placeholder="Enter your current password"
             type="password"
           ></app-auth-input>
           <app-auth-input
-            label="NOWE HASŁO"
-            placeholder="Wpisz nowe hasło"
+            label="NEW PASSWORD"
+            placeholder="Enter a new password"
             type="password"
           ></app-auth-input>
         </div>
@@ -30,12 +30,12 @@
         <div class="profile-settings-page__actions">
           <app-button
             variant="profile-settings"
-            [labelOverride]="'ANULUJ ZMIANY'"
+            [labelOverride]="'DISCARD CHANGES'"
             [fullWidth]="true"
           ></app-button>
           <app-button
             variant="log-in"
-            [labelOverride]="'ZAPISZ ZMIANY'"
+            [labelOverride]="'SAVE CHANGES'"
             [fullWidth]="true"
           ></app-button>
         </div>

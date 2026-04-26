@@ -44,7 +44,7 @@ export class GameApiService {
   }
 
   private handleError(error: { error: ApiError; status: number }): Observable<never> {
-    const message = error.error?.message ?? error.error?.error ?? 'Blad podczas komunikacji z serwerem gry'
+    const message = error.error?.message ?? error.error?.error ?? 'Game server communication error'
     return throwError(() => new Error(message))
   }
 }

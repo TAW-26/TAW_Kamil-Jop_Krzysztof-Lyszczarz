@@ -24,19 +24,46 @@
 }
 
 .profile-header-card__avatar {
+  box-sizing: border-box;
+  flex-shrink: 0;
   width: 100px;
   height: 100px;
+  padding: 6px 4px 8px;
   border: 3px solid var(--medal-gold);
   border-radius: 50%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 2px;
   background: rgba(255, 255, 255, 0.03);
 }
 
+.profile-header-card__avatar--photo {
+  padding: 0;
+  overflow: hidden;
+}
+
+.profile-header-card__avatar-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 50%;
+}
+
 .profile-header-card__avatar-icon {
-  font-size: 48px;
+  font-size: 40px;
   line-height: 1;
+}
+
+.profile-header-card__avatar-mock {
+  font-family: 'Poppins', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+  text-transform: lowercase;
 }
 
 .profile-header-card__meta {

@@ -9,15 +9,15 @@
     <div class="auth-form__fields">
       <ng-container *ngIf="mode === 'login'">
         <app-auth-input
-          label="NICK"
-          placeholder="Wpisz swój nick"
+          label="USERNAME"
+          placeholder="Enter your username"
           autocomplete="username"
           [(value)]="username"
           [disabled]="isSubmitting()"
         />
         <app-auth-input
-          label="HASŁO"
-          placeholder="Wpisz hasło"
+          label="PASSWORD"
+          placeholder="Enter your password"
           type="password"
           autocomplete="current-password"
           [(value)]="password"
@@ -27,32 +27,32 @@
 
       <ng-container *ngIf="mode === 'signup'">
         <app-auth-input
-          label="ADRES E-MAIL"
-          placeholder="Wpisz swój email"
+          label="EMAIL"
+          placeholder="Enter your email"
           type="email"
           autocomplete="email"
           [(value)]="email"
           [disabled]="isSubmitting()"
         />
         <app-auth-input
-          label="HASŁO"
-          placeholder="Wpisz hasło"
+          label="PASSWORD"
+          placeholder="Enter your password"
           type="password"
           autocomplete="new-password"
           [(value)]="password"
           [disabled]="isSubmitting()"
         />
         <app-auth-input
-          label="POTWIERDŹ HASŁO"
-          placeholder="Powtórz hasło"
+          label="CONFIRM PASSWORD"
+          placeholder="Repeat your password"
           type="password"
           autocomplete="new-password"
           [(value)]="confirmPassword"
           [disabled]="isSubmitting()"
         />
         <app-auth-input
-          label="NICK"
-          placeholder="Wpisz swój nick (login)"
+          label="USERNAME"
+          placeholder="Choose a username"
           autocomplete="username"
           [(value)]="username"
           [disabled]="isSubmitting()"
@@ -62,7 +62,7 @@
 
     <p *ngIf="mode === 'login'" class="auth-form__forgot">
       <a routerLink="/forgot-password" class="auth-form__forgot-link text-12-regular text-muted-color">
-        Zapomniałeś hasła?
+        Forgot your password?
       </a>
     </p>
 
@@ -72,14 +72,14 @@
           [variant]="mode === 'login' ? 'log-in' : 'sign-up'"
           [fullWidth]="true"
           [disabled]="isSubmitting()"
-          [labelOverride]="isSubmitting() ? 'Proszę czekać…' : undefined"
+          [labelOverride]="isSubmitting() ? 'Please wait…' : undefined"
           (click)="submit()"
         ></app-button>
       </div>
 
       <div class="auth-form__divider">
         <span class="auth-form__divider-line"></span>
-        <span class="auth-form__divider-text text-12-semi-bold-uc text-main-color">LUB</span>
+        <span class="auth-form__divider-text text-12-semi-bold-uc text-main-color">OR</span>
         <span class="auth-form__divider-line"></span>
       </div>
 

@@ -6,6 +6,7 @@ import { Button } from '../button/button';
 import { AuthInput } from '../auth-input/auth-input';
 import { AuthMode, AuthToggle } from '../auth-toggle/auth-toggle';
 import { AuthService } from '../../../services/auth.service';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'app-auth-form',
@@ -17,6 +18,7 @@ export class AuthForm {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly toast = inject(ToastService);
 
   protected mode: AuthMode = 'login';
 
@@ -44,7 +46,7 @@ export class AuthForm {
   }
 
   protected handleGoogleClick(): void {
-    this.error.set('Logowanie Google jeszcze nie zrobione #TODO');
+    this.error.set('Google sign-in is not implemented yet #TODO');
   }
 
   private clearFields(): void {
@@ -58,7 +60,7 @@ export class AuthForm {
     const username = this.username.trim();
     const password = this.password;
     if (!username || !password) {
-      this.error.set('Wpisz nick i hasło.');
+      this.error.set('Enter your username and password.');
       return;
     }
 
@@ -67,7 +69,10 @@ export class AuthForm {
       .login({ username, password })
       .pipe(finalize(() => this.isSubmitting.set(false)))
       .subscribe({
-        next: () => this.navigateAfterAuth(),
+        next: () => {
+          this.toast.show('Signed in successfully.');
+          this.navigateAfterAuth();
+        },
         error: (err: Error) => this.error.set(err.message),
       });
   }
@@ -79,12 +84,12 @@ export class AuthForm {
     const confirm = this.confirmPassword;
 
     if (!username || !email || !password || !confirm) {
-      this.error.set('Wypełnij wszystkie pola.');
+      this.error.set('Fill in all fields.');
       return;
     }
 
     if (password !== confirm) {
-      this.error.set('Hasła muszą być takie same.');
+      this.error.set('Passwords must match.');
       return;
     }
 
@@ -96,7 +101,10 @@ export class AuthForm {
         finalize(() => this.isSubmitting.set(false))
       )
       .subscribe({
-        next: () => this.navigateAfterAuth(),
+        next: () => {
+          this.toast.show('Account created. Signed in successfully.');
+          this.navigateAfterAuth();
+        },
         error: (err: Error) => this.error.set(err.message),
       });
   }

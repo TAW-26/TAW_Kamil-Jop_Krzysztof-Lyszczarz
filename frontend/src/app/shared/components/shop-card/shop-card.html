@@ -4,17 +4,29 @@
   [class.shop-card--eq-to-equip]="isEqToEquip"
   [class.shop-card--eq-equipped]="isEqEquipped"
 >
-  <div *ngIf="isBuyNew" class="shop-card__new-badge text-8-bold-uc">NOWOŚĆ</div>
-  <div *ngIf="isEqEquipped" class="shop-card__equipped-badge text-8-bold-uc">ZAŁOŻONO</div>
+  <div *ngIf="isBuyNew && showNewBadge" class="shop-card__new-badge text-8-bold-uc">NEW</div>
+  <div *ngIf="isEqEquipped" class="shop-card__equipped-badge text-8-bold-uc">EQUIPPED</div>
 
   <div class="shop-card__icon-wrap">
     <div class="shop-card__icon-bg"></div>
-    <span class="shop-card__icon">{{ icon }}</span>
+    <img
+      *ngIf="posterSrc"
+      [src]="posterSrc"
+      [alt]="title || 'Movie poster'"
+      class="shop-card__poster"
+      loading="lazy"
+      width="100"
+      height="100"
+    />
+    <span *ngIf="!posterSrc" class="shop-card__icon">{{ icon }}</span>
   </div>
 
   <h3 class="shop-card__title text-18-bold text-main-color">{{ title }}</h3>
 
-  <p *ngIf="showDescription" class="shop-card__description text-12-regular text-muted-color">
+  <p
+    *ngIf="showDescription && description.trim()"
+    class="shop-card__description text-12-regular text-muted-color"
+  >
     {{ description }}
   </p>
 
@@ -31,6 +43,8 @@
       variant="buy"
       [tickets]="buyTickets"
       [fullWidth]="true"
+      [disabled]="purchaseDisabled"
+      (click)="onBuyPressed()"
     ></app-button>
 
     <app-button
@@ -42,8 +56,10 @@
     <app-button
       *ngIf="variant === 'card-eq-to-equip'"
       variant="profile-settings"
-      [labelOverride]="'Użyj'"
+      [labelOverride]="'Equip'"
       [fullWidth]="true"
+      [disabled]="equipDisabled"
+      (click)="onEquipPressed()"
     ></app-button>
   </div>
 </article>

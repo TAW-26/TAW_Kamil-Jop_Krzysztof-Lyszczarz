@@ -21,7 +21,7 @@ export class MovieSearchApiService {
   }
 
   private handleError(error: { error: ApiError; status: number }): Observable<never> {
-    const message = error.error?.message ?? error.error?.error ?? 'Blad podczas wyszukiwania filmow'
+    const message = error.error?.message ?? error.error?.error ?? 'Movie search error'
     return throwError(() => new Error(message))
   }
 }

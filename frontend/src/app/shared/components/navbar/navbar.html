@@ -2,7 +2,7 @@
   <button
     type="button"
     class="navbar__logo-button"
-    aria-label="Przejdz do strony glownej"
+    aria-label="Go to home page"
     (click)="goToHome()"
   >
     <span class="navbar__logo text-28-black-uc text-main-color">MOVIEGUESS</span>
@@ -27,10 +27,19 @@
     <button
       type="button"
       class="navbar__avatar-button navbar__avatar"
-      aria-label="Przejdz do profilu"
+      aria-label="Go to profile"
       (click)="goToProfile()"
     >
-      🧙‍♂️
+      <img
+        *ngIf="navbarAvatarUrl() as navSrc"
+        [src]="navSrc"
+        alt=""
+        class="navbar__avatar-img"
+        width="40"
+        height="40"
+        loading="lazy"
+      />
+      <span *ngIf="!navbarAvatarUrl()" class="navbar__avatar-fallback" aria-hidden="true">🧙‍♂️</span>
     </button>
   </div>
 
@@ -47,10 +56,19 @@
     <button
       type="button"
       class="navbar__avatar-button navbar__avatar"
-      aria-label="Przejdz do profilu"
+      aria-label="Go to profile"
       (click)="goToProfile()"
     >
-      🧙‍♂️
+      <img
+        *ngIf="navbarAvatarUrl() as navSrc"
+        [src]="navSrc"
+        alt=""
+        class="navbar__avatar-img"
+        width="40"
+        height="40"
+        loading="lazy"
+      />
+      <span *ngIf="!navbarAvatarUrl()" class="navbar__avatar-fallback" aria-hidden="true">🧙‍♂️</span>
     </button>
   </div>
 </nav>

@@ -3,7 +3,7 @@
     <input
       type="text"
       class="search-input__field text-14-semi-bold text-main-color"
-      placeholder="WPISZ TYTUŁ FILMU..."
+      placeholder="ENTER MOVIE TITLE..."
       [value]="query"
       (input)="onInput($any($event.target).value)"
       (blur)="closeSuggestions()"
@@ -11,7 +11,7 @@
     />
 
     <button type="button" class="search-input__button text-18-bold-uc text-black-color">
-      ZGADNIJ
+      GUESS
     </button>
   </div>
 

@@ -26,22 +26,22 @@ export class Game implements OnInit, AfterViewInit, OnDestroy {
   protected categoryTitle = 'TOP 250';
   protected ticketTitle = 'TOP 250';
   protected ticketTheme: TicketTheme = 'default';
-  protected readonly headers = ['TYTUŁ', 'ROK', 'GATUNEK', 'REŻYSER', 'GŁÓWNY AKTOR'];
+  protected readonly headers = ['TITLE', 'YEAR', 'GENRE', 'DIRECTOR', 'LEAD ACTOR'];
 
   protected readonly rows: GuessRowTile[][] = [
     [
-      { state: 'correct', text: 'TEKST' },
-      { state: 'correct', text: 'TEKST' },
-      { state: 'correct', text: 'TEKST' },
-      { state: 'correct', text: 'TEKST' },
-      { state: 'correct', text: 'TEKST' },
+      { state: 'correct', text: 'TEXT' },
+      { state: 'correct', text: 'TEXT' },
+      { state: 'correct', text: 'TEXT' },
+      { state: 'correct', text: 'TEXT' },
+      { state: 'correct', text: 'TEXT' },
     ],
     [
-      { state: 'wrong', text: 'TEKST' },
+      { state: 'wrong', text: 'TEXT' },
       { state: 'partial-year', text: '2020↑' },
-      { state: 'partial', text: 'TEKST' },
-      { state: 'correct', text: 'TEKST' },
-      { state: 'wrong', text: 'TEKST' },
+      { state: 'partial', text: 'TEXT' },
+      { state: 'correct', text: 'TEXT' },
+      { state: 'wrong', text: 'TEXT' },
     ],
     [
       { state: 'empty' },
@@ -134,7 +134,6 @@ export class Game implements OnInit, AfterViewInit, OnDestroy {
       window.clearTimeout(this.autoScrollTimeoutId);
     }
 
-    // Ensure user sees the hero/top part first.
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
 
     this.autoScrollTimeoutId = window.setTimeout(() => {

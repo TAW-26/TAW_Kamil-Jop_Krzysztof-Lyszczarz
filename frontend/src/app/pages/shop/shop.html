@@ -4,35 +4,146 @@
   <section class="shop-page__content">
     <div class="shop-page__layout">
       <header class="shop-page__hero">
-        <h1 class="shop-page__title text-64-black text-main-color">Sklep Premium</h1>
+        <h1 class="shop-page__title text-64-black text-main-color">Premium shop</h1>
         <p class="shop-page__description text-18-regular text-muted-color">
-          Codzienne filmowe wyzwania. Wybierz swoją ulubioną kategorię, analizuj kadry i sprawdź
-          swoją wiedzę kinową. Czy uda Ci się zebrać wszystkie bilety?
+          Avatars from movie posters. Earn tickets in-game and trade them for unique profile artwork.
         </p>
       </header>
 
       <div class="shop-page__catalog">
         <app-tab-buttons
           class="shop-page__tabs"
-          [tabs]="['AWATARY', 'KOLOR RAMKI', 'KOLOR NICKU', 'INNE']"
-          [activeIndex]="0"
+          [tabs]="avatarTabs"
+          [activeIndex]="catalogTabIndex()"
+          (activeIndexChange)="onCatalogTabChange($event)"
         ></app-tab-buttons>
 
-        <div class="shop-page__cards">
-          <app-shop-card variant="buy-new"></app-shop-card>
-          <app-shop-card variant="owned"></app-shop-card>
-          <app-shop-card variant="default-buy" [lockedTickets]="'1000'"></app-shop-card>
-
-          <app-shop-card
-            variant="default-buy"
-            [lockedLabelOverride]="'🎟️ 300 Kup Brak biletów'"
-          ></app-shop-card>
-          <app-shop-card variant="default-buy" [lockedTickets]="'1000'"></app-shop-card>
-          <app-shop-card variant="default-buy" [lockedTickets]="'1000'"></app-shop-card>
+        <div class="shop-page__filters">
+          <label class="shop-page__filter shop-page__filter--grow">
+            <span class="shop-page__filter-label text-12-regular text-muted-color">Search</span>
+            <input
+              type="search"
+              class="shop-page__input text-14-bold text-main-color"
+              [value]="searchInputDraft()"
+              (input)="onSearchInput($event)"
+              placeholder="Movie title…"
+              autocomplete="off"
+              aria-label="Search by movie title"
+            />
+          </label>
+          <label class="shop-page__filter">
+            <span class="shop-page__filter-label text-12-regular text-muted-color">Year</span>
+            <select
+              class="shop-page__select text-14-bold text-main-color"
+              [value]="sortYearSelectValue()"
+              (change)="onSortYearChange($event)"
+              aria-label="Sort by release year"
+            >
+              <option value="">Default</option>
+              <option value="desc">Newest first</option>
+              <option value="asc">Oldest first</option>
+            </select>
+          </label>
+          <label class="shop-page__filter">
+            <span class="shop-page__filter-label text-12-regular text-muted-color">Genre</span>
+            <select
+              class="shop-page__select text-14-bold text-main-color"
+              [value]="genreSelectValue()"
+              (change)="onGenreChange($event)"
+              aria-label="Genre filter"
+            >
+              <option value="">All</option>
+              <option *ngFor="let g of genreOptions; trackBy: trackByGenreId" [value]="g.id">
+                {{ g.name }}
+              </option>
+            </select>
+          </label>
         </div>
+
+        <div
+          class="shop-page__catalog-body"
+          [class.shop-page__catalog-body--busy]="loading() && shopItems().length > 0"
+        >
+          <div
+            *ngIf="loading() && shopItems().length === 0"
+            class="shop-page__catalog-placeholder text-muted-color"
+            role="status"
+            aria-live="polite"
+          >
+            Loading catalog…
+          </div>
+
+          <p
+            *ngIf="!loading() && shopItems().length === 0"
+            class="shop-page__status shop-page__status--empty text-muted-color"
+          >
+            No items in this view.
+          </p>
+
+          <div
+            *ngIf="shopItems().length > 0"
+            class="shop-page__cards"
+            [attr.aria-busy]="loading()"
+            [attr.aria-label]="loading() ? 'Refreshing catalog' : null"
+          >
+            <app-shop-card
+              *ngFor="let item of shopItems(); trackBy: trackByMovieId"
+              [variant]="cardVariant(item)"
+              [title]="item.title || 'Movie'"
+              [posterPath]="item.posterPath"
+              [description]="releaseYearText(item.releaseDate)"
+              [buyTickets]="item.price.toString()"
+              [lockedTickets]="item.price.toString()"
+              [movieId]="item.id"
+              [purchaseDisabled]="
+                purchasingId() !== null || loading() || purchaseConfirm() !== null
+              "
+              [equipDisabled]="
+                equippingId() !== null || loading() || purchaseConfirm() !== null
+              "
+              (purchaseClick)="openPurchaseConfirm($event)"
+              (equipClick)="onEquipAvatar($event)"
+            ></app-shop-card>
+          </div>
+        </div>
+
+        <nav
+          *ngIf="meta() && meta()!.totalPages > 1"
+          class="shop-page__pagination"
+          aria-label="Catalog pagination"
+        >
+          <button
+            type="button"
+            class="shop-page__page-btn text-14-bold"
+            [disabled]="loading() || meta()!.currentPage <= 1"
+            (click)="goPrevPage()"
+          >
+            Previous
+          </button>
+          <span class="shop-page__page-info text-14-bold text-main-color">
+            {{ meta()!.currentPage }} / {{ meta()!.totalPages }}
+          </span>
+          <button
+            type="button"
+            class="shop-page__page-btn text-14-bold"
+            [disabled]="loading() || meta()!.currentPage >= meta()!.totalPages"
+            (click)="goNextPage()"
+          >
+            Next
+          </button>
+        </nav>
       </div>
     </div>
   </section>
+
+  <app-confirm-dialog
+    *ngIf="purchaseConfirm() as ctx"
+    heading="Confirm purchase"
+    [body]="purchaseConfirmBody(ctx)"
+    [confirmTickets]="ctx.price.toString()"
+    (confirm)="confirmPurchase()"
+    (cancel)="dismissPurchaseConfirm()"
+  ></app-confirm-dialog>
 
   <app-footer></app-footer>
 </main>

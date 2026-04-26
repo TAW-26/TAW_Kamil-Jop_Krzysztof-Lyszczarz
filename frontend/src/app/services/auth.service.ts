@@ -133,7 +133,7 @@ export class AuthService {
   }
 
   private handleError(error: { error: ApiError; status: number }): Observable<never> {
-    const message = error.error?.message ?? error.error?.error ?? 'Wystapil nieoczekiwany blad'
+    const message = error.error?.message ?? error.error?.error ?? 'An unexpected error occurred'
     return throwError(() => new Error(message))
   }
 }

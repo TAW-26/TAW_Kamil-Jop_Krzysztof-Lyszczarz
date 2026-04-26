@@ -19,14 +19,38 @@
 
 .shop-card--eq-to-equip,
 .shop-card--eq-equipped {
-  min-height: 250px;
+  min-height: 260px;
   padding: 24px;
   justify-content: flex-start;
-  gap: 23px;
+  gap: 16px;
 }
 
 .shop-card--eq-equipped {
   border-color: var(--medal-gold);
+}
+
+:host-context(.profile-tabs-section__equipment-cards) {
+  display: block;
+  height: 100%;
+  min-height: 0;
+}
+
+:host-context(.profile-tabs-section__equipment-cards) .shop-card--eq-to-equip,
+:host-context(.profile-tabs-section__equipment-cards) .shop-card--eq-equipped {
+  height: 100%;
+  min-height: 280px;
+}
+
+:host-context(.profile-tabs-section__equipment-cards) .shop-card--eq-to-equip .shop-card__title,
+:host-context(.profile-tabs-section__equipment-cards) .shop-card--eq-equipped .shop-card__title {
+  min-height: 2.6em;
+}
+
+:host-context(.profile-tabs-section__equipment-cards) .shop-card--eq-to-equip .shop-card__action,
+:host-context(.profile-tabs-section__equipment-cards) .shop-card--eq-equipped .shop-card__action {
+  margin-top: auto;
+  width: 100%;
+  padding-top: 4px;
 }
 
 .shop-card__icon-wrap {
@@ -57,6 +81,21 @@
   line-height: 1.1;
 }
 
+.shop-card__poster {
+  position: relative;
+  z-index: 1;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.shop-card--eq-to-equip .shop-card__poster,
+.shop-card--eq-equipped .shop-card__poster {
+  width: 80px;
+  height: 80px;
+}
+
 .shop-card--eq-to-equip .shop-card__icon,
 .shop-card--eq-equipped .shop-card__icon {
   font-size: 40px;
@@ -64,8 +103,11 @@
 
 .shop-card__title {
   margin: 0;
-  line-height: 1;
+  width: 100%;
+  max-width: 100%;
+  line-height: 1.2;
   letter-spacing: 0.18px;
+  text-align: center;
 }
 
 .shop-card__description {

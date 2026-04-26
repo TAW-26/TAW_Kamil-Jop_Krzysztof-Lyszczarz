@@ -29,6 +29,7 @@ class AuthService {
             points_balance: user.points_balance,
             current_streak: user.current_streak,
             equipped_avatar_id: user.equipped_avatar_id,
+            equipped_avatar_url: user.equipped_avatar_url,
             created_at: user.created_at,
         };
     }

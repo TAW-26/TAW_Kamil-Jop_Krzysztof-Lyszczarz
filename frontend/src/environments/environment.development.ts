@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://taw-kamil-jop-krzysztof-lyszczarz.onrender.com'
+  apiUrl: 'http://localhost:3000'
 }

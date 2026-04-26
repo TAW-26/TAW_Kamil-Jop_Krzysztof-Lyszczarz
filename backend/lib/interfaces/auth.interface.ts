@@ -27,6 +27,7 @@ export interface SafeUser {
     points_balance: number | null;
     current_streak: number | null;
     equipped_avatar_id: number | null;
+    equipped_avatar_url: string | null;
     created_at: Date | null;
 }
 

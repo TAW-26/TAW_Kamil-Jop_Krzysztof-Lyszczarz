@@ -10,7 +10,7 @@
             type="button"
             class="ticket-carousel__ticket-button"
             (click)="selectCategory(i)"
-            [attr.aria-label]="'Przejdz do kategorii ' + category"
+            [attr.aria-label]="'Go to category ' + category"
           >
             <div class="ticket-carousel__ticket-scale">
               <app-ticket [title]="category.toUpperCase()" [theme]="getThemeForCategory(category)" />
@@ -29,7 +29,7 @@
     <button
       type="button"
       class="ticket-carousel__control-btn"
-      aria-label="Poprzednia kategoria"
+      aria-label="Previous category"
       (click)="previous()"
       [disabled]="!canScrollPrev && categories.length <= 1"
     >
@@ -38,7 +38,7 @@
     <button
       type="button"
       class="ticket-carousel__control-btn"
-      aria-label="Nastepna kategoria"
+      aria-label="Next category"
       (click)="next()"
       [disabled]="!canScrollNext && categories.length <= 1"
     >
