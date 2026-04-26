@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, model } from '@angular/core';
 
 @Component({
   selector: 'app-auth-input',
@@ -11,4 +11,8 @@ export class AuthInput {
   @Input() placeholder = 'Wpisz swój email';
   @Input() type: 'text' | 'email' | 'password' = 'text';
   @Input() focused = false;
+  @Input() disabled = false;
+  @Input() autocomplete = '';
+
+  readonly value = model('');
 }

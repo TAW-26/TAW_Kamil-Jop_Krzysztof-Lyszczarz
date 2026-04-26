@@ -32,6 +32,11 @@
   gap: 20px;
 }
 
+.auth-form__error {
+  margin: 0;
+  color: var(--error, #c62828);
+}
+
 .auth-form__fields {
   display: flex;
   flex-direction: column;

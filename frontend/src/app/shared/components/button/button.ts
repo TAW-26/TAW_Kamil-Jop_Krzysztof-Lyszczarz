@@ -23,6 +23,7 @@ export class Button {
   @Input() tickets = '300';
   @Input() fullWidth = false;
   @Input() labelOverride?: string;
+  @Input() disabled = false;
 
   protected get isGold(): boolean {
     return ['default', 'sign-up-log-in', 'log-in', 'sign-up', 'buy'].includes(

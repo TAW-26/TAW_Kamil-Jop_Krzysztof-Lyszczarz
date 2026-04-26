@@ -78,3 +78,38 @@
   background-clip: text;
   color: transparent;
 }
+
+.profile-header-card__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.profile-header-card__logout {
+  box-sizing: border-box;
+  height: 55px;
+  padding: 0 40px;
+  border: 1px solid var(--border-light);
+  border-radius: 32px;
+  background: var(--background-card);
+  color: var(--text-main);
+  cursor: pointer;
+  transition:
+    filter 0.15s ease,
+    border-color 160ms ease;
+}
+
+.profile-header-card__logout:hover,
+.profile-header-card__logout:focus-visible {
+  filter: brightness(1.05);
+  border-color: var(--medal-gold);
+}
+
+.profile-header-card__logout:focus-visible {
+  outline: none;
+}
+
+.profile-header-card__logout:active {
+  transform: translateY(1px);
+}

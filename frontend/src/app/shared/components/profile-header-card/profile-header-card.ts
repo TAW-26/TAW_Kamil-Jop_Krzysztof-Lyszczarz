@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
 import { Button } from '../button/button';
 
 @Component({
@@ -9,14 +10,20 @@ import { Button } from '../button/button';
   styleUrl: './profile-header-card.css',
 })
 export class ProfileHeaderCard {
+  private readonly router = inject(Router);
+  private readonly auth = inject(AuthService);
+
   @Input() nickname = 'Twój_Nick_123';
   @Input() createdAt = 'Konto utworzone: Marzec 2026';
   @Input() badge = 'ZŁOTY RECENZENT';
   @Input() icon = '🍿';
 
-  constructor(private readonly router: Router) {}
-
   protected goToProfileSettings(): void {
     void this.router.navigate(['/profile-settings']);
+  }
+
+  protected logout(): void {
+    this.auth.logout();
+    void this.router.navigate(['/']);
   }
 }

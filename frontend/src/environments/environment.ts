@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://tawkamil-jopkrzysztof-lyszczarz-production.up.railway.app'
+  apiUrl: 'https://taw-kamil-jop-krzysztof-lyszczarz.onrender.com'
 }

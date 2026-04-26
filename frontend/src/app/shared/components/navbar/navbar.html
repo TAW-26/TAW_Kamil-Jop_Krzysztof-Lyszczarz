@@ -20,25 +20,29 @@
     </li>
   </ul>
 
-  <button
-    *ngIf="showAvatarOnly"
-    type="button"
-    class="navbar__avatar-button navbar__avatar"
-    aria-label="Przejdz do profilu"
-    (click)="goToProfile()"
-  >
-    🧙‍♂️
-  </button>
+  <div *ngIf="showUserCompact" class="navbar__user">
+    <span class="navbar__username text-16-semi-bold text-main-color" aria-live="polite">
+      {{ displayName() || 'Profil' }}
+    </span>
+    <button
+      type="button"
+      class="navbar__avatar-button navbar__avatar"
+      aria-label="Przejdz do profilu"
+      (click)="goToProfile()"
+    >
+      🧙‍♂️
+    </button>
+  </div>
 
   <app-button
-    *ngIf="showSignButton"
+    *ngIf="showGuestAuthButton"
     variant="sign-up-log-in"
     (click)="goToLogin()"
   ></app-button>
 
-  <div *ngIf="showWalletWithAvatar" class="navbar__wallet-group">
+  <div *ngIf="showUserWallet" class="navbar__wallet-group">
     <div class="navbar__wallet text-16-bold">
-      <span>🎟️ {{ walletAmount }}</span>
+      <span>🎟️ {{ walletLabel }}</span>
     </div>
     <button
       type="button"

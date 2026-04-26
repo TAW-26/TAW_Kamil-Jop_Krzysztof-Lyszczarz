@@ -1,10 +1,6 @@
 <main class="home">
   <section class="home__navbar-wrap">
-    <app-navbar
-      class="home__navbar"
-      variant="default-not-logged"
-      (navLinkSelect)="scrollToSection($event)"
-    ></app-navbar>
+    <app-navbar class="home__navbar" (navLinkSelect)="scrollToSection($event)"></app-navbar>
   </section>
 
   <section id="home-hero" class="home__hero">

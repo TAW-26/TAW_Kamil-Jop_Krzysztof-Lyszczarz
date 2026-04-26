@@ -11,5 +11,15 @@
     </div>
   </div>
 
-  <app-button variant="profile-settings" (click)="goToProfileSettings()"></app-button>
+  <div class="profile-header-card__actions">
+    <app-button variant="profile-settings" (click)="goToProfileSettings()"></app-button>
+    <button
+      type="button"
+      class="profile-header-card__logout text-14-bold"
+      aria-label="Wyloguj się z konta"
+      (click)="logout()"
+    >
+      Wyloguj
+    </button>
+  </div>
 </section>

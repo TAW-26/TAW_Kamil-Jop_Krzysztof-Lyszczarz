@@ -1,6 +1,7 @@
 <button
   type="button"
   class="app-button"
+  [disabled]="disabled"
   [ngClass]="{
     'app-button--gold': isGold,
     'app-button--white': variant === 'sign-up-with-google',

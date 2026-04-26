@@ -118,6 +118,20 @@
   outline: none;
 }
 
+.navbar__user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+}
+
+.navbar__username {
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .navbar__wallet-group {
   width: 160px;
   display: flex;

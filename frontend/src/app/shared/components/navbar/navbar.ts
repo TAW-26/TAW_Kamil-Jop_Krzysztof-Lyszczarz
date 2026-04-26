@@ -1,13 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
 import { Button } from '../button/button';
 
-export type NavbarVariant =
-  | 'default-logged'
-  | 'with-wallet'
-  | 'default-not-logged'
-  | 'log-sign';
+export type NavbarLayout = 'auto' | 'log-sign';
 
 type NavbarLink =
   | { label: string; type: 'section'; targetId: string }
@@ -20,8 +17,15 @@ type NavbarLink =
   styleUrl: './navbar.css',
 })
 export class Navbar {
-  @Input() variant: NavbarVariant = 'default-logged';
-  @Input() walletAmount = '1,250';
+  private readonly auth = inject(AuthService);
+
+  /** `log-sign` — strony logowania (tylko logo). `auto` — linki + gość albo zalogowany użytkownik. */
+  @Input() layout: NavbarLayout = 'auto';
+  /** Przy zalogowanym: pokaż bilet / saldo obok awatara (np. sklep, profil). */
+  @Input() showWallet = false;
+  /** Nadpisanie tekstu portfela; puste = `points_balance` z `/auth/me`. */
+  @Input() walletAmount?: string;
+
   @Output() navLinkSelect = new EventEmitter<string>();
 
   protected readonly links: NavbarLink[] = [
@@ -34,19 +38,35 @@ export class Navbar {
   constructor(private readonly router: Router) {}
 
   protected get showLinks(): boolean {
-    return this.variant !== 'log-sign';
+    return this.layout !== 'log-sign';
   }
 
-  protected get showAvatarOnly(): boolean {
-    return this.variant === 'default-logged';
+  protected get showGuestAuthButton(): boolean {
+    return this.layout === 'auto' && !this.auth.isAuthenticated();
   }
 
-  protected get showWalletWithAvatar(): boolean {
-    return this.variant === 'with-wallet';
+  protected get showUserWallet(): boolean {
+    return this.layout === 'auto' && this.auth.isAuthenticated() && this.showWallet;
   }
 
-  protected get showSignButton(): boolean {
-    return this.variant === 'default-not-logged';
+  protected get showUserCompact(): boolean {
+    return this.layout === 'auto' && this.auth.isAuthenticated() && !this.showWallet;
+  }
+
+  protected get walletLabel(): string {
+    const override = this.walletAmount?.trim();
+    if (override) {
+      return override;
+    }
+    const b = this.auth.currentUser()?.points_balance;
+    if (b == null || Number.isNaN(b)) {
+      return '0';
+    }
+    return b.toLocaleString('pl-PL');
+  }
+
+  protected displayName(): string | null {
+    return this.auth.username();
   }
 
   protected onLinkClick(link: NavbarLink): void {

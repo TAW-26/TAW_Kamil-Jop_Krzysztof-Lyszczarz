@@ -13,6 +13,7 @@ import { GuessRow, GuessRowTile } from '../../shared/components/guess-row/guess-
 import { Navbar } from '../../shared/components/navbar/navbar';
 import { SearchInput } from '../../shared/components/search-input/search-input';
 import { Ticket, TicketTheme } from '../../shared/components/ticket/ticket';
+import { isDailyCategoryKey, resolveGameCategoryKey } from '../../utils/game-category.util';
 import { combineLatest, Subscription } from 'rxjs';
 
 @Component({
@@ -82,9 +83,10 @@ export class Game implements OnInit, AfterViewInit, OnDestroy {
       const pathCategory = params.get('category');
       const queryCategory = query.get('category');
       const raw = pathCategory || queryCategory || 'top-250';
+      const categoryKey = resolveGameCategoryKey(pathCategory, queryCategory);
       this.categoryTitle = this.toDisplayTitle(raw);
       this.ticketTitle = this.categoryTitle;
-      this.ticketTheme = this.toTicketTheme(raw);
+      this.ticketTheme = this.ticketThemeFromCategoryKey(categoryKey);
       this.shouldAutoScrollToPlay = query.get('autoscroll') === '1';
       this.hasAutoScrolledToPlay = false;
       this.scheduleAutoScrollToPlay();
@@ -109,19 +111,14 @@ export class Game implements OnInit, AfterViewInit, OnDestroy {
       .toUpperCase();
   }
 
-  private toTicketTheme(raw: string): TicketTheme {
-    const normalized = raw
-      .replace(/[-_]+/g, ' ')
-      .trim()
-      .toLowerCase();
-
-    if (normalized === 'horror') {
+  private ticketThemeFromCategoryKey(categoryKey: string): TicketTheme {
+    if (categoryKey === 'horror') {
       return 'horror';
     }
-    if (normalized === 'cartoons') {
+    if (categoryKey === 'cartoons') {
       return 'cartoons';
     }
-    if (normalized === 'daily') {
+    if (isDailyCategoryKey(categoryKey)) {
       return 'daily-challenge';
     }
 
