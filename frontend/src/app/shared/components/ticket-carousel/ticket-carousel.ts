@@ -185,7 +185,7 @@ export class TicketCarousel implements AfterViewInit, OnDestroy, OnChanges {
     const scrollProgress = this.emblaApi.scrollProgress();
     const slideNodes = this.emblaApi.slideNodes();
 
-    this.emblaApi.scrollSnapList().forEach((scrollSnap, snapIndex) => {
+    this.emblaApi.scrollSnapList().forEach((scrollSnap: number, snapIndex: number) => {
       let diffToTarget = scrollSnap - scrollProgress;
       const slideIndex = snapIndex;
 
