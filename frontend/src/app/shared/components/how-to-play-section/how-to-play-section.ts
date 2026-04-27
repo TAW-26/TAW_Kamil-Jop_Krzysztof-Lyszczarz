@@ -32,7 +32,7 @@ export class HowToPlaySection {
       step: 3,
       title: 'Earn tickets',
       description:
-        'Correct guesses award tickets. Spend them on profile avatars and other items in the shop.',
+        'Correct guesses award tickets, and the reward depends on how many attempts you used. Spend them on profile avatars and other items in the shop.',
     },
   ];
 }

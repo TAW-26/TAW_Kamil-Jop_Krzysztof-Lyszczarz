@@ -54,6 +54,14 @@
   line-height: 1.6;
 }
 
+.home__cta-button {
+  transition: transform 0.2s ease;
+}
+
+.home__cta-button:hover {
+  transform: scale(1.05);
+}
+
 .home__hero-ticket {
   flex-shrink: 0;
   transform: perspective(1100px) rotateX(12deg) rotateY(-14deg);
