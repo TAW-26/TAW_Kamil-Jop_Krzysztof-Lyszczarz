@@ -13,19 +13,13 @@ interface GoogleCredentialResponse {
   credential?: string;
 }
 
-interface GooglePromptMomentNotification {
-  isNotDisplayed(): boolean;
-  isSkippedMoment(): boolean;
-  isDismissedMoment(): boolean;
-}
-
 interface GoogleAccountsId {
   initialize(config: {
     client_id: string;
     callback: (response: GoogleCredentialResponse) => void;
     ux_mode?: 'popup' | 'redirect';
   }): void;
-  prompt(listener?: (notification: GooglePromptMomentNotification) => void): void;
+  prompt(listener?: (notification: unknown) => void): void;
   cancel?: () => void;
 }
 
@@ -126,8 +120,8 @@ export class AuthForm {
         isResolved = true;
         this.googleCredentialResolver = null;
         this.googleCredentialRejecter = null;
-        reject(new Error('Google sign-in timed out. Please try again.'));
-      }, 30000);
+        reject(new Error('Google sign-in did not start. Please try again.'));
+      }, 12000);
 
       if (window.__movieguessGoogleInitializedForClientId !== environment.googleClientId) {
         googleIdentity.accounts.id.initialize({
@@ -150,22 +144,7 @@ export class AuthForm {
       }
 
       googleIdentity.accounts.id.cancel?.();
-
-      googleIdentity.accounts.id.prompt(notification => {
-        if (isResolved) return;
-
-        if (
-          notification.isNotDisplayed() ||
-          notification.isSkippedMoment() ||
-          notification.isDismissedMoment()
-        ) {
-          isResolved = true;
-          clearTimeout(timeoutId);
-          this.googleCredentialResolver = null;
-          this.googleCredentialRejecter = null;
-          reject(new Error('Google sign-in was cancelled or blocked.'));
-        }
-      });
+      googleIdentity.accounts.id.prompt();
     });
   }
 
