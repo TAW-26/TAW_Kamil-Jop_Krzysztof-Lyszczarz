@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   Input,
+  NgZone,
   OnChanges,
   OnDestroy,
   SimpleChanges,
@@ -34,12 +36,21 @@ export class TicketCarousel implements AfterViewInit, OnDestroy, OnChanges {
   protected canScrollNext = false;
 
   private emblaApi?: EmblaCarouselType;
-  private readonly loopEnabled = true;
+  private loopEnabled = true;
   private readonly tweenFactorBase = 0.84;
   private tweenFactor = 0;
   private isDestroyed = false;
+  private autoplayIntervalId?: number;
+  private autoplayDelayMs = 4000;
+  private isAutoplayPaused = false;
+  private resumeAutoplayTimeoutId?: number;
+  private readonly manualPauseMs = 2200;
 
-  constructor(private readonly router: Router) {}
+  constructor(
+    private readonly router: Router,
+    private readonly ngZone: NgZone,
+    private readonly cdr: ChangeDetectorRef
+  ) {}
 
   protected get activeCategory(): string {
     return this.items[this.activeIndex]?.label ?? '';
@@ -51,8 +62,15 @@ export class TicketCarousel implements AfterViewInit, OnDestroy, OnChanges {
       return;
     }
 
-    this.emblaApi = EmblaCarousel(viewport, { loop: this.loopEnabled, align: 'center' });
+    this.loopEnabled = this.items.length > 1;
+    this.emblaApi = EmblaCarousel(viewport, {
+      loop: this.loopEnabled,
+      align: 'center',
+      slidesToScroll: 1,
+      containScroll: 'trimSnaps',
+    });
     this.bindEmbla();
+    this.startAutoplay();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -63,13 +81,16 @@ export class TicketCarousel implements AfterViewInit, OnDestroy, OnChanges {
     if (!this.items.length) {
       this.activeIndex = 0;
     }
-    this.emblaApi?.reInit();
+    this.loopEnabled = this.items.length > 1;
+    this.emblaApi?.reInit({ loop: this.loopEnabled, align: 'center', slidesToScroll: 1 });
+    this.startAutoplay();
   }
 
   protected previous(): void {
     if (!this.emblaApi) {
       return;
     }
+    this.pauseAutoplayTemporarily();
     this.emblaApi.scrollPrev();
   }
 
@@ -77,6 +98,7 @@ export class TicketCarousel implements AfterViewInit, OnDestroy, OnChanges {
     if (!this.emblaApi) {
       return;
     }
+    this.pauseAutoplayTemporarily();
     this.emblaApi.scrollNext();
   }
 
@@ -95,8 +117,21 @@ export class TicketCarousel implements AfterViewInit, OnDestroy, OnChanges {
 
   ngOnDestroy(): void {
     this.isDestroyed = true;
+    this.stopAutoplay();
+    if (this.resumeAutoplayTimeoutId) {
+      window.clearTimeout(this.resumeAutoplayTimeoutId);
+      this.resumeAutoplayTimeoutId = undefined;
+    }
     this.emblaApi?.destroy();
     this.emblaApi = undefined;
+  }
+
+  protected pauseAutoplay(): void {
+    this.isAutoplayPaused = true;
+  }
+
+  protected resumeAutoplay(): void {
+    this.isAutoplayPaused = false;
   }
 
   private bindEmbla(): void {
@@ -114,7 +149,10 @@ export class TicketCarousel implements AfterViewInit, OnDestroy, OnChanges {
         this.updateUiState();
         this.tweenOpacity();
       })
-      .on('select', () => this.updateUiState())
+      .on('select', () => {
+        this.updateUiState();
+        this.tweenOpacity();
+      })
       .on('scroll', () => this.tweenOpacity())
       .on('slideFocus', () => this.tweenOpacity());
   }
@@ -124,9 +162,12 @@ export class TicketCarousel implements AfterViewInit, OnDestroy, OnChanges {
       return;
     }
 
-    this.activeIndex = this.emblaApi.selectedScrollSnap();
-    this.canScrollPrev = this.emblaApi.canScrollPrev();
-    this.canScrollNext = this.emblaApi.canScrollNext();
+    this.ngZone.run(() => {
+      this.activeIndex = this.emblaApi!.selectedScrollSnap();
+      this.canScrollPrev = this.emblaApi!.canScrollPrev();
+      this.canScrollNext = this.emblaApi!.canScrollNext();
+      this.cdr.markForCheck();
+    });
   }
 
   private setTweenFactor(): void {
@@ -162,18 +203,51 @@ export class TicketCarousel implements AfterViewInit, OnDestroy, OnChanges {
       }
 
       const tweenValue = 1 - Math.abs(diffToTarget * this.tweenFactor);
-      const opacity = Math.min(Math.max(tweenValue, 0.42), 1).toString();
+      const opacity = Math.min(Math.max(tweenValue, 0.34), 1).toString();
       slideNodes[slideIndex].style.opacity = opacity;
 
       const absDiff = Math.abs(diffToTarget);
-      const rotation = diffToTarget * 140;
-      const scale = Math.max(0.68, 0.92 - absDiff * 0.42);
+      const scale = Math.max(0.58, 1 - absDiff * 0.36);
+      const rotateY = Math.max(-120, Math.min(120, diffToTarget * 120));
       const ticketScaleNode = slideNodes[slideIndex].querySelector<HTMLElement>(
         '.ticket-carousel__ticket-scale'
       );
       if (ticketScaleNode) {
-        ticketScaleNode.style.transform = `scale(${scale}) rotateY(${rotation}deg)`;
+        ticketScaleNode.style.transform = `scale(${scale}) rotateY(${rotateY}deg)`;
+        ticketScaleNode.style.opacity = opacity;
       }
     });
+  }
+
+  private startAutoplay(): void {
+    this.stopAutoplay();
+    if (!this.emblaApi || this.items.length <= 1) {
+      return;
+    }
+    this.autoplayIntervalId = window.setInterval(() => {
+      if (this.isDestroyed || this.isAutoplayPaused || !this.emblaApi) {
+        return;
+      }
+      this.emblaApi.scrollNext();
+    }, this.autoplayDelayMs);
+  }
+
+  private stopAutoplay(): void {
+    if (!this.autoplayIntervalId) {
+      return;
+    }
+    window.clearInterval(this.autoplayIntervalId);
+    this.autoplayIntervalId = undefined;
+  }
+
+  private pauseAutoplayTemporarily(): void {
+    this.isAutoplayPaused = true;
+    if (this.resumeAutoplayTimeoutId) {
+      window.clearTimeout(this.resumeAutoplayTimeoutId);
+    }
+    this.resumeAutoplayTimeoutId = window.setTimeout(() => {
+      this.isAutoplayPaused = false;
+      this.resumeAutoplayTimeoutId = undefined;
+    }, this.manualPauseMs);
   }
 }

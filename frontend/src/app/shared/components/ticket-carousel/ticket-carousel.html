@@ -1,6 +1,13 @@
 <section class="ticket-carousel" aria-label="Category ticket carousel">
   <div class="ticket-carousel__embla embla">
-    <div #viewport class="ticket-carousel__viewport embla__viewport">
+    <div
+      #viewport
+      class="ticket-carousel__viewport embla__viewport"
+      (mouseenter)="pauseAutoplay()"
+      (mouseleave)="resumeAutoplay()"
+      (focusin)="pauseAutoplay()"
+      (focusout)="resumeAutoplay()"
+    >
       <div class="ticket-carousel__container embla__container">
         <div
           *ngFor="let item of items; let i = index"
