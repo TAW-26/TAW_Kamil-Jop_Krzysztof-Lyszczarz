@@ -9,9 +9,6 @@ type ProfileStat = {
   label: string;
 };
 
-const MOCK_GAMES_PLAYED = '142';
-const MOCK_BEST_STREAK = '14🔥';
-
 @Component({
   selector: 'app-stats-cards',
   imports: [CommonModule, StatCard],
@@ -27,13 +24,15 @@ export class StatsCards implements OnInit {
   }
 
   protected readonly stats = computed<ProfileStat[]>(() => {
-    const streak = this.auth.currentUser()?.current_streak ?? 0;
+    const currentStreak = this.auth.currentUser()?.current_streak ?? 0;
+    const lifetimeStreak = this.auth.currentUser()?.lifetime_streak ?? 0;
+    const gamesPlayed = this.auth.currentUser()?.games_played ?? 0;
     const ownedCount = this.avatarShop.ownedAvatars().length;
     return [
-      { value: `${MOCK_GAMES_PLAYED} (mock)`, label: 'GAMES PLAYED' },
+      { value: `${gamesPlayed}`, label: 'GAMES PLAYED' },
       { value: `${ownedCount}`, label: 'AVATARS OWNED' },
-      { value: `${streak}🔥`, label: 'CURRENT STREAK' },
-      { value: `${MOCK_BEST_STREAK} (mock)`, label: 'BEST STREAK' },
+      { value: `${currentStreak}🔥`, label: 'CURRENT STREAK' },
+      { value: `${lifetimeStreak}🔥`, label: 'BEST STREAK' },
     ];
   });
 }

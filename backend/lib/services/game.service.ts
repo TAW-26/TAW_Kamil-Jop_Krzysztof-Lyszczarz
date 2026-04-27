@@ -170,6 +170,7 @@ class GameService {
                         data: {
                             points_balance: { increment: pointsEarned },
                             lifetime_points: { increment: pointsEarned },
+                            games_played: { increment: 1 },
                             current_streak: newStreak,
                             last_won_date: new Date(),
                             games : {connect: { id: currentGame.id }},

@@ -39,6 +39,16 @@
 .profile-settings-page__title {
   margin: 0;
   line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.profile-settings-page__title:hover {
+  color: var(--medal-gold);
+}
+
+.profile-settings-page__error {
+  margin: -8px 0 0;
+  color: #ff7a7a;
 }
 
 .profile-settings-page__form {
@@ -55,4 +65,32 @@
 
 .profile-settings-page__actions app-button ::ng-deep .app-button {
   border-radius: 30px;
+}
+
+.profile-settings-page__actions app-button:first-child ::ng-deep .app-button {
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    filter 0.18s ease;
+}
+
+.profile-settings-page__actions app-button:first-child ::ng-deep .app-button:hover,
+.profile-settings-page__actions app-button:first-child ::ng-deep .app-button:focus-visible {
+  border-color: var(--medal-gold);
+  box-shadow: 0 0 0 1px rgb(212 175 55 / 35%);
+  filter: brightness(1.12);
+}
+
+.profile-settings-page__save-btn ::ng-deep .app-button {
+  transition:
+    transform 0.2s ease,
+    filter 0.2s ease;
+  transform-origin: center;
+  will-change: transform;
+}
+
+.profile-settings-page__save-btn ::ng-deep .app-button:hover,
+.profile-settings-page__save-btn ::ng-deep .app-button:focus-visible {
+  transform: scale(1.02);
+  filter: brightness(1.05);
 }

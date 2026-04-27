@@ -7,6 +7,38 @@ import { AuthInput } from '../auth-input/auth-input';
 import { AuthMode, AuthToggle } from '../auth-toggle/auth-toggle';
 import { AuthService } from '../../../services/auth.service';
 import { ToastService } from '../../../services/toast.service';
+import { environment } from '../../../../environments/environment';
+
+interface GoogleCredentialResponse {
+  credential?: string;
+}
+
+interface GooglePromptMomentNotification {
+  isNotDisplayed(): boolean;
+  isSkippedMoment(): boolean;
+  isDismissedMoment(): boolean;
+}
+
+interface GoogleAccountsId {
+  initialize(config: {
+    client_id: string;
+    callback: (response: GoogleCredentialResponse) => void;
+    ux_mode?: 'popup' | 'redirect';
+  }): void;
+  prompt(listener?: (notification: GooglePromptMomentNotification) => void): void;
+}
+
+interface GoogleIdentity {
+  accounts: {
+    id: GoogleAccountsId;
+  };
+}
+
+declare global {
+  interface Window {
+    google?: GoogleIdentity;
+  }
+}
 
 @Component({
   selector: 'app-auth-form',
@@ -46,7 +78,83 @@ export class AuthForm {
   }
 
   protected handleGoogleClick(): void {
-    this.error.set('Google sign-in is not implemented yet #TODO');
+    this.error.set('');
+
+    if (this.isSubmitting()) return;
+
+    if (!environment.googleClientId) {
+      this.error.set('Google login is not configured.');
+      return;
+    }
+
+    this.isSubmitting.set(true);
+
+    this.requestGoogleCredential()
+      .then(token => this.auth.loginWithGoogle({ token }))
+      .then(request$ => {
+        request$.pipe(finalize(() => this.isSubmitting.set(false))).subscribe({
+          next: () => {
+            this.toast.show('Signed in with Google successfully.');
+            this.navigateAfterAuth();
+          },
+          error: (err: Error) => this.error.set(err.message),
+        });
+      })
+      .catch((err: Error) => {
+        this.error.set(err.message);
+        this.isSubmitting.set(false);
+      });
+  }
+
+  private requestGoogleCredential(): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const googleIdentity = window.google;
+      if (!googleIdentity?.accounts?.id) {
+        reject(new Error('Google Sign-In script is not loaded.'));
+        return;
+      }
+
+      let isResolved = false;
+      const timeoutId = window.setTimeout(() => {
+        if (isResolved) return;
+        isResolved = true;
+        reject(new Error('Google sign-in timed out. Please try again.'));
+      }, 30000);
+
+      googleIdentity.accounts.id.initialize({
+        client_id: environment.googleClientId,
+        callback: response => {
+          if (isResolved) return;
+
+          const credential = response.credential;
+          if (!credential) {
+            isResolved = true;
+            clearTimeout(timeoutId);
+            reject(new Error('Google did not return an ID token.'));
+            return;
+          }
+
+          isResolved = true;
+          clearTimeout(timeoutId);
+          resolve(credential);
+        },
+        ux_mode: 'popup',
+      });
+
+      googleIdentity.accounts.id.prompt(notification => {
+        if (isResolved) return;
+
+        if (
+          notification.isNotDisplayed() ||
+          notification.isSkippedMoment() ||
+          notification.isDismissedMoment()
+        ) {
+          isResolved = true;
+          clearTimeout(timeoutId);
+          reject(new Error('Google sign-in was cancelled or blocked.'));
+        }
+      });
+    });
   }
 
   private clearFields(): void {

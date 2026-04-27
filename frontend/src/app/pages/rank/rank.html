@@ -25,7 +25,7 @@
             [variant]="slot.variant"
             [nick]="slot.entry?.username ?? '—'"
             [tickets]="podiumScore(slot)"
-            [icon]="isPointsTab() ? '🎟️' : '🔥'"
+            [icon]="'?'"
             [avatarUrl]="slot.entry ? avatarForLeader(slot.entry) : null"
             [metricLabel]="isPointsTab() ? 'POINTS' : 'STREAK'"
             [highlight]="!!slot.entry && isCurrentUser(slot.entry.id)"

@@ -7,23 +7,28 @@
 
       <article class="profile-settings-page__card">
         <h1 class="profile-settings-page__title text-28-black-uc text-main-color">Account settings</h1>
+        <p *ngIf="error() as err" class="profile-settings-page__error text-12-regular" role="alert">{{ err }}</p>
 
         <div class="profile-settings-page__form">
-          <app-auth-input label="USERNAME" placeholder="Enter a new username"></app-auth-input>
           <app-auth-input
-            label="EMAIL"
-            placeholder="Enter a new email address"
-            type="email"
+            label="USERNAME"
+            placeholder="Enter a new username"
+            [(value)]="username"
+            [disabled]="isSubmitting()"
           ></app-auth-input>
           <app-auth-input
             label="CURRENT PASSWORD"
             placeholder="Enter your current password"
             type="password"
+            [(value)]="currentPassword"
+            [disabled]="isSubmitting()"
           ></app-auth-input>
           <app-auth-input
             label="NEW PASSWORD"
             placeholder="Enter a new password"
             type="password"
+            [(value)]="newPassword"
+            [disabled]="isSubmitting()"
           ></app-auth-input>
         </div>
 
@@ -32,11 +37,16 @@
             variant="profile-settings"
             [labelOverride]="'DISCARD CHANGES'"
             [fullWidth]="true"
+            [disabled]="isSubmitting()"
+            (click)="discardChanges()"
           ></app-button>
           <app-button
+            class="profile-settings-page__save-btn"
             variant="log-in"
-            [labelOverride]="'SAVE CHANGES'"
+            [labelOverride]="isSubmitting() ? 'SAVING…' : 'SAVE CHANGES'"
             [fullWidth]="true"
+            [disabled]="isSubmitting()"
+            (click)="saveChanges()"
           ></app-button>
         </div>
       </article>

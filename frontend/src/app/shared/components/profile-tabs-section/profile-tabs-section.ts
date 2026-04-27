@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit, computed, inject, signal } from '@angular/core';
 import { finalize } from 'rxjs';
 import { OwnedAvatar } from '../../../interfaces/avatar-shop.interface';
+import { GameHistoryItem } from '../../../interfaces/auth.interface';
 import { AuthService } from '../../../services/auth.service';
 import { AvatarShopApiService } from '../../../services/avatar-shop-api.service';
 import { ToastService } from '../../../services/toast.service';
@@ -24,12 +25,17 @@ export class ProfileTabsSection implements OnInit {
 
   protected readonly ownedAvatars = this.avatarShop.ownedAvatars;
   protected readonly equippingId = signal<number | null>(null);
+  protected readonly historyItems = signal<GameHistoryItem[]>([]);
   protected readonly equippedAvatarId = computed(
     () => this.auth.currentUser()?.equipped_avatar_id ?? null,
   );
 
   ngOnInit(): void {
     this.avatarShop.fetchOwnedAvatars().subscribe({ error: console.error });
+    this.auth.fetchGameHistory().subscribe({
+      next: (history) => this.historyItems.set(history),
+      error: console.error,
+    });
   }
 
   protected setActiveTab(index: number): void {
@@ -60,5 +66,36 @@ export class ProfileTabsSection implements OnInit {
         },
         error: (err: Error) => this.toast.show(err.message),
       });
+  }
+
+  protected formatHistoryDate(isoDate: string | null): string {
+    if (!isoDate) return 'UNKNOWN DATE';
+
+    const parsedDate = new Date(isoDate);
+    if (Number.isNaN(parsedDate.getTime())) return 'UNKNOWN DATE';
+
+    return new Intl.DateTimeFormat('en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    }).format(parsedDate).toUpperCase();
+  }
+
+  protected formatHistoryAttemptText(attempts: number, isWon: boolean): string {
+    if (!isWon) return 'NOT GUESSED';
+    if (attempts <= 1) return 'GUESSED ON 1ST TRY';
+    if (attempts === 2) return 'GUESSED ON 2ND TRY';
+    if (attempts === 3) return 'GUESSED ON 3RD TRY';
+    return `GUESSED ON ${attempts}TH TRY`;
+  }
+
+  protected formatHistoryResult(isWon: boolean): string {
+    return isWon ? 'WIN' : 'LOSS';
+  }
+
+  protected formatCategoryBadge(categoryName: string): string {
+    return categoryName.toUpperCase();
   }
 }

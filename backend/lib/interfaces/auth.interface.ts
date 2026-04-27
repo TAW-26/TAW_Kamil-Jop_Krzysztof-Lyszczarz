@@ -25,6 +25,7 @@ export interface SafeUser {
     role: string | null;
     lifetime_points: number | null;
     points_balance: number | null;
+    games_played: number | null;
     current_streak: number | null;
     lifetime_streak: number | null;
     equipped_avatar_id: number | null;

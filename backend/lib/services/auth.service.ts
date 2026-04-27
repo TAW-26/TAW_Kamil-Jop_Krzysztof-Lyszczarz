@@ -27,6 +27,7 @@ class AuthService {
             role: user.role,
             lifetime_points: user.lifetime_points,
             points_balance: user.points_balance,
+            games_played: user.games_played,
             current_streak: user.current_streak,
             lifetime_streak: user.lifetime_streak,
             equipped_avatar_id: user.equipped_avatar_id,

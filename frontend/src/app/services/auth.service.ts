@@ -6,6 +6,7 @@ import {
   ChangePasswordRequest,
   GoogleLoginRequest,
   GoogleLoginResponse,
+  GameHistoryItem,
   JwtPayload,
   LoginRequest,
   LoginResponse,
@@ -78,6 +79,12 @@ export class AuthService {
   updateMe(payload: UpdateMeRequest): Observable<UserUpdateResponse> {
     return this.http.patch<UserUpdateResponse>(`${this.baseUrl}/users/me`, payload).pipe(
       tap(response => this.currentUserSignal.set(response.user)),
+      catchError(this.handleError)
+    )
+  }
+
+  fetchGameHistory(limit = 20): Observable<GameHistoryItem[]> {
+    return this.http.get<GameHistoryItem[]>(`${this.baseUrl}/users/me/history?limit=${limit}`).pipe(
       catchError(this.handleError)
     )
   }

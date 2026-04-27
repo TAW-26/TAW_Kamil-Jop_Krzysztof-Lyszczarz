@@ -1,4 +1,4 @@
-import { prisma } from '../app.js';
+import { prisma, redis } from '../app.js';
 import { Prisma } from '@prisma/client';
 
 interface ShopItem {
@@ -170,6 +170,9 @@ class AvatarShopService {
                 equipped_avatar_url: movie.poster_path,
             },
         });
+
+        await redis.del('leaderboard:points');
+        await redis.del('leaderboard:streaks');
     }
 
     public async getOwnedAvatars(userId: string): Promise<OwnedAvatar[]> {
