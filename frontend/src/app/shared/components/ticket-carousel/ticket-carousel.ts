@@ -142,7 +142,6 @@ export class TicketCarousel implements AfterViewInit, OnDestroy, OnChanges {
     }
 
     const scrollProgress = this.emblaApi.scrollProgress();
-    const slidesInView = this.emblaApi.slidesInView();
     const slideNodes = this.emblaApi.slideNodes();
 
     this.emblaApi.scrollSnapList().forEach((scrollSnap, snapIndex) => {
@@ -150,10 +149,6 @@ export class TicketCarousel implements AfterViewInit, OnDestroy, OnChanges {
       const slideIndex = snapIndex;
 
       if (slideIndex >= slideNodes.length) {
-        return;
-      }
-
-      if (!slidesInView.includes(slideIndex)) {
         return;
       }
 
@@ -167,8 +162,18 @@ export class TicketCarousel implements AfterViewInit, OnDestroy, OnChanges {
       }
 
       const tweenValue = 1 - Math.abs(diffToTarget * this.tweenFactor);
-      const opacity = Math.min(Math.max(tweenValue, 0), 1).toString();
+      const opacity = Math.min(Math.max(tweenValue, 0.42), 1).toString();
       slideNodes[slideIndex].style.opacity = opacity;
+
+      const absDiff = Math.abs(diffToTarget);
+      const rotation = diffToTarget * 140;
+      const scale = Math.max(0.68, 0.92 - absDiff * 0.42);
+      const ticketScaleNode = slideNodes[slideIndex].querySelector<HTMLElement>(
+        '.ticket-carousel__ticket-scale'
+      );
+      if (ticketScaleNode) {
+        ticketScaleNode.style.transform = `scale(${scale}) rotateY(${rotation}deg)`;
+      }
     });
   }
 }

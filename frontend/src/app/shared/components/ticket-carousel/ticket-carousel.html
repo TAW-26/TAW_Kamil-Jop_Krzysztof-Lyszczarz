@@ -12,8 +12,10 @@
             (click)="selectCategory(i)"
             [attr.aria-label]="'Go to category ' + item.label"
           >
-            <div class="ticket-carousel__ticket-scale">
+            <div class="ticket-carousel__ticket-scene">
+              <div class="ticket-carousel__ticket-scale">
               <app-ticket [title]="item.label.toUpperCase()" [theme]="getThemeForSlug(item.slug)" />
+              </div>
             </div>
           </button>
         </div>

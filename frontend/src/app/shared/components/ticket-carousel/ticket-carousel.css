@@ -18,7 +18,8 @@
 }
 
 .ticket-carousel__viewport {
-  overflow: hidden;
+  overflow: visible;
+  padding: 0 80px;
 }
 
 .ticket-carousel__container {
@@ -29,7 +30,7 @@
 
 .ticket-carousel__slide {
   transform: translate3d(0, 0, 0);
-  flex: 0 0 70%;
+  flex: 0 0 52%;
   min-width: 0;
   padding-left: 16px;
   display: flex;
@@ -52,11 +53,19 @@
   filter: brightness(1.04);
 }
 
+.ticket-carousel__ticket-scene {
+  width: 240px;
+  height: 450px;
+  perspective: 1200px;
+}
+
 .ticket-carousel__ticket-scale {
   width: 240px;
   height: 450px;
-  transform: scale(0.8);
-  transform-origin: top center;
+  transform: scale(0.8) rotateY(0deg);
+  transform-origin: center center;
+  transform-style: preserve-3d;
+  will-change: transform;
 }
 
 .ticket-carousel__category {
