@@ -4,29 +4,71 @@
   <div class="auth-form__content">
     <app-auth-toggle [mode]="mode" (modeChange)="setMode($event)"></app-auth-toggle>
 
+    <p *ngIf="error() as err" class="auth-form__error text-12-regular" role="alert">{{ err }}</p>
+
     <div class="auth-form__fields">
-      <app-auth-input label="ADRES E-MAIL" placeholder="Wpisz swój email" />
-      <app-auth-input
-        [label]="mode === 'signup' ? 'HASŁO' : 'HASŁO'"
-        [placeholder]="mode === 'signup' ? 'Wpisz hasło' : 'Wpisz hasło'"
-        type="password"
-      />
-      <app-auth-input
-        *ngIf="mode === 'signup'"
-        label="POTWIERDŹ HASŁO"
-        placeholder="Powtórz hasło"
-        type="password"
-      />
-      <app-auth-input
-        *ngIf="mode === 'signup'"
-        label="NICK"
-        placeholder="Wpisz swój nick"
-      />
+      <ng-container *ngIf="mode === 'login'">
+        <app-auth-input
+          label="USERNAME"
+          placeholder="Enter your username"
+          autocomplete="username"
+          [(value)]="username"
+          [disabled]="isSubmitting()"
+          (enterPressed)="submit()"
+        />
+        <app-auth-input
+          label="PASSWORD"
+          placeholder="Enter your password"
+          type="password"
+          autocomplete="current-password"
+          [(value)]="password"
+          [disabled]="isSubmitting()"
+          (enterPressed)="submit()"
+        />
+      </ng-container>
+
+      <ng-container *ngIf="mode === 'signup'">
+        <app-auth-input
+          label="EMAIL"
+          placeholder="Enter your email"
+          type="email"
+          autocomplete="email"
+          [(value)]="email"
+          [disabled]="isSubmitting()"
+          (enterPressed)="submit()"
+        />
+        <app-auth-input
+          label="PASSWORD"
+          placeholder="Enter your password"
+          type="password"
+          autocomplete="new-password"
+          [(value)]="password"
+          [disabled]="isSubmitting()"
+          (enterPressed)="submit()"
+        />
+        <app-auth-input
+          label="CONFIRM PASSWORD"
+          placeholder="Repeat your password"
+          type="password"
+          autocomplete="new-password"
+          [(value)]="confirmPassword"
+          [disabled]="isSubmitting()"
+          (enterPressed)="submit()"
+        />
+        <app-auth-input
+          label="USERNAME"
+          placeholder="Choose a username"
+          autocomplete="username"
+          [(value)]="username"
+          [disabled]="isSubmitting()"
+          (enterPressed)="submit()"
+        />
+      </ng-container>
     </div>
 
     <p *ngIf="mode === 'login'" class="auth-form__forgot">
       <a routerLink="/forgot-password" class="auth-form__forgot-link text-12-regular text-muted-color">
-        Zapomniałeś hasła?
+        Forgot your password?
       </a>
     </p>
 
@@ -35,17 +77,25 @@
         <app-button
           [variant]="mode === 'login' ? 'log-in' : 'sign-up'"
           [fullWidth]="true"
+          [disabled]="isSubmitting()"
+          [labelOverride]="isSubmitting() ? 'Please wait…' : undefined"
+          (click)="submit()"
         ></app-button>
       </div>
 
       <div class="auth-form__divider">
         <span class="auth-form__divider-line"></span>
-        <span class="auth-form__divider-text text-12-semi-bold-uc text-main-color">LUB</span>
+        <span class="auth-form__divider-text text-12-semi-bold-uc text-main-color">OR</span>
         <span class="auth-form__divider-line"></span>
       </div>
 
       <div class="auth-form__action-google">
-        <app-button variant="sign-up-with-google" [fullWidth]="true"></app-button>
+        <app-button
+          variant="sign-up-with-google"
+          [fullWidth]="true"
+          [disabled]="isSubmitting()"
+          (click)="handleGoogleClick()"
+        ></app-button>
       </div>
     </div>
   </div>

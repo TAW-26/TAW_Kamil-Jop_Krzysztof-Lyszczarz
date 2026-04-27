@@ -1,10 +1,26 @@
 <div class="guess-row">
-  <div
-    *ngFor="let tile of tiles; let i = index"
-    class="guess-row__tile"
-    [class.guess-row__tile--year]="i === 1"
-    [class.guess-row__tile--flex]="i !== 1"
-  >
-    <app-attribute-tile [state]="tile.state" [text]="tile.text || 'TEKST'"></app-attribute-tile>
-  </div>
+  <ng-container *ngFor="let tile of tiles; let i = index">
+    <div
+      *ngIf="!(hideRevenue && i === 4)"
+      class="guess-row__tile"
+      [class.guess-row__tile--reveal]="animateReveal"
+      [class.guess-row__tile--movie]="i === 0"
+      [class.guess-row__tile--genre]="i === 1"
+      [class.guess-row__tile--studios]="i === 2"
+      [class.guess-row__tile--cast]="i === 3"
+      [class.guess-row__tile--revenue]="i === 4"
+      [class.guess-row__tile--imdb]="i === 5"
+      [class.guess-row__tile--year]="i === 6"
+      [style.animationDelay.ms]="animateReveal ? i * 90 : 0"
+    >
+      <app-attribute-tile
+        [state]="tile.state"
+        [text]="tile.text ?? ''"
+        [imageSrc]="tile.imageSrc ?? ''"
+        [uppercaseText]="tile.uppercaseText !== false"
+        [tileVariant]="tile.tileVariant ?? 'default'"
+        [stackCommaSeparated]="i === 1 || i === 3"
+      ></app-attribute-tile>
+    </div>
+  </ng-container>
 </div>

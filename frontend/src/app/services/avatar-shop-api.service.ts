@@ -49,8 +49,16 @@ export class AvatarShopApiService {
     )
   }
 
+  equipAvatar(movieId: number): Observable<MessageResponse> {
+    const body: PurchaseAvatarRequest = { movieId }
+
+    return this.http.post<MessageResponse>(`${this.baseUrl}/equip`, body).pipe(
+      catchError(this.handleError)
+    )
+  }
+
   private handleError(error: { error: ApiError; status: number }): Observable<never> {
-    const message = error.error?.message ?? error.error?.error ?? 'Blad podczas operacji w sklepie awatarow'
+    const message = error.error?.message ?? error.error?.error ?? 'Avatar shop error'
     return throwError(() => new Error(message))
   }
 }

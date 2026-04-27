@@ -1,0 +1,2 @@
+export const GAME_HINT_POSTER_MIN_ATTEMPTS = 4;
+export const GAME_HINT_OVERVIEW_MIN_ATTEMPTS = 8;

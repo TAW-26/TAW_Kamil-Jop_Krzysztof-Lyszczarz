@@ -1,18 +1,14 @@
 <main class="home">
   <section class="home__navbar-wrap">
-    <app-navbar
-      class="home__navbar"
-      variant="default-not-logged"
-      (navLinkSelect)="scrollToSection($event)"
-    ></app-navbar>
+    <app-navbar class="home__navbar" (navLinkSelect)="scrollToSection($event)"></app-navbar>
   </section>
 
   <section id="home-hero" class="home__hero">
     <div class="home__hero-text">
-      <h1 class="home__title text-64-black text-main-color">Zgadnij film, zdobądź bilet.</h1>
+      <h1 class="home__title text-64-black text-main-color">Guess the movie, earn a ticket.</h1>
       <p class="home__description text-18-regular text-muted-color">
-        Codzienne filmowe wyzwania. Wybierz swój ulubiony gatunek, analizuj kadry i sprawdź
-        swoją wiedzę kinową. Czy uda Ci się zebrać wszystkie bilety?
+        Daily movie challenges. Pick your favorite genre, study the frames, and put your film
+        knowledge to the test. Can you collect every ticket?
       </p>
       <app-button variant="default" (click)="goToDailyGame()"></app-button>
     </div>
@@ -23,10 +19,8 @@
   </section>
 
   <section id="home-genre" class="home__genre">
-    <h2 class="home__section-title text-40-bold text-main-color">Wybierz swój gatunek</h2>
-    <app-ticket-carousel
-      [categories]="['Horror', 'Cartoons', 'Daily']"
-    ></app-ticket-carousel>
+    <h2 class="home__section-title text-40-bold text-main-color">Choose your genre</h2>
+    <app-ticket-carousel [items]="carouselItems()"></app-ticket-carousel>
   </section>
 
   <section id="home-how-to-play" class="home__how-to-play">

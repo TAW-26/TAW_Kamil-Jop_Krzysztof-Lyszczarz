@@ -6,6 +6,7 @@ import {
   ChangePasswordRequest,
   GoogleLoginRequest,
   GoogleLoginResponse,
+  GameHistoryItem,
   JwtPayload,
   LoginRequest,
   LoginResponse,
@@ -43,6 +44,7 @@ export class AuthService {
   login(payload: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.baseUrl}/auth/login`, payload).pipe(
       tap(response => {
+        this.clearLocalStorage()
         this.setToken(response.token)
         this.currentUserSignal.set(response.user)
       }),
@@ -53,6 +55,7 @@ export class AuthService {
   loginWithGoogle(payload: GoogleLoginRequest): Observable<GoogleLoginResponse> {
     return this.http.post<GoogleLoginResponse>(`${this.baseUrl}/auth/google`, payload).pipe(
       tap(response => {
+        this.clearLocalStorage()
         this.setToken(response.token)
         this.currentUserSignal.set(response.user)
       }),
@@ -80,7 +83,14 @@ export class AuthService {
     )
   }
 
+  fetchGameHistory(limit = 20): Observable<GameHistoryItem[]> {
+    return this.http.get<GameHistoryItem[]>(`${this.baseUrl}/users/me/history?limit=${limit}`).pipe(
+      catchError(this.handleError)
+    )
+  }
+
   logout(): void {
+    this.clearLocalStorage()
     this.removeToken()
     this.currentUserSignal.set(null)
   }
@@ -132,8 +142,12 @@ export class AuthService {
     return localStorage.getItem(TOKEN_KEY)
   }
 
+  private clearLocalStorage(): void {
+    localStorage.clear()
+  }
+
   private handleError(error: { error: ApiError; status: number }): Observable<never> {
-    const message = error.error?.message ?? error.error?.error ?? 'Wystapil nieoczekiwany blad'
+    const message = error.error?.message ?? error.error?.error ?? 'An unexpected error occurred'
     return throwError(() => new Error(message))
   }
 }

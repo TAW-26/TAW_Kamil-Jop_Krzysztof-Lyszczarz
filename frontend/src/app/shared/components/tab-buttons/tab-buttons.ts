@@ -9,7 +9,7 @@ import { TabButton } from '../tab-button/tab-button';
   styleUrl: './tab-buttons.css',
 })
 export class TabButtons {
-  @Input() tabs: string[] = ['AWATARY', 'AWATARY', 'AWATARY', 'AWATARY'];
+  @Input() tabs: string[] = ['AVATARS', 'AVATARS', 'AVATARS', 'AVATARS'];
   @Input() activeIndex = 0;
   @Output() activeIndexChange = new EventEmitter<number>();
 

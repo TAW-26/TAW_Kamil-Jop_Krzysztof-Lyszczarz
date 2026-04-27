@@ -16,6 +16,7 @@ class AvatarShopController implements Controller {
     this.router.get(`${this.path}/avatars`, authMiddleware, this.getShopItems);
     this.router.get(`${this.path}/owned-avatars`, authMiddleware, this.getOwnedAvatars);
     this.router.post(`${this.path}/purchase`, authMiddleware, this.purchaseAvatar);
+    this.router.post(`${this.path}/equip`, authMiddleware, this.equipAvatar);
   }
     
   private getShopItems = async (req: AuthRequest, res: Response): Promise<void> => {
@@ -70,6 +71,23 @@ class AvatarShopController implements Controller {
       res.status(400).json({ error: (error as Error).message });
     }
   }
+
+  private equipAvatar = async (req: AuthRequest, res: Response): Promise<void> => {
+    const userId = req.user?.userId;
+    const { movieId } = req.body;
+
+    if (!userId) {
+      res.status(401).json({ error: 'Brak autoryzacji' });
+      return;
+    }
+
+    try {
+      await this.avatarShopService.equipAvatar(userId, movieId);
+      res.status(200).json({ message: 'Awatar został założony' });
+    } catch (error) {
+      res.status(400).json({ error: (error as Error).message });
+    }
+  };
 
 
 }

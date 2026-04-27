@@ -30,8 +30,11 @@ export interface SafeUser {
   role: string | null
   lifetime_points: number | null
   points_balance: number | null
+  games_played: number | null
   current_streak: number | null
+  lifetime_streak: number | null
   equipped_avatar_id: number | null
+  equipped_avatar_url: string | null
   created_at: string | null
 }
 
@@ -58,6 +61,13 @@ export interface MessageResponse {
 export interface UserUpdateResponse {
   message: string
   user: SafeUser
+}
+
+export interface GameHistoryItem {
+  playedAt: string | null
+  categoryName: string
+  attempts: number
+  isWon: boolean
 }
 
 export interface JwtPayload {

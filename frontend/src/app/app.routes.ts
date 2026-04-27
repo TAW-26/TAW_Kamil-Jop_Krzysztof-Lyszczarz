@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './guards/auth.guard';
+import { gameAccessGuard } from './guards/game-access.guard';
 import { Contact } from './pages/contact/contact';
 import { ForgotPassword } from './pages/forgot-password/forgot-password';
 import { Game } from './pages/game/game';
@@ -13,13 +15,13 @@ import { Terms } from './pages/terms/terms';
 
 export const routes: Routes = [
   { path: '', component: Home },
-  { path: 'game', component: Game },
-  { path: 'game/:category', component: Game },
+  { path: 'game', component: Game, canActivate: [gameAccessGuard] },
+  { path: 'game/:category', component: Game, canActivate: [gameAccessGuard] },
   { path: 'login', component: Login },
   { path: 'rank', component: Rank },
-  { path: 'shop', component: Shop },
-  { path: 'profile', component: Profile },
-  { path: 'profile-settings', component: ProfileSettings },
+  { path: 'shop', component: Shop, canActivate: [authGuard] },
+  { path: 'profile', component: Profile, canActivate: [authGuard] },
+  { path: 'profile-settings', component: ProfileSettings, canActivate: [authGuard] },
   { path: 'terms', component: Terms },
   { path: 'privacy-policy', component: PrivacyPolicy },
   { path: 'contact', component: Contact },

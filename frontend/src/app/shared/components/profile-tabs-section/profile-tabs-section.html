@@ -1,43 +1,40 @@
 <section class="profile-tabs-section">
   <app-tab-buttons
-    [tabs]="['HISTORIA GIER', 'EKWIPUNEK']"
+    [tabs]="['GAME HISTORY', 'INVENTORY']"
     [activeIndex]="activeTabIndex"
     (activeIndexChange)="setActiveTab($event)"
   ></app-tab-buttons>
 
   <div *ngIf="activeTabIndex === 0" class="profile-tabs-section__history-rows">
+    <p *ngIf="historyItems().length === 0" class="profile-tabs-section__equipment-empty text-muted-color">
+      No game history yet.
+    </p>
     <app-rank-list-row
+      *ngFor="let entry of historyItems()"
       variant="history"
       [rowWidth]="900"
       [rowMinHeight]="63"
-      position="DZIŚ, 18:30"
-      nickname="🔪HORROR"
-      tickets="ZGADNIĘTO ZA 3 RAZEM"
-      streak="WYGRANA"
-    ></app-rank-list-row>
-    <app-rank-list-row
-      variant="history"
-      [rowWidth]="900"
-      [rowMinHeight]="63"
-      position="DZIŚ, 18:30"
-      nickname="🔪HORROR"
-      tickets="ZGADNIĘTO ZA 3 RAZEM"
-      streak="WYGRANA"
-    ></app-rank-list-row>
-    <app-rank-list-row
-      variant="history"
-      [rowWidth]="900"
-      [rowMinHeight]="63"
-      position="DZIŚ, 18:30"
-      nickname="🔪HORROR"
-      tickets="ZGADNIĘTO ZA 3 RAZEM"
-      streak="WYGRANA"
+      [position]="formatHistoryDate(entry.playedAt)"
+      [nickname]="formatCategoryBadge(entry.categoryName)"
+      [tickets]="formatHistoryAttemptText(entry.attempts, entry.isWon)"
+      [streak]="formatHistoryResult(entry.isWon)"
     ></app-rank-list-row>
   </div>
 
   <div *ngIf="activeTabIndex === 1" class="profile-tabs-section__equipment-cards">
-    <app-shop-card variant="card-eq-to-equip"></app-shop-card>
-    <app-shop-card variant="card-eq-equipped"></app-shop-card>
-    <app-shop-card variant="card-eq-to-equip"></app-shop-card>
+    <p *ngIf="ownedAvatars().length === 0" class="profile-tabs-section__equipment-empty text-muted-color">
+      {{ emptyInventoryMessage }}
+    </p>
+    <app-shop-card
+      *ngFor="let avatar of ownedAvatars(); trackBy: trackByAvatarId"
+      [variant]="equipmentVariant(avatar.id)"
+      [title]="avatar.title || 'Movie'"
+      [posterPath]="avatar.posterPath"
+      [description]="''"
+      [icon]="'🍿'"
+      [movieId]="avatar.id"
+      [equipDisabled]="equippingId() !== null"
+      (equipClick)="onEquipAvatar($event)"
+    ></app-shop-card>
   </div>
 </section>

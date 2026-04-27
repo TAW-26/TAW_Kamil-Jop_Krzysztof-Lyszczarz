@@ -1,33 +1,67 @@
 <main class="game-page">
-  <app-navbar variant="default-logged"></app-navbar>
+  <app-navbar></app-navbar>
 
   <section class="game-page__content">
     <section class="game-page__top">
       <h1 class="game-page__watermark text-240-black-uc" [ngClass]="watermarkClass">
         {{ categoryTitle }}
       </h1>
-      <app-ticket [title]="ticketTitle" [theme]="ticketTheme"></app-ticket>
+      <app-ticket [title]="ticketTitle" [theme]="ticketTheme" [compact]="true"></app-ticket>
     </section>
 
     <section #playSection class="game-page__search">
-      <app-search-input></app-search-input>
+      <app-search-input
+        [categorySlug]="apiCategorySlug"
+        (guess)="onMovieGuess($event)"
+        (guessInvalid)="onGuessInvalid()"
+      ></app-search-input>
+
+      <div class="game-page__hints">
+        <app-game-hints-panel
+          [categorySlug]="apiCategorySlug"
+          [attemptCount]="guessRows().length"
+          [isLoggedIn]="isGameAuthenticated"
+        ></app-game-hints-panel>
+      </div>
 
       <div class="game-page__headers">
-        <span
-          *ngFor="let header of headers; let i = index"
-          class="game-page__header text-16-black-uc text-muted-color"
-          [class.game-page__header--year]="i === 1"
-          [class.game-page__header--flex]="i !== 1"
-        >
-          {{ header }}
-        </span>
+        <ng-container *ngFor="let header of headers; let i = index">
+          <span
+            *ngIf="!(isRevenueHiddenForCategory && i === 4)"
+            class="game-page__header text-12-semi-bold-uc text-muted-color"
+            [class.game-page__header--movie]="i === 0"
+            [class.game-page__header--genre]="i === 1"
+            [class.game-page__header--studios]="i === 2"
+            [class.game-page__header--cast]="i === 3"
+            [class.game-page__header--revenue]="i === 4"
+            [class.game-page__header--imdb]="i === 5"
+            [class.game-page__header--year]="i === 6"
+          >
+            {{ header }}
+          </span>
+        </ng-container>
       </div>
 
       <div class="game-page__rows">
-        <app-guess-row *ngFor="let row of rows" [tiles]="row"></app-guess-row>
+        <app-guess-row
+          *ngFor="let row of guessRows(); let i = index; trackBy: trackGuessRowIndex"
+          [tiles]="row"
+          [hideRevenue]="isRevenueHiddenForCategory"
+          [animateReveal]="animateNewestRow() && i === 0"
+        ></app-guess-row>
       </div>
     </section>
   </section>
 
   <app-footer></app-footer>
+
+  @if (winSummary(); as ws) {
+    <app-game-win-dialog
+      [movieTitle]="ws.movieTitle"
+      [guessCount]="ws.guessCount"
+      [isLoggedIn]="isGameAuthenticated"
+      [ticketsAwarded]="ws.ticketsAwarded"
+      (closed)="closeWinDialog()"
+    ></app-game-win-dialog>
+  }
 </main>

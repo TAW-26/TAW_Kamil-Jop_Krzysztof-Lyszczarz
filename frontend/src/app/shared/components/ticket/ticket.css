@@ -2,6 +2,18 @@
   display: block;
 }
 
+:host.ticket-host--compact {
+  width: 168px;
+  height: 315px;
+  margin-inline: auto;
+  flex-shrink: 0;
+}
+
+:host.ticket-host--compact .ticket {
+  transform: scale(0.7);
+  transform-origin: top left;
+}
+
 .ticket {
   --ticket-bg: var(--ticket-default-gradient);
   --ticket-border: var(--ticket-default-border);
@@ -111,4 +123,22 @@
   --ticket-bg: var(--ticket-daily-gradient);
   --ticket-border: var(--ticket-daily-border);
   --ticket-divider: var(--ticket-daily-divider);
+}
+
+.ticket--polish {
+  --ticket-bg: var(--ticket-polish-gradient);
+  --ticket-border: var(--ticket-polish-border);
+  --ticket-divider: var(--ticket-polish-divider);
+}
+
+.ticket--oscar {
+  --ticket-bg: var(--ticket-oscar-gradient);
+  --ticket-border: var(--ticket-oscar-border);
+  --ticket-divider: var(--ticket-oscar-divider);
+}
+
+.ticket--rotten {
+  --ticket-bg: var(--ticket-rotten-gradient);
+  --ticket-border: var(--ticket-rotten-border);
+  --ticket-divider: var(--ticket-rotten-divider);
 }

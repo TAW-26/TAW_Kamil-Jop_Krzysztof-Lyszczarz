@@ -1,0 +1,307 @@
+.game-hints-panel {
+  width: 100%;
+  max-width: 1400px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.game-hints-panel__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid rgb(255 255 255 / 14%);
+  background: var(--background-card);
+  box-sizing: border-box;
+}
+
+.game-hints-panel__lead {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  text-align: left;
+}
+
+.game-hints-panel__title {
+  margin: 0;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+}
+
+.game-hints-panel__hint {
+  margin: 0;
+  line-height: 1.35;
+  max-width: 42ch;
+}
+
+.text-11-muted {
+  font-family: 'Poppins', sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--text-muted);
+}
+
+.game-hints-panel__switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.game-hints-panel__checkbox {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.game-hints-panel__switch-ui {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  border-radius: 11px;
+  background: rgb(255 255 255 / 12%);
+  border: 1px solid rgb(255 255 255 / 18%);
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease;
+  flex-shrink: 0;
+}
+
+.game-hints-panel__switch-ui::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--text-main);
+  box-shadow: 0 1px 4px rgb(0 0 0 / 35%);
+  transition: transform 0.18s ease;
+}
+
+.game-hints-panel__checkbox:checked + .game-hints-panel__switch-ui {
+  background: rgb(212 175 55 / 28%);
+  border-color: rgb(212 175 55 / 55%);
+}
+
+.game-hints-panel__checkbox:checked + .game-hints-panel__switch-ui::after {
+  transform: translateX(18px);
+  background: var(--medal-gold);
+}
+
+.game-hints-panel__checkbox:focus-visible + .game-hints-panel__switch-ui {
+  outline: 2px solid var(--medal-gold);
+  outline-offset: 2px;
+}
+
+.game-hints-panel__switch-label {
+  letter-spacing: 0.05em;
+}
+
+.game-hints-panel__cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+@media (max-width: 640px) {
+  .game-hints-panel__cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hint-card {
+  border: 1px solid rgb(255 255 255 / 14%);
+  border-radius: 10px;
+  background: var(--background-card);
+  padding: 10px 12px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+}
+
+.hint-card__head {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.hint-card__label {
+  letter-spacing: 0.05em;
+}
+
+.hint-card__rule {
+  margin: 0;
+}
+
+.hint-card__locked {
+  margin: 0;
+  line-height: 1.4;
+  text-align: left;
+}
+
+.hint-card__reveal {
+  align-self: flex-start;
+  border: 1px solid rgb(212 175 55 / 45%);
+  border-radius: 8px;
+  padding: 6px 12px;
+  background: rgb(212 175 55 / 12%);
+  color: var(--text-main);
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition:
+    filter 0.15s ease,
+    background 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.hint-card__reveal:hover:not(:disabled) {
+  filter: brightness(1.1);
+  background: rgb(212 175 55 / 20%);
+}
+
+.hint-card__reveal:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.hint-card__poster-done {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.hint-card__poster-note {
+  margin: 0;
+  line-height: 1.4;
+  max-width: 36ch;
+  text-align: left;
+}
+
+.hint-poster-modal__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 16px;
+  background: rgb(0 0 0 / 76%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-sizing: border-box;
+}
+
+.hint-poster-modal {
+  box-sizing: border-box;
+  width: min(100%, 380px);
+  padding: 20px 20px 18px;
+  border-radius: 18px;
+  border: 1px solid rgb(212 175 55 / 38%);
+  background: var(--background-card);
+  box-shadow:
+    0 10px 48px rgb(0 0 0 / 55%),
+    0 0 0 1px rgb(255 255 255 / 8%),
+    0 24px 72px rgb(212 175 55 / 14%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: stretch;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.hint-poster-modal__title {
+  margin: 0;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+}
+
+.hint-poster-modal__sub {
+  margin: 0;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.hint-poster-modal__stage {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgb(0 0 0 / 45%);
+  border: 1px solid rgb(255 255 255 / 10%);
+  line-height: 0;
+  aspect-ratio: 2 / 3;
+  max-height: min(58vh, 520px);
+  margin: 4px 0 2px;
+  box-shadow:
+    inset 0 0 0 1px rgb(212 175 55 / 15%),
+    0 8px 28px rgb(0 0 0 / 40%);
+}
+
+.hint-poster-modal__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: blur(18px) saturate(1.05) brightness(0.92);
+  transform: scale(1.12);
+  transform-origin: center;
+  user-select: none;
+  pointer-events: none;
+}
+
+.hint-poster-modal__close {
+  align-self: center;
+  margin-top: 4px;
+  border: 1px solid rgb(212 175 55 / 45%);
+  border-radius: 10px;
+  padding: 8px 20px;
+  background: rgb(212 175 55 / 14%);
+  color: var(--text-main);
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition:
+    filter 0.15s ease,
+    background 0.15s ease;
+}
+
+.hint-poster-modal__close:hover {
+  filter: brightness(1.08);
+  background: rgb(212 175 55 / 22%);
+}
+
+.hint-card__overview {
+  margin: 0;
+  line-height: 1.45;
+  max-height: 140px;
+  overflow-y: auto;
+  text-align: left;
+  hyphens: auto;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: rgb(0 0 0 / 22%);
+  border: 1px solid rgb(255 255 255 / 8%);
+  font-size: 12px;
+}

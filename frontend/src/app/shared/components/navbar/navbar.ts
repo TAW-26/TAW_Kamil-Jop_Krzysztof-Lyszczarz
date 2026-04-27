@@ -1,13 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output, computed } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
+import { AvatarShopApiService } from '../../../services/avatar-shop-api.service';
+import { equippedAvatarImageUrl } from '../../../utils/equipped-avatar-url.util';
 import { Button } from '../button/button';
 
-export type NavbarVariant =
-  | 'default-logged'
-  | 'with-wallet'
-  | 'default-not-logged'
-  | 'log-sign';
+export type NavbarLayout = 'auto' | 'log-sign';
 
 type NavbarLink =
   | { label: string; type: 'section'; targetId: string }
@@ -19,34 +18,65 @@ type NavbarLink =
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
-export class Navbar {
-  @Input() variant: NavbarVariant = 'default-logged';
-  @Input() walletAmount = '1,250';
+export class Navbar implements OnInit {
+  private readonly auth = inject(AuthService);
+  private readonly avatarShop = inject(AvatarShopApiService);
+
+  @Input() layout: NavbarLayout = 'auto';
+  @Input() showWallet = false;
+  @Input() walletAmount?: string;
+
   @Output() navLinkSelect = new EventEmitter<string>();
 
+  ngOnInit(): void {
+    if (this.auth.isAuthenticated()) {
+      this.avatarShop.fetchOwnedAvatars().subscribe({ error: console.error });
+    }
+  }
+
+  protected readonly navbarAvatarUrl = computed(() =>
+    equippedAvatarImageUrl(this.auth.currentUser(), this.avatarShop.ownedAvatars()),
+  );
+
   protected readonly links: NavbarLink[] = [
-    { label: 'Kategorie', type: 'section', targetId: 'home-genre' },
+    { label: 'Categories', type: 'section', targetId: 'home-genre' },
     { label: 'Ranking', type: 'route', commands: ['/rank'] },
-    { label: 'Zasady', type: 'section', targetId: 'home-how-to-play' },
-    { label: 'Sklep', type: 'route', commands: ['/shop'] },
+    { label: 'How to play', type: 'section', targetId: 'home-how-to-play' },
+    { label: 'Shop', type: 'route', commands: ['/shop'] },
   ];
 
   constructor(private readonly router: Router) {}
 
   protected get showLinks(): boolean {
-    return this.variant !== 'log-sign';
+    return this.layout !== 'log-sign';
   }
 
-  protected get showAvatarOnly(): boolean {
-    return this.variant === 'default-logged';
+  protected get showGuestAuthButton(): boolean {
+    return this.layout === 'auto' && !this.auth.isAuthenticated();
   }
 
-  protected get showWalletWithAvatar(): boolean {
-    return this.variant === 'with-wallet';
+  protected get showUserWallet(): boolean {
+    return this.layout === 'auto' && this.auth.isAuthenticated() && this.showWallet;
   }
 
-  protected get showSignButton(): boolean {
-    return this.variant === 'default-not-logged';
+  protected get showUserCompact(): boolean {
+    return this.layout === 'auto' && this.auth.isAuthenticated() && !this.showWallet;
+  }
+
+  protected get walletLabel(): string {
+    const override = this.walletAmount?.trim();
+    if (override) {
+      return override;
+    }
+    const b = this.auth.currentUser()?.points_balance;
+    if (b == null || Number.isNaN(b)) {
+      return '0';
+    }
+    return b.toLocaleString('en-US');
+  }
+
+  protected displayName(): string | null {
+    return this.auth.username();
   }
 
   protected onLinkClick(link: NavbarLink): void {

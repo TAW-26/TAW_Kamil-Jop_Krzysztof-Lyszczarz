@@ -1,4 +1,4 @@
-import { prisma } from '../app.js';
+import { prisma, redis } from '../app.js';
 import { Prisma } from '@prisma/client';
 
 interface ShopItem {
@@ -136,6 +136,43 @@ class AvatarShopService {
             });
         });
         return response;
+    }
+
+    public async equipAvatar(userId: string, movieId: unknown): Promise<void> {
+        if (movieId === null || movieId === undefined) {
+            throw new Error('movieId jest wymagane');
+        }
+        const id =
+            typeof movieId === 'string' ? parseInt(movieId, 10) : Number(movieId);
+        if (!Number.isInteger(id) || id <= 0) {
+            throw new Error('Nieprawidłowy movieId');
+        }
+
+        const owned = await prisma.user_avatars.findFirst({
+            where: { user_id: userId, movie_id: id },
+        });
+        if (!owned) {
+            throw new Error('Nie posiadasz tego awatara');
+        }
+
+        const movie = await prisma.movies.findUnique({
+            where: { tmdb_id: id },
+            select: { poster_path: true },
+        });
+        if (!movie) {
+            throw new Error('Nie znaleziono filmu w katalogu');
+        }
+
+        await prisma.users.update({
+            where: { id: userId },
+            data: {
+                equipped_avatar_id: id,
+                equipped_avatar_url: movie.poster_path,
+            },
+        });
+
+        await redis.del('leaderboard:points');
+        await redis.del('leaderboard:streaks');
     }
 
     public async getOwnedAvatars(userId: string): Promise<OwnedAvatar[]> {

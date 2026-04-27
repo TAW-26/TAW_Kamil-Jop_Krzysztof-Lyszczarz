@@ -8,7 +8,7 @@ import { Component, Input } from '@angular/core';
 })
 export class HowToPlayCard {
   @Input() step = 1;
-  @Input() title = 'Wybierz bilet';
+  @Input() title = 'Pick a category';
   @Input() description =
-    'Zdecyduj sie na jedna z 5 kategorii. Masz ochote na kino grozy, czy moze wolisz klasyki z listy TOP 250?';
+    'Choose from genres like horror, cartoons, or the IMDb Top 250. There is also a daily challenge open to everyone.';
 }

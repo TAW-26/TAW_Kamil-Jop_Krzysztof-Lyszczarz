@@ -12,11 +12,14 @@ export type RankListRowVariant = 'default' | 'me' | 'history';
 export class RankListRow {
   @Input() variant: RankListRowVariant = 'default';
   @Input() position = '4';
-  @Input() nickname = 'NAZWA GRACZA';
+  @Input() nickname = 'PLAYER NAME';
   @Input() tickets = '🎟️ 385';
-  @Input() streak = '🔥 14 DNI';
+  @Input() streak = '🔥 14 DAYS';
   @Input() rowWidth = 800;
   @Input() rowMinHeight = 56;
+  @Input() avatarUrl: string | null = null;
+  @Input() hideTicketsColumn = false;
+  @Input() hideStreakColumn = false;
 
   protected get isMe(): boolean {
     return this.variant === 'me';

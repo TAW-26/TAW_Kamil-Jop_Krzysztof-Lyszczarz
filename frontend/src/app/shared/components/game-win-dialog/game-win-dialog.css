@@ -1,0 +1,74 @@
+.game-win-dialog__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  background: rgb(0 0 0 / 72%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-sizing: border-box;
+}
+
+.game-win-dialog {
+  box-sizing: border-box;
+  width: min(100%, 440px);
+  padding: 36px 28px 28px;
+  border: 1px solid var(--border-light);
+  border-radius: 20px;
+  background: var(--background-card);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+  text-align: center;
+  box-shadow:
+    0 8px 40px rgb(0 0 0 / 55%),
+    0 0 0 1px rgb(255 255 255 / 8%),
+    0 28px 80px rgb(212 175 55 / 12%);
+  position: relative;
+  z-index: 1;
+}
+
+.game-win-dialog__title {
+  margin: 0;
+  line-height: 1.12;
+}
+
+.game-win-dialog__movie {
+  margin: 0;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+.game-win-dialog__line {
+  margin: 0;
+  line-height: 1.45;
+}
+
+.game-win-dialog__emphasis {
+  font-weight: 700;
+  color: var(--medal-gold);
+}
+
+.game-win-dialog__tickets {
+  margin: 0;
+  line-height: 1.4;
+}
+
+.game-win-dialog__guest {
+  margin: 0;
+  line-height: 1.45;
+  max-width: 34ch;
+}
+
+.game-win-dialog__actions {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.game-win-dialog__actions app-button {
+  width: 100%;
+}

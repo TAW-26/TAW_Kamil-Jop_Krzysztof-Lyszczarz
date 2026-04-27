@@ -60,7 +60,7 @@ export class AdminApiService {
   }
 
   private handleError(error: { error: ApiError; status: number }): Observable<never> {
-    const message = error.error?.message ?? error.error?.error ?? 'Blad podczas operacji administracyjnej'
+    const message = error.error?.message ?? error.error?.error ?? 'Admin operation failed'
     return throwError(() => new Error(message))
   }
 }

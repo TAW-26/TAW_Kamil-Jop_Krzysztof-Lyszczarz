@@ -4,20 +4,75 @@
 }
 
 .guess-row {
-  width: 900px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.guess-row__tile app-attribute-tile {
+  --guess-row-tile-height: 84px;
   width: 100%;
+  max-width: 1400px;
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
 }
 
-.guess-row__tile--flex {
+.guess-row__tile {
+  min-width: 0;
+  height: var(--guess-row-tile-height);
+  min-height: var(--guess-row-tile-height);
+  max-height: var(--guess-row-tile-height);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  box-sizing: border-box;
+}
+
+.guess-row__tile--reveal {
+  opacity: 0;
+  transform: translateY(10px) scale(0.98);
+  animation: guess-tile-reveal 320ms cubic-bezier(0.2, 0.9, 0.28, 1) forwards;
+}
+
+.guess-row__tile--movie {
+  width: 72px;
+  flex-shrink: 0;
+}
+
+.guess-row__tile--genre,
+.guess-row__tile--studios,
+.guess-row__tile--cast {
   flex: 1;
+  min-width: 72px;
+}
+
+.guess-row__tile--revenue {
+  width: 148px;
+  flex-shrink: 0;
+}
+
+.guess-row__tile--imdb {
+  width: 86px;
+  flex-shrink: 0;
 }
 
 .guess-row__tile--year {
-  width: 120px;
+  width: 72px;
+  flex-shrink: 0;
+}
+
+.guess-row__tile app-attribute-tile {
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+  height: 100%;
+  display: block;
+}
+
+@keyframes guess-tile-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+    filter: saturate(0.75);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: saturate(1);
+  }
 }

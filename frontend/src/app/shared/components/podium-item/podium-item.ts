@@ -14,6 +14,9 @@ export class PodiumItem {
   @Input() nick = 'KUBRICK_FAN';
   @Input() tickets = '412';
   @Input() icon = '🎥';
+  @Input() avatarUrl: string | null = null;
+  @Input() metricLabel = 'TICKETS';
+  @Input() highlight = false;
 
   protected get isGold(): boolean {
     return this.variant === '1';

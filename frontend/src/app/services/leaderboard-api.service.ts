@@ -35,7 +35,7 @@ export class LeaderboardApiService {
   }
 
   private handleError(error: { error: ApiError; status: number }): Observable<never> {
-    const message = error.error?.message ?? error.error?.error ?? 'Blad podczas pobierania rankingu'
+    const message = error.error?.message ?? error.error?.error ?? 'Failed to load leaderboard'
     return throwError(() => new Error(message))
   }
 }

@@ -1,44 +1,139 @@
 <main class="rank-page">
-  <app-navbar variant="default-logged"></app-navbar>
+  <app-navbar></app-navbar>
 
   <section class="rank-page__content">
     <div class="rank-page__layout">
-      <h1 class="rank-page__title text-64-black text-main-color">Najlepsi Kinomaniacy</h1>
+      <h1 class="rank-page__title text-64-black text-main-color">Leaderboards</h1>
 
-      <div class="rank-page__podium">
-        <app-podium-item variant="2"></app-podium-item>
-        <app-podium-item variant="1"></app-podium-item>
-        <app-podium-item variant="3"></app-podium-item>
-      </div>
+      <app-tab-buttons
+        class="rank-page__tabs"
+        [tabs]="leaderboardTabs"
+        [activeIndex]="leaderTabIndex()"
+        (activeIndexChange)="onLeaderTabChange($event)"
+      ></app-tab-buttons>
 
-      <div class="rank-page__table">
-        <div class="rank-page__header-row text-16-black-uc text-muted-color">
-          <span class="rank-page__header-pos">POZ.</span>
-          <span class="rank-page__header-player">GRACZ</span>
-          <span class="rank-page__header-tickets">ZEBRANE BILETY</span>
-          <span class="rank-page__header-streak">SERIA</span>
+      <p *ngIf="error()" class="rank-page__error text-14-regular text-muted-color" role="alert">
+        {{ error() }}
+      </p>
+
+      <p *ngIf="loading()" class="rank-page__status text-14-regular text-muted-color">Loading…</p>
+
+      <ng-container *ngIf="!loading()">
+        <div class="rank-page__podium">
+          <app-podium-item
+            *ngFor="let slot of podiumSlots()"
+            [variant]="slot.variant"
+            [nick]="slot.entry?.username ?? '—'"
+            [tickets]="podiumScore(slot)"
+            [icon]="'?'"
+            [avatarUrl]="slot.entry ? avatarForLeader(slot.entry) : null"
+            [metricLabel]="isPointsTab() ? 'POINTS' : 'STREAK'"
+            [highlight]="!!slot.entry && isCurrentUser(slot.entry.id)"
+          ></app-podium-item>
         </div>
 
-        <div class="rank-page__header-divider"></div>
+        <div class="rank-page__table">
+          <div class="rank-page__header-row text-16-black-uc text-muted-color rank-page__header-row--one-metric">
+            <span class="rank-page__header-pos">POS.</span>
+            <span class="rank-page__header-player">PLAYER</span>
+            <span *ngIf="isPointsTab()" class="rank-page__header-metric">POINTS</span>
+            <span *ngIf="!isPointsTab()" class="rank-page__header-metric">STREAK</span>
+          </div>
 
-        <div class="rank-page__rows">
-          <app-rank-list-row variant="default"></app-rank-list-row>
-          <app-rank-list-row variant="default"></app-rank-list-row>
-          <app-rank-list-row variant="default"></app-rank-list-row>
-          <app-rank-list-row variant="default"></app-rank-list-row>
-          <app-rank-list-row variant="default"></app-rank-list-row>
-          <app-rank-list-row variant="default"></app-rank-list-row>
-          <app-rank-list-row variant="default"></app-rank-list-row>
-          <app-rank-list-row
-            variant="me"
-            position="125"
-            nickname="TY"
-            tickets="🎟️ 10"
-            streak="🔥 3 DNI"
-          ></app-rank-list-row>
+          <div class="rank-page__header-divider"></div>
+
+          <div class="rank-page__rows">
+            <ng-container *ngIf="isPointsTab()">
+              <app-rank-list-row
+                *ngFor="let row of tablePointsRows()"
+                [variant]="isCurrentUser(row.entry.id) ? 'me' : 'default'"
+                [position]="row.rank.toString()"
+                [nickname]="row.entry.username"
+                [tickets]="formatPoints(row.entry.lifetime_points)"
+                [streak]="'—'"
+                [avatarUrl]="avatarForLeader(row.entry)"
+                [hideStreakColumn]="true"
+              ></app-rank-list-row>
+            </ng-container>
+
+            <ng-container *ngIf="!isPointsTab()">
+              <app-rank-list-row
+                *ngFor="let row of tableStreakRows()"
+                [variant]="isCurrentUser(row.entry.id) ? 'me' : 'default'"
+                [position]="row.rank.toString()"
+                [nickname]="row.entry.username"
+                [tickets]="'—'"
+                [streak]="formatStreak(row.entry.lifetime_streak)"
+                [avatarUrl]="avatarForLeader(row.entry)"
+                [hideTicketsColumn]="true"
+              ></app-rank-list-row>
+            </ng-container>
+
+            @if (meOutsideLeaderboard(); as o) {
+              <app-rank-list-row
+                variant="me"
+                position="—"
+                [nickname]="o.user.username"
+                [tickets]="o.kind === 'points' ? formatPoints(o.user.lifetime_points) : '—'"
+                [streak]="o.kind === 'streak' ? formatStreak(o.user.lifetime_streak) : '—'"
+                [avatarUrl]="posterUrl(o.user.equipped_avatar_url)"
+                [hideStreakColumn]="o.kind === 'points'"
+                [hideTicketsColumn]="o.kind === 'streak'"
+              ></app-rank-list-row>
+            }
+          </div>
         </div>
-      </div>
 
+        <section class="rank-page__histogram-section" aria-label="Today's wins by number of guesses">
+          <h2 class="rank-page__histogram-title text-28-black-uc text-main-color">
+            Today's wins by attempts
+          </h2>
+          <p class="rank-page__histogram-hint text-12-regular text-muted-color">
+            Per category daily challenge (UTC date). Pick a category below.
+          </p>
+
+          <div class="rank-page__category-picker" role="tablist" aria-label="Leaderboard categories">
+            <button
+              *ngFor="let c of categoryItems()"
+              type="button"
+              class="rank-page__category-ticket"
+              [class.rank-page__category-ticket--active]="histogramSlug() === c.slug"
+              (click)="onCategoryPicked(c.slug)"
+              [attr.aria-selected]="histogramSlug() === c.slug"
+            >
+              <div class="rank-page__category-ticket-scale">
+                <app-ticket [title]="c.label.toUpperCase()" [theme]="themeForSlug(c.slug)"></app-ticket>
+              </div>
+            </button>
+          </div>
+
+          <p *ngIf="histogramLoading()" class="rank-page__histogram-status text-14-regular text-muted-color">
+            Loading stats…
+          </p>
+
+          <p
+            *ngIf="!histogramLoading() && histogram().length === 0"
+            class="rank-page__histogram-status text-14-regular text-muted-color"
+          >
+            No winning games recorded for this category today, or no daily challenge yet.
+          </p>
+
+          <ul *ngIf="!histogramLoading() && histogram().length > 0" class="rank-page__histogram-bars">
+            <li *ngFor="let row of histogram()" class="rank-page__histogram-row">
+              <span class="rank-page__histogram-label text-14-semi-bold text-main-color">
+                {{ row.attempts }} {{ row.attempts === 1 ? 'attempt' : 'attempts' }}
+              </span>
+              <div class="rank-page__histogram-track" aria-hidden="true">
+                <div
+                  class="rank-page__histogram-fill"
+                  [style.width.%]="(row.count / histogramMax()) * 100"
+                ></div>
+              </div>
+              <span class="rank-page__histogram-count text-14-bold text-main-color">{{ row.count }}</span>
+            </li>
+          </ul>
+        </section>
+      </ng-container>
     </div>
   </section>
 

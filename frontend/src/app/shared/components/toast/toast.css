@@ -1,0 +1,35 @@
+:host {
+  pointer-events: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 32px;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  padding: 0 16px;
+}
+
+.toast {
+  pointer-events: auto;
+  max-width: min(420px, 100%);
+  padding: 14px 22px;
+  border-radius: 12px;
+  border: 1px solid var(--border-light);
+  background: var(--background-card);
+  color: var(--text-main);
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  animation: toast-in 220ms ease-out;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

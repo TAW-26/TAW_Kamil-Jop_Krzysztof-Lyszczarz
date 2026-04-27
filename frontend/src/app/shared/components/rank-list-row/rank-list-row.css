@@ -55,6 +55,14 @@
   line-height: 1;
 }
 
+.rank-list-row__avatar-img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+}
+
 .rank-list-row__nickname,
 .rank-list-row__tickets {
   color: var(--text-main);

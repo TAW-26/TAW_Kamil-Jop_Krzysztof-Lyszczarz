@@ -90,6 +90,7 @@ model users {
   role               String?        @default("user") @db.VarChar(50)
   lifetime_points    Int?           @default(0)
   points_balance     Int?           @default(0)
+  games_played       Int?           @default(0)
   current_streak     Int?           @default(0)
   lifetime_streak    Int?           @default(0)
   equipped_avatar_id Int?

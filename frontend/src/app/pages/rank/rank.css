@@ -18,11 +18,22 @@
 }
 
 .rank-page__layout {
-  width: min(100%, 820px);
+  width: min(100%, 900px);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 50px;
+  gap: 40px;
+}
+
+.rank-page__tabs {
+  width: 100%;
+  max-width: 520px;
+}
+
+.rank-page__error,
+.rank-page__status {
+  margin: 0;
+  text-align: center;
 }
 
 .rank-page__title {
@@ -37,11 +48,15 @@
   align-items: flex-end;
   justify-content: center;
   gap: 20px;
+  position: relative;
+  z-index: 1;
 }
 
 .rank-page__table {
   width: 800px;
   max-width: 100%;
+  position: relative;
+  z-index: 1;
 }
 
 .rank-page__header-row {
@@ -59,9 +74,13 @@
   flex: 1;
 }
 
-.rank-page__header-tickets,
-.rank-page__header-streak {
+.rank-page__header-metric {
   width: 140px;
+  text-align: right;
+}
+
+.rank-page__header-row--one-metric .rank-page__header-player {
+  flex: 1;
 }
 
 .rank-page__header-divider {
@@ -76,4 +95,118 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.rank-page__histogram-section {
+  width: 100%;
+  max-width: 900px;
+  margin-top: 32px;
+  padding-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: stretch;
+  position: relative;
+  z-index: 0;
+}
+
+.rank-page__histogram-title {
+  margin: 0;
+  text-align: center;
+}
+
+.rank-page__histogram-hint {
+  margin: 0;
+  text-align: center;
+}
+
+.rank-page__category-picker {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  min-height: 190px;
+}
+
+.rank-page__category-ticket {
+  position: relative;
+  flex-shrink: 0;
+  width: 90px;
+  height: 168px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  border-radius: 16px;
+  background: transparent;
+  cursor: pointer;
+  overflow: hidden;
+  transform: scale(1);
+  transform-origin: center center;
+  transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.rank-page__category-ticket--active {
+  transform: scale(1.1);
+  z-index: 2;
+}
+
+.rank-page__category-ticket-scale {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 240px;
+  height: 450px;
+  margin: 0;
+  display: block;
+  transform: translate(-50%, -50%) scale(0.35);
+  transform-origin: center center;
+  pointer-events: none;
+}
+
+.rank-page__histogram-status {
+  margin: 0;
+  text-align: center;
+}
+
+.rank-page__histogram-bars {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rank-page__histogram-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rank-page__histogram-label {
+  width: 100px;
+  flex-shrink: 0;
+}
+
+.rank-page__histogram-track {
+  flex: 1;
+  height: 10px;
+  border-radius: 6px;
+  background: rgb(255 255 255 / 8%);
+  overflow: hidden;
+}
+
+.rank-page__histogram-fill {
+  height: 100%;
+  border-radius: 6px;
+  background: var(--gold-gradient);
+  min-width: 4px;
+  transition: width 0.25s ease;
+}
+
+.rank-page__histogram-count {
+  width: 36px;
+  flex-shrink: 0;
+  text-align: right;
 }

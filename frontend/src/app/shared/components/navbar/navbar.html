@@ -2,7 +2,7 @@
   <button
     type="button"
     class="navbar__logo-button"
-    aria-label="Przejdz do strony glownej"
+    aria-label="Go to home page"
     (click)="goToHome()"
   >
     <span class="navbar__logo text-28-black-uc text-main-color">MOVIEGUESS</span>
@@ -20,33 +20,55 @@
     </li>
   </ul>
 
-  <button
-    *ngIf="showAvatarOnly"
-    type="button"
-    class="navbar__avatar-button navbar__avatar"
-    aria-label="Przejdz do profilu"
-    (click)="goToProfile()"
-  >
-    🧙‍♂️
-  </button>
+  <div *ngIf="showUserCompact" class="navbar__user">
+    <span class="navbar__username text-16-semi-bold text-main-color" aria-live="polite">
+      {{ displayName() || 'Profil' }}
+    </span>
+    <button
+      type="button"
+      class="navbar__avatar-button navbar__avatar"
+      aria-label="Go to profile"
+      (click)="goToProfile()"
+    >
+      <img
+        *ngIf="navbarAvatarUrl() as navSrc"
+        [src]="navSrc"
+        alt=""
+        class="navbar__avatar-img"
+        width="40"
+        height="40"
+        loading="lazy"
+      />
+      <span *ngIf="!navbarAvatarUrl()" class="navbar__avatar-fallback" aria-hidden="true">?</span>
+    </button>
+  </div>
 
   <app-button
-    *ngIf="showSignButton"
+    *ngIf="showGuestAuthButton"
     variant="sign-up-log-in"
     (click)="goToLogin()"
   ></app-button>
 
-  <div *ngIf="showWalletWithAvatar" class="navbar__wallet-group">
+  <div *ngIf="showUserWallet" class="navbar__wallet-group">
     <div class="navbar__wallet text-16-bold">
-      <span>🎟️ {{ walletAmount }}</span>
+      <span>🎟️ {{ walletLabel }}</span>
     </div>
     <button
       type="button"
       class="navbar__avatar-button navbar__avatar"
-      aria-label="Przejdz do profilu"
+      aria-label="Go to profile"
       (click)="goToProfile()"
     >
-      🧙‍♂️
+      <img
+        *ngIf="navbarAvatarUrl() as navSrc"
+        [src]="navSrc"
+        alt=""
+        class="navbar__avatar-img"
+        width="40"
+        height="40"
+        loading="lazy"
+      />
+      <span *ngIf="!navbarAvatarUrl()" class="navbar__avatar-fallback" aria-hidden="true">?</span>
     </button>
   </div>
 </nav>

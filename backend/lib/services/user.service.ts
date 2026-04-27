@@ -1,6 +1,13 @@
 import { users } from '@prisma/client';
-import { prisma } from '../app.js';
+import { prisma, redis } from '../app.js';
 import { SafeUser, UpdateMeDto } from '../interfaces/auth.interface.js';
+
+interface GameHistoryItem {
+    playedAt: Date | null;
+    categoryName: string;
+    attempts: number;
+    isWon: boolean;
+}
 
 class UserService {
     private toSafeUser(user: users): SafeUser {
@@ -11,8 +18,11 @@ class UserService {
             role: user.role,
             lifetime_points: user.lifetime_points,
             points_balance: user.points_balance,
+            games_played: user.games_played,
             current_streak: user.current_streak,
+            lifetime_streak: user.lifetime_streak,
             equipped_avatar_id: user.equipped_avatar_id,
+            equipped_avatar_url: user.equipped_avatar_url,
             created_at: user.created_at,
         };
     }
@@ -86,7 +96,36 @@ class UserService {
             data: updateData,
         });
 
+        if (updateData.username && updateData.username !== user.username) {
+            await redis.del('leaderboard:points');
+            await redis.del('leaderboard:streaks');
+        }
+
         return this.toSafeUser(updatedUser);
+    }
+
+    public async getGameHistory(userId: string, limit = 20): Promise<GameHistoryItem[]> {
+        const safeLimit = Math.max(1, Math.min(limit, 100));
+
+        const games = await prisma.games.findMany({
+            where: { user_id: userId },
+            orderBy: { played_at: 'desc' },
+            take: safeLimit,
+            include: {
+                daily_challenges: {
+                    include: {
+                        categories: true,
+                    },
+                },
+            },
+        });
+
+        return games.map((game) => ({
+            playedAt: game.played_at,
+            categoryName: game.daily_challenges?.categories?.name || 'Unknown',
+            attempts: game.attempts || 0,
+            isWon: game.is_won || false,
+        }));
     }
 }
 

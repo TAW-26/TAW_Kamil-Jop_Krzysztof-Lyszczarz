@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { tmdbPosterUrl } from '../../../utils/tmdb-poster.util';
 import { Button } from '../button/button';
 
 export type ShopCardVariant =
@@ -19,10 +20,32 @@ export class ShopCard {
   @Input() variant: ShopCardVariant = 'default-buy';
   @Input() title = 'Kinowy Widz';
   @Input() description = 'Klasyczny awatar fana kina z popocornem.';
+  @Input() posterPath: string | null = null;
   @Input() icon = '🍿';
   @Input() buyTickets = '300';
   @Input() lockedTickets = '1000';
   @Input() lockedLabelOverride?: string;
+  @Input() movieId: number | null = null;
+  @Input() purchaseDisabled = false;
+  @Input() equipDisabled = false;
+  @Input() showNewBadge = false;
+
+  @Output() purchaseClick = new EventEmitter<number>();
+  @Output() equipClick = new EventEmitter<number>();
+
+  protected onBuyPressed(): void {
+    if (this.movieId == null || this.purchaseDisabled) {
+      return;
+    }
+    this.purchaseClick.emit(this.movieId);
+  }
+
+  protected onEquipPressed(): void {
+    if (this.movieId == null || this.equipDisabled) {
+      return;
+    }
+    this.equipClick.emit(this.movieId);
+  }
 
   protected get isBuyNew(): boolean {
     return this.variant === 'buy-new';
@@ -50,6 +73,10 @@ export class ShopCard {
   }
 
   protected get lockedLabel(): string {
-    return this.lockedLabelOverride?.trim() || `🎟️ ${this.lockedTickets} Brak biletów`;
+    return this.lockedLabelOverride?.trim() || `🎟️ ${this.lockedTickets} Not enough tickets`;
+  }
+
+  protected get posterSrc(): string | null {
+    return tmdbPosterUrl(this.posterPath);
   }
 }

@@ -86,6 +86,7 @@
 }
 
 .navbar__avatar {
+  box-sizing: border-box;
   width: 40px;
   height: 40px;
   border: 1px solid var(--border-light);
@@ -93,8 +94,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
   background: var(--brighte);
   font-size: 20px;
+}
+
+.navbar__avatar-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.navbar__avatar-fallback {
+  line-height: 1;
 }
 
 .navbar__avatar-button {
@@ -116,6 +130,20 @@
 
 .navbar__avatar-button:focus-visible {
   outline: none;
+}
+
+.navbar__user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+}
+
+.navbar__username {
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .navbar__wallet-group {

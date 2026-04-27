@@ -5,5 +5,10 @@
     [class.auth-input__field--focused]="focused"
     [type]="type"
     [placeholder]="placeholder"
+    [disabled]="disabled"
+    [attr.autocomplete]="autocomplete || null"
+    [value]="value()"
+    (input)="value.set(($any($event.target).value))"
+    (keydown.enter)="enterPressed.emit()"
   />
 </label>

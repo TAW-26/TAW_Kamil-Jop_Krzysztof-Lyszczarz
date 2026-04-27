@@ -23,6 +23,7 @@ export class Button {
   @Input() tickets = '300';
   @Input() fullWidth = false;
   @Input() labelOverride?: string;
+  @Input() disabled = false;
 
   protected get isGold(): boolean {
     return ['default', 'sign-up-log-in', 'log-in', 'sign-up', 'buy'].includes(
@@ -37,21 +38,21 @@ export class Button {
 
     switch (this.variant) {
       case 'default':
-        return 'ZAGRAJ TERAZ';
+        return 'PLAY NOW';
       case 'sign-up-log-in':
         return 'SIGN UP/LOG IN';
       case 'log-in':
-        return 'WEJDZ DO GRY';
+        return 'ENTER GAME';
       case 'sign-up':
-        return 'ZALOZ KONTO';
+        return 'CREATE ACCOUNT';
       case 'buy':
-        return `🎟️ ${this.tickets} Kup`;
+        return `🎟️ ${this.tickets} Buy`;
       case 'locked':
-        return `🎟️ ${this.tickets} Kup Brak biletow`;
+        return `🎟️ ${this.tickets} Not enough tickets`;
       case 'owned':
-        return 'Posiadasz to';
+        return 'Already owned';
       case 'profile-settings':
-        return 'Ustawienia Konta';
+        return 'Account settings';
       default:
         return '';
     }

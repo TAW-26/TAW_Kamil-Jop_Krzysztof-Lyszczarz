@@ -1,0 +1,32 @@
+<div
+  class="confirm-dialog__backdrop"
+  role="presentation"
+  (click)="onBackdrop($event)"
+>
+  <div
+    class="confirm-dialog"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-labelledby]="'confirm-dialog-heading'"
+    (click)="$event.stopPropagation()"
+  >
+    <h2 id="confirm-dialog-heading" class="confirm-dialog__heading text-28-black-uc text-main-color">
+      {{ heading }}
+    </h2>
+    <p class="confirm-dialog__body text-18-regular text-muted-color">{{ body }}</p>
+    <div class="confirm-dialog__actions">
+      <app-button
+        variant="profile-settings"
+        [labelOverride]="'Cancel'"
+        [fullWidth]="true"
+        (click)="cancel.emit()"
+      ></app-button>
+      <app-button
+        variant="buy"
+        [tickets]="confirmTickets"
+        [fullWidth]="true"
+        (click)="confirm.emit()"
+      ></app-button>
+    </div>
+  </div>
+</div>
