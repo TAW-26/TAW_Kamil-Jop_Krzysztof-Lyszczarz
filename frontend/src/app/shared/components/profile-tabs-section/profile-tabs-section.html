@@ -23,7 +23,7 @@
 
   <div *ngIf="activeTabIndex === 1" class="profile-tabs-section__equipment-cards">
     <p *ngIf="ownedAvatars().length === 0" class="profile-tabs-section__equipment-empty text-muted-color">
-      You do not have any avatars yet. Buy some in the shop.
+      {{ emptyInventoryMessage }}
     </p>
     <app-shop-card
       *ngFor="let avatar of ownedAvatars(); trackBy: trackByAvatarId"

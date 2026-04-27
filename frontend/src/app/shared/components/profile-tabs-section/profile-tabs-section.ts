@@ -17,6 +17,7 @@ import { TabButtons } from '../tab-buttons/tab-buttons';
   styleUrl: './profile-tabs-section.css',
 })
 export class ProfileTabsSection implements OnInit {
+  private readonly noAvatarsMessage = 'You do not have any avatars yet. Buy some in the shop.';
   @Input() activeTabIndex = 0;
 
   private readonly avatarShop = inject(AvatarShopApiService);
@@ -29,6 +30,7 @@ export class ProfileTabsSection implements OnInit {
   protected readonly equippedAvatarId = computed(
     () => this.auth.currentUser()?.equipped_avatar_id ?? null,
   );
+  protected readonly emptyInventoryMessage = this.noAvatarsMessage.replace(/\\n/g, ' ');
 
   ngOnInit(): void {
     this.avatarShop.fetchOwnedAvatars().subscribe({ error: console.error });

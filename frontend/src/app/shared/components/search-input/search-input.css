@@ -63,7 +63,7 @@
 }
 
 .search-input__dropdown {
-  position: absolute;
+  position: relative;
   margin: 8px 0 0;
   width: 100%;
   box-sizing: border-box;
@@ -71,6 +71,9 @@
   border: 1px solid var(--text-muted);
   background: var(--background-card);
   z-index: 10;
+  max-height: min(420px, calc(100vh - 220px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
   animation: search-input-dropdown-in 0.22s ease-out;
   transform-origin: top center;
 }
@@ -148,6 +151,7 @@
   margin: 0;
   padding: 8px;
   list-style: none;
+  max-height: inherit;
 }
 
 .search-input__no-matches {

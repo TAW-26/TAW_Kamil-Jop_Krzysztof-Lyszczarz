@@ -23,9 +23,9 @@ import { GameApiService } from '../../services/game-api.service';
 import { ToastService } from '../../services/toast.service';
 import {
   isDailyCategoryKey,
-  resolveGameCategoryKey,
   toApiCategorySlug,
 } from '../../utils/game-category.util';
+import { ticketThemeFromSlug } from '../../utils/ticket-theme.util';
 import {
   loadGuessRowsFromStorage,
   saveGuessRowsToStorage,
@@ -99,6 +99,12 @@ export class Game implements OnInit, AfterViewInit, OnDestroy {
         return 'game-page__watermark--cartoons';
       case 'daily-challenge':
         return 'game-page__watermark--daily';
+      case 'polish':
+        return 'game-page__watermark--polish';
+      case 'oscar':
+        return 'game-page__watermark--oscar';
+      case 'rotten':
+        return 'game-page__watermark--rotten';
       default:
         return 'text-gold-color';
     }
@@ -137,10 +143,9 @@ export class Game implements OnInit, AfterViewInit, OnDestroy {
       const queryCategory = query.get('category');
       const raw = pathCategory || queryCategory || 'daily';
       this.apiCategorySlug = toApiCategorySlug(pathCategory || queryCategory);
-      const categoryKey = resolveGameCategoryKey(pathCategory, queryCategory);
       this.categoryTitle = this.toDisplayTitle(raw);
       this.ticketTitle = this.categoryTitle;
-      this.ticketTheme = this.ticketThemeFromCategoryKey(categoryKey);
+      this.ticketTheme = ticketThemeFromSlug(this.apiCategorySlug);
       this.shouldAutoScrollToPlay = query.get('autoscroll') === '1';
       this.hasAutoScrolledToPlay = false;
 
@@ -228,6 +233,7 @@ export class Game implements OnInit, AfterViewInit, OnDestroy {
               guessCount,
               ticketsAwarded: tickets,
             });
+            this.auth.fetchCurrentUser().subscribe({ error: console.error });
           }
         },
         error: (err: Error) => this.toast.show(err.message),
@@ -272,20 +278,6 @@ export class Game implements OnInit, AfterViewInit, OnDestroy {
       .replace(/[-_]+/g, ' ')
       .trim()
       .toUpperCase();
-  }
-
-  private ticketThemeFromCategoryKey(categoryKey: string): TicketTheme {
-    if (categoryKey === 'horror') {
-      return 'horror';
-    }
-    if (categoryKey === 'cartoons') {
-      return 'cartoons';
-    }
-    if (isDailyCategoryKey(categoryKey)) {
-      return 'daily-challenge';
-    }
-
-    return 'default';
   }
 
   private scheduleAutoScrollToPlay(): void {

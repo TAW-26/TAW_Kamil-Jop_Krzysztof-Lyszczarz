@@ -7,8 +7,7 @@ import { ToastService } from '../../../services/toast.service';
 import { equippedAvatarImageUrl } from '../../../utils/equipped-avatar-url.util';
 import { Button } from '../button/button';
 
-const MOCK_PROFILE_BADGE = 'GOLD REVIEWER (mock)';
-const MOCK_AVATAR_ICON = '🍿';
+const MOCK_AVATAR_ICON = '?';
 
 function formatAccountCreatedLabel(isoDate: string | null | undefined): string {
   if (!isoDate) {
@@ -54,7 +53,6 @@ export class ProfileHeaderCard implements OnInit {
     equippedAvatarImageUrl(this.auth.currentUser(), this.avatarShop.ownedAvatars()),
   );
 
-  protected readonly badge = MOCK_PROFILE_BADGE;
   protected readonly icon = MOCK_AVATAR_ICON;
 
   protected goToProfileSettings(): void {

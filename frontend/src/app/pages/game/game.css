@@ -64,6 +64,18 @@
   color: var(--ticket-daily-accent);
 }
 
+.game-page__watermark--polish {
+  color: var(--ticket-polish-accent);
+}
+
+.game-page__watermark--oscar {
+  color: var(--ticket-oscar-accent);
+}
+
+.game-page__watermark--rotten {
+  color: var(--ticket-rotten-accent);
+}
+
 .game-page__watermark.text-gold-color {
   color: var(--medal-gold);
 }
