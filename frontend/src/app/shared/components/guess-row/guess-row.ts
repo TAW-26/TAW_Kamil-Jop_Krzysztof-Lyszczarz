@@ -24,6 +24,7 @@ export type GuessRowTile = {
 })
 export class GuessRow {
   @Input() animateReveal = false;
+  @Input() hideRevenue = false;
   @Input() tiles: GuessRowTile[] = Array.from({ length: GUESS_ROW_TILE_COUNT }, () => ({
     state: 'empty' as const,
   }));

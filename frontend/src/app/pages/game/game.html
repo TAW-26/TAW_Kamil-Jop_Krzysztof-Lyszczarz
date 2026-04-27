@@ -25,25 +25,28 @@
       </div>
 
       <div class="game-page__headers">
-        <span
-          *ngFor="let header of headers; let i = index"
-          class="game-page__header text-12-semi-bold-uc text-muted-color"
-          [class.game-page__header--movie]="i === 0"
-          [class.game-page__header--genre]="i === 1"
-          [class.game-page__header--studios]="i === 2"
-          [class.game-page__header--cast]="i === 3"
-          [class.game-page__header--revenue]="i === 4"
-          [class.game-page__header--imdb]="i === 5"
-          [class.game-page__header--year]="i === 6"
-        >
-          {{ header }}
-        </span>
+        <ng-container *ngFor="let header of headers; let i = index">
+          <span
+            *ngIf="!(isRevenueHiddenForCategory && i === 4)"
+            class="game-page__header text-12-semi-bold-uc text-muted-color"
+            [class.game-page__header--movie]="i === 0"
+            [class.game-page__header--genre]="i === 1"
+            [class.game-page__header--studios]="i === 2"
+            [class.game-page__header--cast]="i === 3"
+            [class.game-page__header--revenue]="i === 4"
+            [class.game-page__header--imdb]="i === 5"
+            [class.game-page__header--year]="i === 6"
+          >
+            {{ header }}
+          </span>
+        </ng-container>
       </div>
 
       <div class="game-page__rows">
         <app-guess-row
           *ngFor="let row of guessRows(); let i = index; trackBy: trackGuessRowIndex"
           [tiles]="row"
+          [hideRevenue]="isRevenueHiddenForCategory"
           [animateReveal]="animateNewestRow() && i === 0"
         ></app-guess-row>
       </div>

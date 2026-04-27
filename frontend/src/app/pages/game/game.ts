@@ -104,6 +104,10 @@ export class Game implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  protected get isRevenueHiddenForCategory(): boolean {
+    return this.apiCategorySlug === 'polish';
+  }
+
   ngOnInit(): void {
     this.routeSubscription = combineLatest([
       this.route.paramMap,
