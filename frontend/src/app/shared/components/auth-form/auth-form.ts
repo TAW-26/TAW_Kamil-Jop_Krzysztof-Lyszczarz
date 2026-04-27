@@ -26,6 +26,7 @@ interface GoogleAccountsId {
     ux_mode?: 'popup' | 'redirect';
   }): void;
   prompt(listener?: (notification: GooglePromptMomentNotification) => void): void;
+  cancel?: () => void;
 }
 
 interface GoogleIdentity {
@@ -37,6 +38,7 @@ interface GoogleIdentity {
 declare global {
   interface Window {
     google?: GoogleIdentity;
+    __movieguessGoogleInitializedForClientId?: string;
   }
 }
 
@@ -61,6 +63,8 @@ export class AuthForm {
 
   protected readonly error = signal('');
   protected readonly isSubmitting = signal(false);
+  private googleCredentialResolver: ((token: string) => void) | null = null;
+  private googleCredentialRejecter: ((error: Error) => void) | null = null;
 
   protected setMode(mode: AuthMode): void {
     this.mode = mode;
@@ -115,31 +119,37 @@ export class AuthForm {
       }
 
       let isResolved = false;
+      this.googleCredentialResolver = resolve;
+      this.googleCredentialRejecter = reject;
       const timeoutId = window.setTimeout(() => {
         if (isResolved) return;
         isResolved = true;
+        this.googleCredentialResolver = null;
+        this.googleCredentialRejecter = null;
         reject(new Error('Google sign-in timed out. Please try again.'));
       }, 30000);
 
-      googleIdentity.accounts.id.initialize({
-        client_id: environment.googleClientId,
-        callback: response => {
-          if (isResolved) return;
+      if (window.__movieguessGoogleInitializedForClientId !== environment.googleClientId) {
+        googleIdentity.accounts.id.initialize({
+          client_id: environment.googleClientId,
+          callback: response => {
+            const credential = response.credential;
+            if (!credential) {
+              this.googleCredentialRejecter?.(new Error('Google did not return an ID token.'));
+              this.googleCredentialResolver = null;
+              this.googleCredentialRejecter = null;
+              return;
+            }
+            this.googleCredentialResolver?.(credential);
+            this.googleCredentialResolver = null;
+            this.googleCredentialRejecter = null;
+          },
+          ux_mode: 'popup',
+        });
+        window.__movieguessGoogleInitializedForClientId = environment.googleClientId;
+      }
 
-          const credential = response.credential;
-          if (!credential) {
-            isResolved = true;
-            clearTimeout(timeoutId);
-            reject(new Error('Google did not return an ID token.'));
-            return;
-          }
-
-          isResolved = true;
-          clearTimeout(timeoutId);
-          resolve(credential);
-        },
-        ux_mode: 'popup',
-      });
+      googleIdentity.accounts.id.cancel?.();
 
       googleIdentity.accounts.id.prompt(notification => {
         if (isResolved) return;
@@ -151,6 +161,8 @@ export class AuthForm {
         ) {
           isResolved = true;
           clearTimeout(timeoutId);
+          this.googleCredentialResolver = null;
+          this.googleCredentialRejecter = null;
           reject(new Error('Google sign-in was cancelled or blocked.'));
         }
       });
