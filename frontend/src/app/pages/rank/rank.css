@@ -99,7 +99,7 @@
 
 .rank-page__histogram-section {
   width: 100%;
-  max-width: 720px;
+  max-width: 900px;
   margin-top: 32px;
   padding-top: 8px;
   display: flex;
@@ -122,18 +122,18 @@
 
 .rank-page__category-picker {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
-  gap: 24px 28px;
-  min-height: 216px;
+  gap: 12px;
+  min-height: 190px;
 }
 
 .rank-page__category-ticket {
   position: relative;
   flex-shrink: 0;
-  width: 102px;
-  height: 190px;
+  width: 90px;
+  height: 168px;
   padding: 0;
   margin: 0;
   border: none;
@@ -159,7 +159,7 @@
   height: 450px;
   margin: 0;
   display: block;
-  transform: translate(-50%, -50%) scale(0.4);
+  transform: translate(-50%, -50%) scale(0.35);
   transform-origin: center center;
   pointer-events: none;
 }

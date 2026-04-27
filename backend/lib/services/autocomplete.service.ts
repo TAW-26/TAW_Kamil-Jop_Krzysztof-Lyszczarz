@@ -2,8 +2,8 @@ import {prisma, redis} from '../app.js';
 import { CATEGORIES } from '../constants/categories.map.js';
 type MovieCache = {
   id: number;
-  title: string;
-  original_title?: string;
+  title: string | null;
+  original_title?: string | null;
   poster_path: string;
   release_date: string | null;
 };
@@ -42,10 +42,14 @@ class AutoCompleteService {
                 return [];
             }
             const lowerCaseQuery = query.toLowerCase();
-            const results = cacheData.filter((movie: MovieCache) => 
-                movie.title.toLowerCase().includes(lowerCaseQuery) ||
-                (movie.original_title && movie.original_title.toLowerCase().includes(lowerCaseQuery))
-            );
+            const results = cacheData.filter((movie: MovieCache) => {
+                const normalizedTitle = (movie.title ?? '').toLowerCase();
+                const normalizedOriginalTitle = (movie.original_title ?? '').toLowerCase();
+                return (
+                    normalizedTitle.includes(lowerCaseQuery) ||
+                    normalizedOriginalTitle.includes(lowerCaseQuery)
+                );
+            });
             return results.slice(0, limit);
         } catch (error) {
             console.error(`Error during search in category ${categorySlug}:`, error);

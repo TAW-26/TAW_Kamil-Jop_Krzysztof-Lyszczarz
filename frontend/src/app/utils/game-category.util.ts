@@ -31,5 +31,14 @@ export function toApiCategorySlug(routeSegment: string | null | undefined): stri
   if (s === 'cartoon') {
     return 'cartoons';
   }
+  if (s === 'polish' || compact === 'polishmovies') {
+    return 'polish';
+  }
+  if (s === 'oscar' || compact === 'oscarwinners') {
+    return 'oscar-winners';
+  }
+  if (compact === 'toprottentomatoes') {
+    return 'top-rotten-tomatoes';
+  }
   return raw.toLowerCase();
 }

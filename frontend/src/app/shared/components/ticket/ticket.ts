@@ -1,6 +1,13 @@
 import { Component, Input } from '@angular/core';
 
-export type TicketTheme = 'default' | 'horror' | 'cartoons' | 'daily-challenge';
+export type TicketTheme =
+  | 'default'
+  | 'horror'
+  | 'cartoons'
+  | 'daily-challenge'
+  | 'polish'
+  | 'oscar'
+  | 'rotten';
 
 @Component({
   selector: 'app-ticket',
